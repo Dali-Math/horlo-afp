@@ -27,6 +27,7 @@ export interface EngineCallbacks {
   onHelp: () => void;
   onFullscreenKey: () => void;
   onPreset: (id: PresetId) => void;
+  onReady?: () => void;
 }
 
 interface SimState {
@@ -400,9 +401,14 @@ export function createCalibreEngine(container: HTMLDivElement, cb: EngineCallbac
   let rafId = 0;
   let disposed = false;
 
+  let firstFrameDone = false;
   function animate(now: number) {
     if (disposed) return;
     rafId = requestAnimationFrame(animate);
+    if (!firstFrameDone) {
+      firstFrameDone = true;
+      cb.onReady?.();
+    }
 
     const dt = Math.min(0.05, (now - lastFrameTime) / 1000);
     lastFrameTime = now;

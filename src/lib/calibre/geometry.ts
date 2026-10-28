@@ -17,7 +17,10 @@ export function setMaxAnisotropy(v: number) {
  * A dark watchmaker's photo studio: gradient dome + bright softboxes so polished
  * steel, brass and rubies get real reflections while rotating in any direction.
  */
+let cachedStudioTexture: THREE.Texture | null = null;
+
 export function createStudioEnvironment(renderer: THREE.WebGLRenderer): THREE.Texture {
+  if (cachedStudioTexture) return cachedStudioTexture;
   const envScene = new THREE.Scene();
 
   // Gradient dome (dark atelier ceiling → near-black floor)
@@ -57,25 +60,29 @@ export function createStudioEnvironment(renderer: THREE.WebGLRenderer): THREE.Te
   const pmrem = new THREE.PMREMGenerator(renderer);
   const envRT = pmrem.fromScene(envScene, 0.04);
   pmrem.dispose();
-  return envRT.texture;
+  cachedStudioTexture = envRT.texture;
+  return cachedStudioTexture;
 }
 
 /** Côtes de Genève diagonales (rayage en bandes sinusoïdales). */
+let cachedCotesDeGeneve: THREE.CanvasTexture | null = null;
+
 export function createCotesDeGeneveTexture(): THREE.CanvasTexture {
+  if (cachedCotesDeGeneve) return cachedCotesDeGeneve;
   const canvas = document.createElement('canvas');
-  canvas.width = 1024;
-  canvas.height = 1024;
+  canvas.width = 512;
+  canvas.height = 512;
   const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
   ctx.fillStyle = '#C3CEDC';
-  ctx.fillRect(0, 0, 1024, 1024);
+  ctx.fillRect(0, 0, 512, 512);
 
-  const stripeW = 118;
+  const stripeW = 59;
   ctx.save();
-  ctx.translate(512, 512);
+  ctx.translate(256, 256);
   ctx.rotate(-0.42);
-  ctx.translate(-512, -512);
-  for (let x = -320; x < 1360; x += stripeW) {
+  ctx.translate(-256, -256);
+  for (let x = -160; x < 680; x += 59) {
     const g = ctx.createLinearGradient(x, 0, x + stripeW, 0);
     g.addColorStop(0.0, 'rgba(62, 78, 98, 0.50)');
     g.addColorStop(0.2, 'rgba(255, 255, 255, 0.78)');
@@ -83,14 +90,14 @@ export function createCotesDeGeneveTexture(): THREE.CanvasTexture {
     g.addColorStop(0.76, 'rgba(255, 255, 255, 0.60)');
     g.addColorStop(1.0, 'rgba(62, 78, 98, 0.50)');
     ctx.fillStyle = g;
-    ctx.fillRect(x, -320, stripeW, 1680);
+    ctx.fillRect(x, -160, stripeW, 840);
 
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
     ctx.lineWidth = 1;
     for (let f = 2; f < stripeW; f += 3) {
       ctx.beginPath();
-      ctx.moveTo(x + f, -320);
-      ctx.lineTo(x + f, 1360);
+      ctx.moveTo(x + f, -160);
+      ctx.lineTo(x + f, 680);
       ctx.stroke();
     }
     ctx.strokeStyle = 'rgba(38, 50, 64, 0.38)';
@@ -102,11 +109,11 @@ export function createCotesDeGeneveTexture(): THREE.CanvasTexture {
   }
   ctx.restore();
 
-  const vg = ctx.createRadialGradient(512, 512, 260, 512, 512, 760);
+  const vg = ctx.createRadialGradient(256, 256, 130, 256, 256, 380);
   vg.addColorStop(0, 'rgba(255, 255, 255, 0.06)');
   vg.addColorStop(1, 'rgba(18, 26, 38, 0.30)');
   ctx.fillStyle = vg;
-  ctx.fillRect(0, 0, 1024, 1024);
+  ctx.fillRect(0, 0, 512, 512);
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.wrapS = THREE.RepeatWrapping;
@@ -114,22 +121,26 @@ export function createCotesDeGeneveTexture(): THREE.CanvasTexture {
   tex.repeat.set(1.15, 1.15);
   if ('colorSpace' in tex) (tex as any).colorSpace = (THREE as any).SRGBColorSpace; else (tex as any).encoding = (THREE as any).sRGBEncoding;
   tex.anisotropy = maxAnisotropy;
+  cachedCotesDeGeneve = tex;
   return tex;
 }
 
 /** Perlage circulaire de platine (grainage en rosaces). */
+let cachedPerlage: THREE.CanvasTexture | null = null;
+
 export function createPerlageTexture(): THREE.CanvasTexture {
+  if (cachedPerlage) return cachedPerlage;
   const canvas = document.createElement('canvas');
-  canvas.width = 1024;
-  canvas.height = 1024;
+  canvas.width = 512;
+  canvas.height = 512;
   const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
   ctx.fillStyle = '#AEBAC8';
-  ctx.fillRect(0, 0, 1024, 1024);
+  ctx.fillRect(0, 0, 512, 512);
 
-  const step = 62;
-  for (let row = -1; row < 1024 / step + 2; row++) {
-    for (let col = -1; col < 1024 / step + 2; col++) {
+  const step = 38;
+  for (let row = -1; row < 512 / step + 2; row++) {
+    for (let col = -1; col < 512 / step + 2; col++) {
       const cx = col * step + (row % 2 ? step / 2 : 0);
       const cy = row * step;
       const r = step * 0.8;
@@ -158,11 +169,15 @@ export function createPerlageTexture(): THREE.CanvasTexture {
   tex.wrapT = THREE.RepeatWrapping;
   if ('colorSpace' in tex) (tex as any).colorSpace = (THREE as any).SRGBColorSpace; else (tex as any).encoding = (THREE as any).sRGBEncoding;
   tex.anisotropy = maxAnisotropy;
+  cachedPerlage = tex;
   return tex;
 }
 
 /** Satiné circulaire (roughness variation on wheels). */
+let cachedRadialBrush: THREE.CanvasTexture | null = null;
+
 export function createRadialBrushTexture(): THREE.CanvasTexture {
+  if (cachedRadialBrush) return cachedRadialBrush;
   const canvas = document.createElement('canvas');
   canvas.width = 512;
   canvas.height = 512;
@@ -171,7 +186,7 @@ export function createRadialBrushTexture(): THREE.CanvasTexture {
   ctx.fillRect(0, 0, 512, 512);
   const cx = 256;
   const cy = 256;
-  for (let i = 0; i < 2400; i++) {
+  for (let i = 0; i < 800; i++) {
     const a = Math.random() * Math.PI * 2;
     const r0 = Math.random() * 258;
     const r1 = r0 + 10 + Math.random() * 42;
@@ -377,7 +392,10 @@ export function createBridgeChaton(
 }
 
 /** Cadran soleillé anthracite, minuterie, petite seconde 9h & signature. */
+let cachedModernDial: THREE.CanvasTexture | null = null;
+
 export function createModernDialTexture(): THREE.CanvasTexture {
+  if (cachedModernDial) return cachedModernDial;
   const canvas = document.createElement('canvas');
   canvas.width = 1024;
   canvas.height = 1024;

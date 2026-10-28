@@ -62,6 +62,7 @@ export default function CalibreEcorchePage() {
   const viewportRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<CalibreEngineHandle | null>(null);
 
+  const [isSceneReady, setIsSceneReady] = useState(false);
   const [selected, setSelected] = useState<OrganId>('barrel');
   const [speed, setSpeed] = useState(1.0);
   const [beatLabel, setBeatLabel] = useState('Cycle Actif (1×) • 90 ms');
@@ -109,6 +110,7 @@ export default function CalibreEcorchePage() {
       onHelp: () => setHelpOpen((o: boolean) => !o),
       onFullscreenKey: () => toggleFullscreen(),
       onPreset: (id: PresetId) => setCamPreset(id),
+      onReady: () => setIsSceneReady(true),
     });
     engineRef.current = engine;
     return () => {
@@ -320,31 +322,40 @@ export default function CalibreEcorchePage() {
           <div
             id="viewportCard"
             ref={viewportRef}
-            className="relative w-full h-[540px] sm:h-[620px] xl:h-[680px] rounded-2xl border border-[#D7D0C4] dark:border-[#2a2f36] bg-atelier-canvas overflow-hidden shadow-xl select-none"
+            className="relative w-full h-[520px] sm:h-[620px] xl:h-[680px] rounded-2xl border border-[#D7D0C4] dark:border-[#2a2f36] bg-atelier-canvas overflow-hidden shadow-xl select-none"
           >
-            {/* Overlay statut (haut-gauche) */}
-            <div className="absolute top-3 left-3 z-10 pointer-events-none flex flex-col gap-1.5 max-w-[62%]">
-              <div className="px-3 py-1.5 rounded-xl bg-black/45 backdrop-blur-md border border-white/10 text-xs font-label flex items-center gap-2 w-fit">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#E3B95F] animate-pulse" />
-                <span id="viewportActiveOrganTitle" className="text-[#F3E5AB] font-semibold">
-                  {`Organe sélectionné : ${data.title}`}
+            {/* Loader Haute Horlogerie instantané */}
+            {!isSceneReady && (
+              <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#07090E]/90 backdrop-blur-md transition-opacity duration-300">
+                <div className="w-10 h-10 rounded-full border-2 border-[#E3B95F]/30 border-t-[#E3B95F] animate-spin mb-3" />
+                <p className="text-xs font-label text-[#F3E5AB] tracking-widest uppercase">Assemblage du Calibre ETA 6497-1...</p>
+                <span className="text-[10px] font-label text-slate-400 mt-1">Précision micromécanique 360°</span>
+              </div>
+            )}
+
+            {/* Overlay statut (haut-gauche épuré) */}
+            <div className="absolute top-3 left-3 z-10 pointer-events-none flex flex-col gap-1.5 max-w-[70%] sm:max-w-[62%]">
+              <div className="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl bg-black/60 backdrop-blur-md border border-white/10 text-[11px] sm:text-xs font-label flex items-center gap-1.5 sm:gap-2 w-fit">
+                <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#E3B95F] animate-pulse shrink-0" />
+                <span id="viewportActiveOrganTitle" className="text-[#F3E5AB] font-semibold truncate max-w-[190px] sm:max-w-none">
+                  {`Organe : ${data.title.split('(')[0].trim()}`}
                 </span>
               </div>
-              <div className="px-3 py-1 rounded-lg bg-black/35 backdrop-blur-sm border border-white/10 text-[11px] font-label text-[#B7C1D0] w-fit">
+              <div className="hidden md:block px-3 py-1 rounded-lg bg-black/35 backdrop-blur-sm border border-white/10 text-[11px] font-label text-[#B7C1D0] w-fit">
                 Glisser : Tourner dans tous les sens (360° libre) • Maj / Clic droit : Déplacer • Molette / Pincer : Zoom • Double-clic : Recentrer • 2 doigts : Pivoter + Zoom
               </div>
             </div>
 
-            {/* Télémétrie phases + pad de rotation (haut-droite) */}
-            <div className="absolute top-3 right-3 z-10 flex flex-col items-end gap-2 max-w-[36%]">
-              <div className="pointer-events-none px-3 py-1.5 rounded-xl bg-black/50 backdrop-blur-md border border-[#E3B95F]/40 text-[11px] font-label text-[#F3E5AB] shadow-lg flex items-center gap-2">
-                <span className="text-[#B7C1D0]">{hudPrefix}</span>
+            {/* Télémétrie phases + pad de rotation (haut-droite épuré) */}
+            <div className="absolute top-3 right-3 z-10 flex flex-col items-end gap-1.5 max-w-[36%]">
+              <div className="pointer-events-none px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl bg-black/60 backdrop-blur-md border border-[#E3B95F]/40 text-[10px] sm:text-[11px] font-label text-[#F3E5AB] shadow-lg flex items-center gap-1.5">
+                <span className="text-[#B7C1D0] hidden sm:inline">{hudPrefix}</span>
                 <strong className="text-[#E3B95F]">{hudTag}</strong>
               </div>
-              <div className="pointer-events-none px-3 py-1.5 rounded-lg bg-black/45 backdrop-blur-md border border-white/10 text-[10px] font-label text-[#B7C1D0] leading-snug shadow">
+              <div className="hidden md:block pointer-events-none px-3 py-1.5 rounded-lg bg-black/45 backdrop-blur-md border border-white/10 text-[10px] font-label text-[#B7C1D0] leading-snug shadow">
                 {hudDesc}
               </div>
-              <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-xl p-1.5 flex items-center gap-1 shadow-lg text-xs font-label">
+              <div className="hidden sm:flex bg-black/50 backdrop-blur-md border border-white/10 rounded-xl p-1.5 items-center gap-1 shadow-lg text-xs font-label">
                 <button
                   onClick={() => e()?.nudge(0, 0.35)}
                   title="Tourner à Gauche"
@@ -375,7 +386,7 @@ export default function CalibreEcorchePage() {
                 </button>
                 <button
                   onClick={() => e()?.flip180()}
-                  title="Retourner à 180° (Ponts ↔ Cadran) — touche B"
+                  title="Retourner à 180° (Ponts ↔ Cadran)"
                   className="px-2 h-7 rounded-lg bg-[#E3B95F]/20 hover:bg-[#E3B95F] hover:text-black text-[#E3B95F] border border-[#E3B95F]/40 flex items-center gap-1 transition font-semibold"
                 >
                   <Repeat className="w-3.5 h-3.5" />
@@ -387,17 +398,28 @@ export default function CalibreEcorchePage() {
             {/* Rendu Three.js */}
             <div ref={containerRef} className="w-full h-full cursor-grab active:cursor-grabbing touch-none" />
 
-            {/* Sélecteur rapide d'organes (bas) */}
-            <div className="absolute bottom-3 left-3 right-3 z-10 flex flex-wrap justify-between items-end gap-2 pointer-events-none">
+            {/* Bas du viewport : Commandes essentielles */}
+            <div className="absolute bottom-3 left-3 right-3 z-10 flex items-center justify-between pointer-events-none">
               <button
                 onClick={() => e()?.setPreset('escapement')}
-                className="pointer-events-auto px-3 py-1.5 rounded-xl bg-rose-900/40 hover:bg-rose-800/50 border border-rose-400/40 text-rose-100 text-xs font-label font-semibold transition flex items-center gap-2 shadow-lg backdrop-blur-sm"
+                className="pointer-events-auto px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl bg-rose-950/70 hover:bg-rose-900/80 border border-rose-400/40 text-rose-100 text-[10px] sm:text-xs font-label font-semibold transition flex items-center gap-1.5 shadow-lg backdrop-blur-md"
               >
-                <Crosshair className="w-3.5 h-3.5 text-rose-400" />
-                <span>Plonger sur l&apos;Échappement &amp; l&apos;Ancre</span>
+                <Crosshair className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-rose-400" />
+                <span>Zoom Échappement</span>
               </button>
 
-              <div className="pointer-events-auto flex flex-wrap justify-end gap-1 max-w-[70%]">
+              {/* Bouton 180° mobile direct */}
+              <button
+                onClick={() => e()?.flip180()}
+                title="Retourner à 180° (Ponts ↔ Cadran)"
+                className="sm:hidden pointer-events-auto px-2.5 py-1 rounded-xl bg-black/60 backdrop-blur-md border border-[#E3B95F]/40 text-[#E3B95F] text-[10px] font-label font-bold flex items-center gap-1 shadow-lg"
+              >
+                <Repeat className="w-3 h-3 text-[#E3B95F]" />
+                <span>180°</span>
+              </button>
+
+              {/* Sur desktop : les 9 boutons en coin droit */}
+              <div className="hidden sm:flex pointer-events-auto flex-wrap justify-end gap-1 max-w-[70%]">
                 {ORGAN_PILLS.map((o: any) => (
                   <button
                     key={o.id}
@@ -414,19 +436,44 @@ export default function CalibreEcorchePage() {
               </div>
             </div>
 
-            {/* Toast de prise en main (fondu auto) */}
+            {/* Toast de prise en main (fondu auto rapide) */}
             {toastState !== 'gone' && (
               <div
-                className={`absolute bottom-16 left-1/2 -translate-x-1/2 z-20 pointer-events-none px-3.5 py-2 rounded-xl bg-black/75 backdrop-blur-md border border-[#E3B95F]/40 text-[10px] sm:text-[11px] font-label text-[#F3E5AB] shadow-xl transition-opacity duration-1000 flex items-center gap-2 max-w-[calc(100%-2rem)] text-center whitespace-normal sm:whitespace-nowrap leading-tight ${
+                className={`absolute bottom-14 sm:bottom-16 left-1/2 -translate-x-1/2 z-20 pointer-events-none px-3 py-1.5 rounded-xl bg-black/75 backdrop-blur-md border border-[#E3B95F]/40 text-[10px] sm:text-[11px] font-label text-[#F3E5AB] shadow-xl transition-opacity duration-700 flex items-center gap-2 max-w-[calc(100%-2rem)] text-center leading-tight ${
                   toastState === 'fading' ? 'opacity-0' : 'opacity-100'
                 }`}
               >
-                <Pointer className="w-3.5 h-3.5 text-[#E3B95F]" />
-                <span>Glissez dans n&apos;importe quelle direction : le calibre tourne librement à 360°, sans butée ni blocage.</span>
+                <Pointer className="w-3.5 h-3.5 text-[#E3B95F] shrink-0" />
+                <span>Glissez dans n&apos;importe quelle direction : le calibre tourne librement à 360°.</span>
               </div>
             )}
           </div>
 
+          {/* SÉLECTEUR RAPIDE D'ORGANES MOBILE (Placé sous le viewport pour dégager 100% de la vue 3D sur téléphone) */}
+          <div className="sm:hidden -mt-1 mb-3 bg-[#FAF7F1] dark:bg-[#111419] border border-[#D7D0C4] dark:border-[#2a2f36] rounded-2xl p-2.5 shadow-sm">
+            <div className="flex items-center justify-between px-1 mb-1.5 text-[11px] font-label text-[#9C7A43] font-bold">
+              <span className="flex items-center gap-1.5">
+                <Cog className="w-3.5 h-3.5" />
+                Organes Horlogers (9) :
+              </span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-normal">Défiler ➔</span>
+            </div>
+            <div className="flex items-center gap-1.5 overflow-x-auto py-0.5 px-0.5 scrollbar-none">
+              {ORGAN_PILLS.map((o: any) => (
+                <button
+                  key={o.id}
+                  onClick={() => setSelected(o.id)}
+                  className={`shrink-0 px-3 py-1.5 rounded-xl border text-[11px] font-label transition ${
+                    selected === o.id
+                      ? 'bg-[#9C7A43] text-white font-bold border-[#9C7A43] shadow-sm'
+                      : 'bg-[#F3EFE7] dark:bg-[#171b21] text-[#57534E] dark:text-[#aaa49a] border-[#D7D0C4] dark:border-[#2a2f36]'
+                  }`}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+          </div>
           {/* -------- DOCK DES 4 CURSEURS INTERACTIFS -------- */}
           <div className={`${CREAM_CARD} rounded-2xl p-4 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-4`}>
             {/* 1 · Curseur temporel d'alternance */}

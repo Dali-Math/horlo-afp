@@ -89,7 +89,7 @@ export function buildCalibreScene(container: HTMLDivElement, xrayFactor: number)
   const keyLight = new THREE.DirectionalLight(0xfff6e0, 1.25);
   keyLight.position.set(14, 22, 18);
   keyLight.castShadow = true;
-  keyLight.shadow.mapSize.set(2048, 2048);
+  keyLight.shadow.mapSize.set(1024, 1024);
   keyLight.shadow.camera.near = 2;
   keyLight.shadow.camera.far = 90;
   keyLight.shadow.camera.left = -18;
