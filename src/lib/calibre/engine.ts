@@ -208,7 +208,7 @@ export function createCalibreEngine(container: HTMLDivElement, cb: EngineCallbac
       trackball.velY = 0;
     } else if (gesture.pointers.size === 2) {
       gesture.mode = 'multi';
-      const pts = [...gesture.pointers.values()];
+      const pts: { x: number; y: number }[] = []; gesture.pointers.forEach(p => pts.push(p));
       gesture.startDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
       gesture.startAngle = Math.atan2(pts[1].y - pts[0].y, pts[1].x - pts[0].x);
       gesture.startMidX = (pts[0].x + pts[1].x) / 2;
@@ -239,7 +239,7 @@ export function createCalibreEngine(container: HTMLDivElement, cb: EngineCallbac
         applyDragRotation(dx, dy);
       }
     } else if (gesture.pointers.size === 2 && gesture.mode === 'multi') {
-      const pts = [...gesture.pointers.values()];
+      const pts: { x: number; y: number }[] = []; gesture.pointers.forEach(p => pts.push(p));
       const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
       const ang = Math.atan2(pts[1].y - pts[0].y, pts[1].x - pts[0].x);
       const midX = (pts[0].x + pts[1].x) / 2;
