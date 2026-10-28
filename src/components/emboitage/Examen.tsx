@@ -1,13 +1,13 @@
 'use client';
 
 /**
- * HorloLearn — Onglet « Examen blanc » : grille officielle d'évaluation
- * AFP / CFC (30 points), note helvétique 1.0 – 6.0, gestion du critère
- * éliminatoire (propreté cadran & saphir) et meilleur score persistant.
+ * HorloLearn — Onglet « Examen d'établi » : Grille officielle de contrôle d'atelier
+ * (30 points), note helvétique 1.0 – 6.0, critère éliminatoire (propreté cadran & saphir),
+ * conformité aux normes suisses NIHS & ISO.
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { CheckSquare, RotateCcw, ShieldAlert, Square } from 'lucide-react';
+import { CheckSquare, RotateCcw, ShieldAlert, Square, Award } from 'lucide-react';
 import { EXAM_CRITERIA, EXAM_TOTAL, swissMention, swissNote } from '@/lib/emboitage/data';
 
 interface ExamenProps {
@@ -31,7 +31,7 @@ export default function Examen({ best, onScore }: ExamenProps) {
       return;
     }
     onScore(note);
-  }, [note]);
+  }, [note, onScore]);
 
   const toggle = (i: number) => {
     setChecked((prev) => {
@@ -55,20 +55,22 @@ export default function Examen({ best, onScore }: ExamenProps) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start hl-fade">
       {/* Grille de critères */}
-      <div className="lg:col-span-8 bg-cream-card rounded-3xl border border-cream-border p-5 sm:p-8 shadow-sm">
-        <div className="flex items-center justify-between pb-4 border-b border-cream-border mb-5 gap-3 flex-wrap">
+      <div className="lg:col-span-8 bg-cream-card dark:bg-slate-900 rounded-3xl border border-cream-border dark:border-slate-800 p-5 sm:p-8 shadow-sm">
+        <div className="flex items-center justify-between pb-4 border-b border-cream-border dark:border-slate-800 mb-5 gap-3 flex-wrap">
           <div>
-            <h2 className="font-display text-xl sm:text-2xl text-ink">Grille officielle d'évaluation AFP / CFC</h2>
-            <p className="text-xs text-ink-soft mt-0.5">
-              10 critères d'atelier notés sur 30 points — seuil d'obtention du diplôme : 20 pts (note 4.0).
+            <h2 className="font-display text-xl sm:text-2xl text-ink dark:text-slate-100">
+              Grille Officielle de Maîtrise d'Atelier
+            </h2>
+            <p className="text-xs text-ink-soft dark:text-slate-400 mt-0.5">
+              10 critères techniques notés sur 30 points — seuil de conformité suisse : 20 pts (note 4.0).
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={() => setAll(true)} className="text-xs font-label text-bronze-dark hover:underline">
+            <button onClick={() => setAll(true)} className="text-xs font-label text-bronze-dark dark:text-amber-400 hover:underline">
               Tout valider
             </button>
-            <span className="text-cream-border">·</span>
-            <button onClick={() => setAll(false)} className="text-xs font-label text-ink-soft hover:underline">
+            <span className="text-cream-border dark:text-slate-700">·</span>
+            <button onClick={() => setAll(false)} className="text-xs font-label text-ink-soft dark:text-slate-400 hover:underline">
               Tout décocher
             </button>
           </div>
@@ -80,8 +82,8 @@ export default function Examen({ best, onScore }: ExamenProps) {
               key={crit.id}
               className={`flex items-start gap-3 p-3.5 rounded-xl cursor-pointer border transition ${
                 checked[i]
-                  ? 'bg-cream-tile border-cream-border hover:bg-cream-track'
-                  : 'bg-red-50/60 border-red-200 hover:bg-red-50'
+                  ? 'bg-cream-tile dark:bg-slate-800/60 border-cream-border dark:border-slate-700 hover:bg-cream-track dark:hover:bg-slate-800'
+                  : 'bg-red-50/60 dark:bg-red-950/30 border-red-200 dark:border-red-900/50 hover:bg-red-50'
               }`}
             >
               <button
@@ -95,88 +97,98 @@ export default function Examen({ best, onScore }: ExamenProps) {
                 className="mt-0.5 shrink-0"
               >
                 {checked[i] ? (
-                  <CheckSquare className="w-5 h-5 text-bronze" />
+                  <CheckSquare className="w-5 h-5 text-bronze dark:text-amber-400" />
                 ) : (
-                  <Square className="w-5 h-5 text-red-400" />
+                  <Square className="w-5 h-5 text-red-400 dark:text-red-500" />
                 )}
               </button>
-              <div className="flex-1">
-                <div className="flex justify-between gap-2 font-semibold text-[14px] text-ink">
-                  <span>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <span className={`text-[13.5px] font-semibold leading-snug ${checked[i] ? 'text-ink dark:text-slate-100' : 'text-red-900 dark:text-red-200'}`}>
                     {crit.label}
-                    {crit.isEliminatory && (
-                      <span className="ml-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-red-100 text-red-700 text-[10px] font-label font-bold uppercase align-middle">
-                        <ShieldAlert className="w-3 h-3" /> éliminatoire
-                      </span>
-                    )}
                   </span>
-                  <span className="font-label text-bronze-dark shrink-0">{crit.points} pts</span>
+                  <span
+                    className={`font-label text-xs font-bold px-2 py-0.5 rounded ${
+                      checked[i]
+                        ? 'bg-cream-track dark:bg-slate-700 text-bronze-dark dark:text-amber-400'
+                        : 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300'
+                    }`}
+                  >
+                    +{crit.points} pts
+                  </span>
                 </div>
-                <p className="text-ink-soft text-xs mt-0.5 leading-relaxed">{crit.desc}</p>
+                <p className="text-xs text-ink-soft dark:text-slate-400 mt-1 leading-relaxed">{crit.desc}</p>
+                {crit.isEliminatory && (
+                  <span className="inline-flex items-center gap-1 text-[11px] font-label font-bold text-red-700 dark:text-red-400 mt-1.5">
+                    <ShieldAlert className="w-3.5 h-3.5" /> CRITÈRE ÉLIMINATOIRE DIRECT
+                  </span>
+                )}
               </div>
             </label>
           ))}
         </div>
       </div>
 
-      {/* Verdict */}
-      <div className="lg:col-span-4">
-        <div className="rounded-3xl bg-[#221B10] border border-bronze/40 p-6 sm:p-8 text-cream shadow-xl space-y-6 lg:sticky lg:top-32">
-          <div className="text-center pb-4 border-b border-white/10">
-            <span className="text-xs uppercase font-label tracking-widest text-bronze-light font-bold block mb-1">
-              Verdict d'examen suisse
-            </span>
-            <div className="text-6xl font-label font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-yellow-100 my-2">
-              {note.toFixed(1)}
-            </div>
-            <div className="text-xs font-label text-white/50">Note helvétique (échelle 1.0 à 6.0)</div>
-            <div className={`text-sm font-label font-bold mt-2 ${mentionCls}`}>{mention.label}</div>
-          </div>
-
-          <div className="space-y-3 font-label text-xs">
-            <div className="flex justify-between py-1.5 border-b border-white/10">
-              <span className="text-white/50">Points obtenus :</span>
-              <span className="font-bold text-bronze-light text-sm">
-                {totalScore} / {EXAM_TOTAL} pts
-              </span>
-            </div>
-            <div className="flex justify-between py-1.5 border-b border-white/10">
-              <span className="text-white/50">Seuil de réussite :</span>
-              <span className="font-bold text-cream">20 pts (note 4.0)</span>
-            </div>
-            <div className="flex justify-between py-1.5 border-b border-white/10">
-              <span className="text-white/50">Meilleur blanc :</span>
-              <span className="font-bold text-bronze-light">{best !== null ? best.toFixed(1) : '—'}</span>
-            </div>
-          </div>
-
-          {eliminatoryFailed ? (
-            <div className="p-4 rounded-2xl bg-red-500/15 border border-red-400/40 text-red-200 text-xs text-center space-y-1">
-              <div className="font-bold text-sm flex items-center justify-center gap-1.5">
-                <ShieldAlert className="w-4 h-4" /> DÉFAUT ÉLIMINATOIRE
-              </div>
-              <p className="text-white/60 text-[11px]">
-                Une trace de poussière ou une micro-rayure cadran / saphir annule la pièce, quel que soit le
-                reste du travail. Retour à l'étape 03 : protocole lumière rasante 45°.
-              </p>
-            </div>
-          ) : (
-            <div className="p-4 rounded-2xl bg-bronze/15 border border-bronze/40 text-bronze-light text-xs text-center space-y-1">
-              <div className="font-bold text-sm">Certification d'atelier validée</div>
-              <p className="text-white/50 text-[11px]">
-                L'élève maîtrise l'ensemble de la chaîne d'habillage horloger selon les directives fédérales
-                AFP / CFC.
-              </p>
-            </div>
-          )}
-
-          <button
-            onClick={() => setAll(true)}
-            className="w-full py-2.5 rounded-xl border border-white/15 hover:bg-white/5 text-xs font-label font-semibold text-white/70 hover:text-cream transition flex items-center justify-center gap-2"
-          >
-            <RotateCcw className="w-3.5 h-3.5" /> Rejouer l'examen blanc
-          </button>
+      {/* Carte score & note suisse */}
+      <div className="lg:col-span-4 bg-[#221B10] text-cream rounded-3xl border border-bronze/40 p-6 sm:p-8 shadow-xl space-y-6 lg:sticky lg:top-32">
+        <div>
+          <span className="inline-block text-[10px] uppercase font-label font-bold tracking-widest text-bronze-light bg-bronze/20 px-2.5 py-0.5 rounded border border-bronze/30">
+            Évaluation d'établi
+          </span>
+          <h3 className="font-display text-2xl mt-2 text-white">Bilan de l'emboîtage</h3>
         </div>
+
+        {/* Note géante */}
+        <div className="rounded-2xl bg-white/[0.04] border border-white/10 p-5 text-center">
+          <div className="text-xs font-label uppercase tracking-wider text-bronze-light">Note helvétique</div>
+          <div className="font-label text-6xl font-bold tracking-tight text-white my-1">
+            {note.toFixed(1)}
+          </div>
+          <div className={`font-label text-sm font-bold ${mentionCls}`}>{mention.label}</div>
+          <div className="text-xs font-label text-cream/60 mt-2">
+            Points cumulés : <strong className="text-white">{totalScore}</strong> / {EXAM_TOTAL}
+          </div>
+        </div>
+
+        {/* Alerte éliminatoire */}
+        {eliminatoryFailed && (
+          <div className="rounded-xl border border-red-500/50 bg-red-950/60 p-3.5 text-xs text-red-200 leading-relaxed flex items-start gap-2.5">
+            <ShieldAlert className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+            <div>
+              <strong className="block text-red-300 font-bold mb-0.5">Note 1.0 immédiate</strong>
+              La moindre poussière sous la glace ou résidu de Rodico sur le cadran annule l'ensemble du travail selon les exigences de la haute horlogerie suisse.
+            </div>
+          </div>
+        )}
+
+        {/* Barème suisse */}
+        <div className="space-y-1.5 text-xs font-label border-t border-white/10 pt-4 text-cream/70">
+          <div className="flex justify-between">
+            <span>6.0 — Travail d'exception</span>
+            <span className="text-emerald-400 font-bold">29-30 pts</span>
+          </div>
+          <div className="flex justify-between">
+            <span>5.0 — Très bon travail</span>
+            <span className="text-sky-300 font-bold">24-28 pts</span>
+          </div>
+          <div className="flex justify-between">
+            <span>4.0 — Seuil de réussite</span>
+            <span className="text-amber-300 font-bold">20-23 pts</span>
+          </div>
+          <div className="flex justify-between">
+            <span>&lt; 4.0 — Reprendre les gestes</span>
+            <span className="text-red-400 font-bold">&lt; 20 pts</span>
+          </div>
+        </div>
+
+        {best !== null && (
+          <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs font-label text-cream/70">
+            <span className="flex items-center gap-1.5">
+              <Award className="w-3.5 h-3.5 text-bronze-light" /> Meilleure note :
+            </span>
+            <strong className="text-white text-sm">{best.toFixed(1)} / 6.0</strong>
+          </div>
+        )}
       </div>
     </div>
   );

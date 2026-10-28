@@ -1,16 +1,17 @@
 /**
  * HorloLearn — Académie Pratique · Posages & Emboîtages d'Atelier
- * Données du cours : 7 gestes fondamentaux, grille AFP/CFC, quiz, flashcards,
- * produits d'établi et points chauds (hotspots) des schémas techniques.
- * Écriture & thème : « Théorie & Académie Horlogère Suisse » (horlolearn.ch/theorie).
+ * Cours complet d'atelier horloger suisse : 13 gestes fondamentaux d'emboîtage & aiguillage,
+ * outillage officiel, grille d'évaluation, quiz d'établi, flashcards et points chauds interactifs.
+ * Écriture & éthique : Artisan horloger authentique — Normes suisses officielles (NIHS, ISO, ETA).
  */
 
 // =========================================================================
-// 1. LES 7 ÉTAPES FONDAMENTALES D'EMBOÎTAGE
+// 1. LES 13 ÉTAPES FONDAMENTALES D'EMBOÎTAGE & AIGUILLAGE
 // =========================================================================
 
 export interface StepData {
   id: number;
+  phase: string;
   badge: string;
   title: string;
   summary: string;
@@ -23,8 +24,19 @@ export interface StepData {
 }
 
 export type SchemaType =
+  | 'workshop_kit'
+  | 'auto_module_removal'
+  | 'dial_feet_support'
   | 'dial_feet'
+  | 'limitation_finger'
+  | 'date_jump_sync'
+  | 'hours_minutes_fitting'
   | 'hands_clearance'
+  | 'seconds_reaming'
+  | 'safe_stem_release'
+  | 'cleanliness_protocol'
+  | 'arkansas_cone'
+  | 'casing_final'
   | 'dial_protection'
   | 'grazing_beam'
   | 'gaskets_casing'
@@ -35,141 +47,240 @@ export type SchemaType =
 export const STEPS_DATA: StepData[] = [
   {
     id: 1,
-    badge: 'Phase Préparatoire',
-    title: 'Contrôle, Cadrage & Fixation du Cadran',
+    phase: 'Phase 1 · Préparation & Démontage',
+    badge: 'Équipement d\'Atelier',
+    title: 'Outillage & Kit d\'Emboîtage Indispensable',
     summary:
-      "Le cadran est le visage de la montre. Avant toute fixation sur la platine, inspectez scrupuleusement la rectitude des deux pieds en cuivre à la loupe 4x. Un pied faussé créera une tension asymétrique qui fera bomber le cadran ou frotter le disque dateur.",
-    tools: ['Tournevis 30081 (0.80 mm)', 'Brucelles fines N°3', "Loupe d'établi 4x"],
-    torques: '1.2 cNm max',
-    standard: 'NIHS 91-10',
+      "Avant de poser le premier composant, l'établi doit être rigoureusement organisé selon les standards helvétiques. Le kit complet comprend : posage universel avec bague de réduction, posage gigogne recouvert d'un cabron de peau propre, porte-pièce à aiguiller équipé de sa vis de soutien moletée (doigt de limitation), tournevis rouge 1.20 mm, brucelles en laiton anti-rayure, pierre d'Arkansas fine, équarrissoirs, ouvre-boîte et brosse marron en poil de martre.",
+    tools: [
+      'Posage universel + bague de réduction',
+      'Posage gigogne + cabron de peau',
+      'Porte-pièce à aiguiller avec vis de soutien',
+      'Tournevis horloger rouge 1.20 mm & 0.80 mm',
+      'Brucelles en laiton (anti-rayures)',
+      'Pierre d\'Arkansas fine & équarrissoirs',
+      'Brosse marron en poil de martre (propreté cadran)',
+    ],
+    torques: 'Préparation du poste de travail',
+    standard: 'Standards Horlogers Suisses d\'Atelier',
     masterTip:
-      'Ne bloquez JAMAIS la première vis à fond ! Approchez la première vis sans forcer, approchez la seconde vis, contrôlez le centrage parfait du guichet de date autour du disque, puis appliquez le serrage final alternatif.',
+      "Nettoyez systématiquement le cabron de peau et les brucelles en laiton avec un chiffon non pelucheux avant d'entamer le travail. Des brucelles sales ou bavées peuvent rayer irrémédiablement une platine perlée ou un cadran laqué.",
     trapAlert:
-      "Serrer la vis avec un tournevis trop large ou forcer le couple : le pied en cuivre se sectionne net à la base ou l'émail saute sur la face visible du cadran. Zéro éliminatoire immédiat aux examens !",
-    schemaType: 'dial_feet',
+      "Utiliser des brucelles métalliques acérées en acier sur les brides de cadran : tout dérapage entraîne une balafre indélébile sur les côtes de Genève ou le perlage de la platine !",
+    schemaType: 'workshop_kit',
   },
   {
     id: 2,
-    badge: 'Micro-Mécanique de Précision',
-    title: 'Chassage des Aiguilles & Gardes NIHS 91-10',
+    phase: 'Phase 1 · Préparation & Démontage',
+    badge: 'Sécurisation Calibre',
+    title: 'Dépose du Module Automatique (ETA 2824-2)',
     summary:
-      "Le chassage des aiguilles requiert un sang-froid absolu. L'aiguille doit être parfaitement horizontale, parallèle au cadran, sans aucune trace d'outil, et positionnée à des distances micrométriques impératives définies par la norme suisse NIHS 91-10.",
-    tools: [
-      'Presse à chasser Bergeon',
-      'Tasseaux en Delrin',
-      'Protecteur Mylar Bergeon 6938',
-      'Pince aux aiguilles Presto N°1',
-    ],
-    torques: 'Chassage progressif sans à-coup',
-    standard: 'NIHS 91-10 (G1, G2, G3, G4)',
+      "Sur les calibres automatiques suisses (ex. ETA 2824-2), le module de remontage automatique et sa masse oscillante doivent impérativement être retirés avant tout aiguillage. À l'aide du tournevis rouge (panne 1.20 mm affûtée), desserrez et retirez les 2 vis noires de fixation du bâti automatique, puis soulevez le module complet d'un bloc.",
+    tools: ['Tournevis rouge 1.20 mm', 'Brucelles N°2 ou 3', 'Sous-cloche de protection'],
+    torques: 'Desserrage contrôlé (couple nominal 1.8 cNm)',
+    standard: 'Directives Techniques ETA 2824-2',
     masterTip:
-      "Avant de poser la première aiguille, faites tourner la tige en position mise à l'heure jusqu'au saut franc de la date. Stoppez net ! Posez alors l'aiguille des heures pointant rigoureusement sur 12h00, puis l'aiguille des minutes. Votre date sautera ainsi précisément à 00:00 (tolérance : 23h55 – 00:05).",
+      "Repérez bien les deux vis noires : elles ont un traitement de surface spécifique (bleuies ou brillant-noir) qui les distingue des vis de ponts de rouage. Rangez le module automatique sous cloche à l'abri des courants d'air.",
     trapAlert:
-      "Chasser une aiguille sans protecteur de cadran en Mylar, ou laisser l'aiguille des minutes frotter les index appliqués ou la face interne du saphir. Baisse d'amplitude fatale et rayure irrémédiable.",
-    schemaType: 'hands_clearance',
+      "Chasser les aiguilles avec le module automatique encore monté : la pression verticale exercée lors du chassage se transmet aux micro-billes du roulement de rotor et aux pivots, les écrasant ou créant du jeu axial prématuré.",
+    schemaType: 'auto_module_removal',
   },
   {
     id: 3,
-    badge: 'Hygiène Chirurgicale',
-    title: 'La Chasse Chirurgicale à la Poussière (Protocole 45°)',
+    phase: 'Phase 2 · Cadrage & Aiguillage',
+    badge: 'Contrôle Composants',
+    title: 'Contrôle des Pieds de Cadran & Roue des Heures',
     summary:
-      "C'est la hantise de l'horloger : la micro-poussière invisible lors de l'assemblage qui, une fois la boîte fermée et livrée, vient se coller en plein milieu du saphir au soleil ! Pour éliminer ce risque, l'atelier suisse applique le protocole d'inspection en lumière rasante à 45°.",
-    tools: [
-      'Poire à soufflet Bergeon 4657 (Filtre HEPA)',
-      'Pâte Rodico 6033 fraîche',
-      'Bâtonnet de moelle de sureau',
-      "Lampe d'établi articulée 45°",
-    ],
-    torques: 'Pression douce par tamponnement',
-    standard: 'Protocole Salle Blanche Horlogère',
+      "Inspectez la face inférieure du cadran : les deux pieds en cuivre brasés doivent être rigoureusement rectilignes et former un angle d'équerre de 90°. Sur la platine, vérifiez la présence indispensable de la roue des heures et de sa rondelle de friction (rondelle clinquant) qui maintient la roue plaquée et prévient tout décalage d'engrènement lors des chocs.",
+    tools: ['Loupe d\'établi 4x', 'Brucelles laiton', 'Réglette d\'équerre horlogère'],
+    torques: 'Contrôle dimensionnel sans contrainte',
+    standard: 'NIHS 91-10',
     masterTip:
-      "L'éclairage zénithal (par le dessus) crée des reflets qui masquent les poussières. En inclinant la lumière à 45° en faisceau rasant sur fond sombre, chaque micro-fibre projette une ombre portée nette et diffuse la lumière, devenant visible comme une étoile dans la nuit !",
+      "N'oubliez jamais la rondelle clinquant sur la roue des heures ! Si elle est omise, l'aiguille des heures aura un jeu axial excessif qui la fera frotter contre le dessous de l'aiguille des minutes ou contre le cadran.",
     trapAlert:
-      "Utiliser une bombe d'air comprimé industrielle (projette des micro-gouttelettes d'huile propulseur) ou un chiffon synthétique (crée de l'électricité statique attirant les particules).",
-    schemaType: 'grazing_beam',
+      "Tenter de redresser un pied de cadran tordu à mains nues ou avec une pince sans support de base : le pied en cuivre se rompt net au ras de la laque, rendant le cadran irrécupérable.",
+    schemaType: 'dial_feet_support',
   },
   {
     id: 4,
-    badge: 'Habillage & Étanchéité',
-    title: 'Préparation de la Boîte, de la Glace & des Joints',
+    phase: 'Phase 2 · Cadrage & Aiguillage',
+    badge: 'Règle d\'Or d\'Atelier',
+    title: 'Bridage du Cadran & Interdiction d\'Appui s/ Rubis',
     summary:
-      'La carrure doit être nettoyée aux ultrasons, séchée à l\'étuve à 60°C et débarrassée de tout résidu de pâte à polir. Les joints sont les gardiens de la montre : leur manipulation et lubrification répondent à des règles suisses inflexibles.',
-    tools: [
-      'Boîte à graisse silicone Bergeon 7007',
-      'Graisse Fomblin UT18',
-      'Potence à chasser les verres',
-      'Tasseaux adaptés au profil de glace',
-    ],
-    torques: 'Friction contrôlée',
-    standard: 'ISO 22810 & NIHS 92-20',
+      "Engagez délicatement les pieds de cadran dans les alésages de la platine. Retournez l'ensemble sur le posage gigogne garni de son cabron de peau. À l'aide des brucelles en laiton, poussez les brides de cadran en butée franche. RÈGLE MAÎTRESSE : il est STRICTEMENT INTERDIT d'appuyer sur les pierres (rubis) des ponts de rouage ! L'appui du doigt se fait exclusivement sur le laiton métallique des ponts.",
+    tools: ['Posage gigogne + cabron', 'Brucelles laiton', 'Doigtier propre'],
+    torques: 'Poussée manuelle en butée douce',
+    standard: 'Règles de l\'Art Horloger Suisse',
     masterTip:
-      "Avant d'insérer le mouvement, placez la carrure vide sous la lumière rasante pour inspecter la face intérieure de la glace. Une trace de doigt ou un dépôt gras laissé par une brucelle métallique ne pourra plus être nettoyé une fois le mouvement en place sans redémonter tout l'ensemble !",
+      "Poussez les brides d'un mouvement franc et symétrique. Vérifiez immédiatement après que le cadran est parfaitement plaqué sur la platine sans aucun jour visible à la loupe.",
     trapAlert:
-      "Graisser le joint de glace Hytrel / Téflon : le joint de glace se monte STRICTEMENT À SEC ! L'adjonction de graisse détruit la friction d'emmanchement et la glace saute sous la pression de l'eau !",
-    schemaType: 'gaskets_casing',
+      "Appuyer avec le pouce ou un cabron directement sur les pierres synthétiques des ponts : risque immédiat d'ébrécher le rubis ou d'expulser la goutte d'huile lubrifiée (Moebius 9010), polluant le rouage et asséchant le pivot !",
+    schemaType: 'dial_feet',
   },
   {
     id: 5,
-    badge: 'Assemblage Carrure',
-    title: 'Emboîtage du Mouvement, Cercle & Brides de Fixation',
+    phase: 'Phase 2 · Cadrage & Aiguillage',
+    badge: 'Support Haute Précision',
+    title: 'Porte-pièce à Doigt de Limitation sous la Seconde',
     summary:
-      'Le calibre équipé de son cadran et de ses aiguilles est déposé dans la carrure sur un porte-pièce d\'emboîtage évidé (pour ne jamais appuyer sur le balancier ou les aiguilles). Il est ensuite verrouillé à l\'aide de brides de boîte (casing clamps) vissées dans la gorge de carrure.',
-    tools: [
-      "Porte-pièce d'emboîtage Delrin évidé",
-      'Tournevis 30081 (1.20 mm)',
-      'Pâte Rodico pour préhension de vis',
-    ],
-    torques: '1.8 à 2.2 cNm (Serrage en croix)',
-    standard: 'Directives ETA / Valjoux',
+      "Déposez le calibre cadran vers le haut sur le porte-pièce d'aiguillage spécifique. Tournez la molette inférieure moletée jusqu'à amener le doigt de soutien en contact franc et affleurant sous la pierre de seconde centrale (ou le contre-pivot). Ce soutien direct est vital pour absorber l'effort de chassage sans répercuter de flexion sur la platine.",
+    tools: ['Porte-pièce à vis de soutien moletée', 'Loupe 10x', 'Brucelles fines'],
+    torques: 'Contact affleurant (zéro soulèvement de pont)',
+    standard: 'Protocole de Chassage ETA',
     masterTip:
-      'Les vis de boîte sont microscopiques : déposez une tête d\'épingle de Rodico frais sur la panne de votre tournevis. La vis y adhère parfaitement, vous permettant de la guider dans le trou taraudé de la platine sans risque de la faire tomber dans le balancier-spiral.',
+      "Le doigt de soutien doit être en contact parfait mais ne doit PAS soulever le calibre ni contraindre le pont. Faites tourner délicatement la roue des secondes avant chassage : elle doit conserver toute sa liberté de rotation.",
     trapAlert:
-      'Serrer une bride à fond sans approcher la seconde : le calibre se met en biais par rapport au tube de carrure, ce qui fait frotter la tige de remontoir dans le tube et fausse le remontage.',
-    schemaType: 'case_assembly',
+      "Chasser la trotteuse sur un posage creux sans doigt de soutien : la force axiale pousse le pivot de seconde contre le rubis, provoquant au choix le déchassage de la pierre du pont ou la casse nette du micro-pivot !",
+    schemaType: 'limitation_finger',
   },
   {
     id: 6,
-    badge: 'Cote Fondamentale',
-    title: 'Découpe Micrométrique de la Tige de Remontoir & Loctite 222',
+    phase: 'Phase 2 · Cadrage & Aiguillage',
+    badge: 'Chronométrie',
+    title: 'Synchronisation du Saut de Date à 00h00 Pile',
     summary:
-      "La tige de remontoir brute fournie par la manufacture est toujours trop longue. Elle doit être tronquée au centième de millimètre près. C'est l'un des exercices les plus sélectifs de l'examen suisse : une tige trop courte est bonne pour la poubelle, une tige trop longue ruine l'étanchéité !",
-    tools: [
-      'Pied à coulisse digital au 1/100e',
-      'Pince coupante au carbure de tungstène',
-      "Pierre d'Arkansas pour chanfrein 45°",
-      'Loctite 222 (violette démontable)',
-    ],
-    torques: 'Formule : L = A + B − 0.20 (Jeu : 0.20 mm)',
-    standard: 'Norme Métrologique NIHS',
+      "Insérez la tige en position de mise à l'heure (position 3). Tournez délicatement la couronne en sens antihoraire pour faire avancer les aiguilles vers minuit. Ralentissez à l'approche de minuit : dès que le sautoir de date déclenche le saut franc du disque, STOPPEZ NET ! La position angulaire du rouage correspond maintenant exactement à 00:00:00 (tolérance officielle : 23h55 – 00h05).",
+    tools: ['Tige de travail moletée', 'Loupe 4x', 'Doigtier'],
+    torques: 'Rotation manuelle au ralenti',
+    standard: 'Tolérance Horlogère Suisse : ±5 min (23h55 – 00h05)',
     masterTip:
-      "Après découpe à la pince carbure, ébavurez impérativement l'amorce de filet sur une pierre d'Arkansas en faisant tourner la tige à 45°. Si le filet n'est pas chanfreiné, il refoule le taraudage de la couronne au vissage !",
+      "Si vous dépassez le saut de date par mégarde, revenez au moins 4 heures en arrière (vers 20h00) avant de réavancer lentement vers minuit, pour annuler tous les jeux d'engrènement du rouage de calendrier.",
     trapAlert:
-      'Utiliser de la Loctite 270 (verte) ou Loctite 243 (bleue) : elles soudent la tige dans la couronne et rendent tout démontage futur impossible sans casser la tige nette !',
-    schemaType: 'stem_cutting',
+      "Poser les aiguilles à une heure quelconque sans avoir provoqué le saut franc de la date : votre montre sautera alors à midi ou en plein après-midi, motif de refus immédiat au contrôle final.",
+    schemaType: 'date_jump_sync',
   },
   {
     id: 7,
-    badge: 'Contrôle Métrologique Final',
-    title: "Contrôle d'Étanchéité selon Normes NIHS 92-20 & ISO 22810",
+    phase: 'Phase 2 · Cadrage & Aiguillage',
+    badge: 'Chassage Fondamental',
+    title: 'Chassage de l\'Aiguille des Heures à 12h00 Pile',
     summary:
-      'Une montre emboîtée ne quitte jamais l\'établi sans un test de résistance à l\'eau officiel. L\'appareil de référence (Witschi Proofmaster) mesure la déformation élastique de la carrure sous vide (-0.5 bar) et sous surpression (+2 à +10 bar).',
-    tools: [
-      "Chrono-comparateur d'étanchéité Witschi Proofmaster",
-      'Plaque chauffante thermostatée à 40°C - 45°C',
-      "Compte-gouttes d'eau froide à 18°C",
-    ],
-    torques: 'Cycles -0.5 bar / +5.0 bar',
-    standard: 'NIHS 92-20 & ISO 22810',
+      "Positionnez l'aiguille des heures pointant rigoureusement sur le repère de 12h00 (ou l'index de midi). Avec le posoir manuel ou le tasseau de presse en Delrin adapté au diamètre du canon, chassez l'aiguille perpendiculairement jusqu'à ce que son canon affleure parfaitement le sommet de la roue des heures. Contrôlez ensuite le saut de date en reculant à 8h00 puis en réavançant vers 12h00.",
+    tools: ['Posoir aux aiguilles Delrin', 'Film protecteur de cadran (Mylar)', 'Loupe 10x'],
+    torques: 'Chassage progressif axial sans à-coup',
+    standard: 'NIHS 91-10 — Garde G1 ≥ 0.20 mm',
     masterTip:
-      "Commencez TOUJOURS par le test sous dépression (vide -0.5 bar). Si la boîte fuit, la dépression écarte légèrement le joint sans aucun danger pour le calibre, alertant immédiatement l'appareil sans introduire d'humidité.",
+      "Interposez toujours le film Mylar (Bergeon 6938) entre l'aiguille et le cadran lors du chassage. Inspectez le parallélisme de l'aiguille des heures avec le cadran sur les 12 index à la loupe d'établi.",
     trapAlert:
-      "Omettre le test de condensation thermique : une montre peut passer le test de pression d'air tout en contenant de l'air humide emprisonné lors de l'emboîtage qui embuera au moindre froid !",
-    schemaType: 'waterproof_testing',
+      "Chasser l'aiguille en biais : l'extrémité de l'aiguille va plonger et labourer les index en relief du cadran lors de la rotation.",
+    schemaType: 'hours_minutes_fitting',
+  },
+  {
+    id: 8,
+    phase: 'Phase 2 · Cadrage & Aiguillage',
+    badge: 'Indexation de Précision',
+    title: 'Chassage des Minutes & Indexation (-2 / +2 min)',
+    summary:
+      "Chassez l'aiguille des minutes sur le cône de la chaussée en la pointant exactement sur 12h00 pile. Le canon des minutes doit être chassé à fleur de la chaussée. L'indexation finale doit respecter la norme helvétique : lorsque l'aiguille des heures est parfaitement centrée sur 12h00, l'aiguille des minutes doit se trouver entre 11h58 et 12h02 (tolérance stricte de -2 à +2 minutes).",
+    tools: ['Posoir aux aiguilles embout fin', 'Protecteur Mylar', 'Loupe 10x'],
+    torques: 'Chassage micrométrique à fleur',
+    standard: 'NIHS 91-10 — Garde G2 ≥ 0.15 mm',
+    masterTip:
+      "Faites faire deux tours complets de cadran (24 heures) à la minuterie pour vérifier le parallélisme parfait entre les heures et les minutes à 12h, 3h, 6h et 9h. La garde G2 ne doit jamais descendre sous 0.15 mm.",
+    trapAlert:
+      "Un canon de minute chassé trop profondément : il vient frotter sur le canon des heures en rotation, provoquant un arrêt de la montre dès la superposition des aiguilles.",
+    schemaType: 'hands_clearance',
+  },
+  {
+    id: 9,
+    phase: 'Phase 2 · Cadrage & Aiguillage',
+    badge: 'Micro-Mécanique',
+    title: 'Équarrissage du Canon & Chassage de la Trotteuse',
+    summary:
+      "Avant de poser la trotteuse (seconde centrale), préparez son canon : introduisez un micro-équarrissoir par le dessous à 90° jusqu'à mi-hauteur maximum pour ébavurer l'entrée du tube sans l'évaser. Vérifiez que la vis de soutien inférieure est fermement bloquée sous la pierre de seconde, puis chassez la trotteuse à fleur de l'axe central. Contrôlez les gardes G3 (≥ 0.15 mm) et G4 (≥ 0.30 mm).",
+    tools: ['Micro-équarrissoir d\'horloger', 'Posoir à seconde creux', 'Porte-pièce à vis de limitation', 'Loupe 10x'],
+    torques: 'Chassage axial doux sous appui direct',
+    standard: 'NIHS 91-10 — Gardes G3 & G4',
+    masterTip:
+      "Vérifiez attentivement le contrepoids de la trotteuse : il doit rester parfaitement horizontal et ne jamais plonger vers le plan de l'aiguille des minutes lorsqu'on incline la montre.",
+    trapAlert:
+      "Équarrir le canon sur toute sa hauteur ou forcer avec l'équarrissoir : le canon s'évase complètement et l'aiguille de seconde perd son serrage, patinant au premier choc de la montre.",
+    schemaType: 'seconds_reaming',
+  },
+  {
+    id: 10,
+    phase: 'Phase 3 · Emboîtage & Habillage',
+    badge: 'Sécurité Calibre',
+    title: 'Retrait Sécurisé de la Tige & Aiguilles à 15h15',
+    summary:
+      "Pour transférer le calibre habillé dans la carrure, retirez la tige de remontoir en appliquant la consigne de sécurité : positionnez préalablement les aiguilles groupées à 15h15 (vers la couronne / 3h) pour les écarter des rebords du posage et de la carrure. Placez la tige en position de mise à l'heure, puis pressez délicatement avec un tournevis rouge 1.20 mm sur le plot de tirette tout en tirant la tige dans l'axe.",
+    tools: ['Tournevis rouge 1.20 mm', 'Brucelles laiton', 'Sous-cloche'],
+    torques: 'Pression douce sur tirette (sans forcer)',
+    standard: 'Règle d\'Or Horlogère : Position 15h15',
+    masterTip:
+      "En plaçant les aiguilles à 15h15, vous réduisez à zéro le risque qu'une aiguille heurte la lunette ou le rebord de carrure lors du retournement ou de l'emboîtage.",
+    trapAlert:
+      "Appuyer trop fort ou avec un outil pointu sur le plot de tirette : vous déboîtez la bascule du tiret ! Le sautoir saute et nécessite le démontage complet des aiguilles et du cadran pour le remettre en place.",
+    schemaType: 'safe_stem_release',
+  },
+  {
+    id: 11,
+    phase: 'Phase 3 · Emboîtage & Habillage',
+    badge: 'Propreté Chirurgicale',
+    title: 'Protocole Propreté : Zéro Rodico sur le Cadran',
+    summary:
+      "La propreté d'emboîtage répond à une consigne intransigeante : le Rodico est STRICTEMENT INTERDIT sur la surface du cadran (il dépose des films gras indélébiles sur les vernis et les laques). Le dépoussiérage du cadran habillé s'effectue UNIQUEMENT avec la brosse marron en poil de martre très propre. N'utilisez jamais la soufflette directement sur le cadran habillé. Nettoyez l'intérieur de la carrure et la glace avec une microfibre d'horloger sous lumière rasante à 45°.",
+    tools: [
+      'Brosse marron en poil de martre propre',
+      'Microfibre optique d\'horloger blanche',
+      'Lampe rasante articulée 45°',
+      'Cloche anti-poussière',
+    ],
+    torques: 'Balayage doux sans pression',
+    standard: 'Protocole Salle Blanche & Inspection 45°',
+    masterTip:
+      "Gardez une brosse en poil de martre dédiée EXCLUSIVEMENT aux cadrans, rangée dans un tube hermétique pour qu'elle ne prenne jamais la poussière grasse de l'atelier.",
+    trapAlert:
+      "Appliquer du Rodico sur un cadran noir mat ou soleillé : la pâte laisse une auréole brillante impossible à faire disparaître, nécessitant le remplacement pur et simple du cadran.",
+    schemaType: 'cleanliness_protocol',
+  },
+  {
+    id: 12,
+    phase: 'Phase 3 · Emboîtage & Habillage',
+    badge: 'Ajustement & Finition',
+    title: 'Coupe de Tige, Cône à 90° s/ Arkansas & Loctite 222',
+    summary:
+      "Insérez le calibre dans la boîte avec la tige d'origine en position 1 (remontage neutre). Vissez la couronne à blanc et mesurez l'écart résiduel avec le tube. Reportez cette cote sur la tige neuve en ajoutant +1 mm de marge de sécurité, puis coupez à la pince d'horloger. Montez la tige dans un mandrin en laiton, maintenez-le à 45° sur la pierre d'Arkansas fine et faites-le rouler d'avant en arrière entre vos doigts pour tailler un cône à 90° sur l'amorce du filet. Ébavurez avec la lame d'un ouvre-boîte et appliquez une micro-goutte de Loctite 222 violette.",
+    tools: [
+      'Pied à coulisse au 1/100e ou réglette',
+      'Mandrin aux tiges en laiton',
+      'Pierre d\'Arkansas fine',
+      'Lame de couteau ouvre-boîte',
+      'Loctite 222 (violette démontable)',
+    ],
+    torques: 'Jeu fonctionnel sous couronne : 0.05 à 0.10 mm',
+    standard: 'Norme Métrologique NIHS',
+    masterTip:
+      "Le cône à 90° réalisé à la pierre d'Arkansas est la signature d'un vrai artisan : il guide l'entrée du filet dans la couronne sans jamais fausser le taraudage.",
+    trapAlert:
+      "Utiliser de la Loctite 243 (bleue) ou 270 (verte) : ces colles soudent la tige de façon définitive. Lors du prochain service, la tige cassera dans la couronne lors de toute tentative de dévissage !",
+    schemaType: 'arkansas_cone',
+  },
+  {
+    id: 13,
+    phase: 'Phase 3 · Emboîtage & Habillage',
+    badge: 'Assemblage Final',
+    title: 'Emboîtage Final, Repose Automatisme & Fond à la Potence',
+    summary:
+      "Placez le calibre muni de son cercle d'emboîtage dans la carrure. Vissez les deux vis de boîte et leurs brides de maintien en alternance croisée (couple 2.0 cNm). Reposez le module automatique ETA 2824 et serrez ses 2 vis noires avec le tournevis rouge 1.20 mm. Lubrifiez le joint de fond au Fomblin UT18. Enfin, fermez le fond à la potence d'horloger en respectant l'alignement : logo ETA vers le haut (12h) et passage de tige vers la gauche (couronne). Procédez au contrôle final d'étanchéité.",
+    tools: [
+      'Tournevis rouge 1.20 mm',
+      'Cercle d\'emboîtage & brides',
+      'Boîte à silicone Fomblin UT18',
+      'Potence à fermer les fonds avec tasseaux Delrin',
+    ],
+    torques: 'Brides : 2.0 cNm · Fond vissé/chassé selon spécifications',
+    standard: 'ISO 22810 & Directives Manufactures Suisses',
+    masterTip:
+      "Faites un dernier balayage à la brosse martre sur le mouvement avant de poser le fond, et vérifiez que la masse oscillante tourne librement à 360° sans heurter le fond.",
+    trapAlert:
+      "Chasser le fond de travers à la potence sans centrer le logo : le joint torique se pince dans le filetage, ruinant l'étanchéité et écrasant le joint.",
+    schemaType: 'casing_final',
   },
 ];
 
 // =========================================================================
-// 2. GRILLE OFFICIELLE D'ÉVALUATION AFP / CFC (30 points)
+// 2. GRILLE OFFICIELLE D'ÉVALUATION HORLOGÈRE SUISSE (30 points)
 // =========================================================================
 
 export interface ExamCriterion {
@@ -181,22 +292,22 @@ export interface ExamCriterion {
 }
 
 export const EXAM_CRITERIA: ExamCriterion[] = [
-  { id: 1, label: '1. Propreté cadran & saphir (Zéro poussière, zéro trace)', points: 4, isEliminatory: true, desc: 'Inspection sous lumière rasante 45° et loupe 2.5x. Critère éliminatoire direct.' },
-  { id: 2, label: '2. Parallélisme des aiguilles sur 12 heures', points: 4, desc: 'Tolérance ±0.05 mm, absence totale de cambrage vicieux ou de plongeon.' },
-  { id: 3, label: '3. Synchronisation du saut de date à 00:00', points: 3, desc: 'Tolérance helvétique : saut franc entre 23h55 et 00:05.' },
-  { id: 4, label: '4. Gardes d\'aiguillage G1, G2, G3, G4 conformes NIHS 91-10', points: 4, desc: 'G1 ≥ 0.20 mm, G2 ≥ 0.15 mm, G3 ≥ 0.15 mm, G4 ≥ 0.25 mm.' },
-  { id: 5, label: '5. Cadrage & centrage dans la lunette', points: 2, desc: 'Pieds serrés sans déformation (couple 1.2 cNm), concentricité parfaite avec le réhaut.' },
-  { id: 6, label: '6. Brides d\'emboîtage & centrage mouvement', points: 2, desc: 'Serrage en croix (2.0 cNm), aucune bavure sur les têtes de vis bleuies.' },
-  { id: 7, label: '7. Coupe de tige & fonctionnement couronne', points: 4, desc: 'Jeu sous couronne ≤ 0.05 mm, chanfrein Arkansas 45°, Loctite 222 violette.' },
-  { id: 8, label: '8. Graissage & intégrité des joints', points: 3, desc: 'Joint de glace Hytrel monté à sec, joint de fond siliconé au Fomblin UT18 sans pincement.' },
-  { id: 9, label: '9. Test étanchéité Proofmaster conforme (NIHS 92-20)', points: 2, desc: 'Déformation stable sous vide (-0.5 bar) et sous surpression (+5 bar).' },
-  { id: 10, label: '10. Test de condensation négatif', points: 2, desc: 'Plaque chauffante à 40°C puis goutte froide à 18°C. Aucune buée sur la face interne.' },
+  { id: 1, label: '1. Propreté cadran & saphir (Zéro poussière, ZÉRO Rodico cadran)', points: 4, isEliminatory: true, desc: 'Inspection sous lumière rasante 45°. Utilisation exclusive de la brosse en poil de martre. Critère éliminatoire direct.' },
+  { id: 2, label: '2. Parallélisme & planéité des aiguilles sur 12 heures', points: 4, desc: 'Tolérance ±0.05 mm, absence totale de cambrage vicieux, de plongée de trotteuse ou de frottement.' },
+  { id: 3, label: '3. Synchronisation du saut de date à 00:00 (±5 min)', points: 3, desc: 'Saut franc net entre 23h55 et 00h05 détecté au ralenti.' },
+  { id: 4, label: '4. Gardes d\'aiguillage G1, G2, G3, G4 conformes NIHS 91-10', points: 4, desc: 'G1 ≥ 0.20 mm, G2 ≥ 0.15 mm, G3 ≥ 0.15 mm, G4 ≥ 0.25-0.30 mm.' },
+  { id: 5, label: '5. Cadrage, centrage guichet & interdiction appui rubis', points: 3, desc: 'Pieds vérifiés à 90°, cabron de peau sous gigogne, aucun appui sur les pierres des ponts.' },
+  { id: 6, label: '6. Utilisation du doigt de limitation sous la seconde', points: 3, desc: 'Doigt moleté en appui affleurant franc sous le contre-pivot lors du chassage de la trotteuse.' },
+  { id: 7, label: '7. Retrait de tige à 15h15 & manœuvre tirette douce', points: 2, desc: 'Aiguilles orientées à 15h15 vers la couronne, pression mesurée sur le plot sans déboîter la bascule.' },
+  { id: 8, label: '8. Coupe de tige, cône 90° Arkansas & Loctite 222', points: 4, desc: 'Jeu sous couronne 0.05 mm, chanfrein à 45° roulé au mandrin, frein-filet violet démontable.' },
+  { id: 9, label: '9. Brides d\'emboîtage & repose module automatique', points: 2, desc: '2 vis de brides serrées en croix, module ETA 2824 reposé avec ses 2 vis noires au tournevis 1.20 mm.' },
+  { id: 10, label: '10. Fermeture du fond & étanchéité ISO 22810', points: 1, desc: 'Joint siliconé Fomblin UT18, alignement logo ETA à 12h, passage tige à gauche, test étanchéité conforme.' },
 ];
 
 export const EXAM_TOTAL = EXAM_CRITERIA.reduce((a, c) => a + c.points, 0); // 30
 
 // =========================================================================
-// 3. QUIZ DE CONNAISSANCES — 12 QUESTIONS QCM
+// 3. QUIZ DE CONNAISSANCES D'ATELIER — 15 QUESTIONS QCM
 // =========================================================================
 
 export interface QuizQuestion {
@@ -212,155 +323,212 @@ export const QUIZ_DATA: QuizQuestion[] = [
   {
     id: 1,
     stepRef: 1,
-    question: 'Vous fixez un cadran sur la platine. Quelle est la règle de serrage des deux vis de pieds ?',
+    question: 'Quel outil d\'établi est STRICTEMENT INTERDIT pour dépoussiérer ou nettoyer la face d\'un cadran verni ou laqué ?',
     options: [
-      'Serrer la première à fond, puis la seconde',
-      'Approcher les deux vis, contrôler le centrage du guichet, puis serrer en alternance',
-      'Serrer uniquement la seconde vis, la première reste libre',
-      'Appliquer un frein-filet moyen sur chaque pied avant vissage',
+      'La brosse marron en poil de martre',
+      'La pâte Rodico (verte ou grise)',
+      'Le cabron de peau propre',
+      'Le pinceau antistatique',
     ],
     correct: 1,
     explanation:
-      'Règle maîtresse de l\'étape 1 : jamais de serrage à fond sur le premier pied sans avoir engagé le second — sinon le cadran se voile (« voilage ») et le disque dateur frotte. Couple maximal : 1.2 cNm.',
+      'La pâte Rodico est formellement interdite sur la surface d\'un cadran : elle y dépose des résidus gras microscopiques et des auréoles indélébiles sur les vernis mats et soleillés. Seule la brosse marron en poil de martre est agréée.',
   },
   {
     id: 2,
-    stepRef: 1,
-    question: 'Quel est le couple de serrage maximal des vis de pieds de cadran ?',
-    options: ['0.5 cNm', '1.2 cNm', '2.0 cNm', '5.0 cNm'],
+    stepRef: 2,
+    question: 'Pourquoi faut-il impérativement déposer le module automatique (ETA 2824) avant de chasser les aiguilles ?',
+    options: [
+      'Pour réduire le poids global du mouvement sur la balance',
+      'Pour éviter d\'écraser les billes du roulement de rotor lors des pressions de chassage',
+      'Parce que le ressort de barillet ne peut pas être remonté avec le module monté',
+      'Pour permettre la lubrification des aiguilles',
+    ],
     correct: 1,
     explanation:
-      '1.2 cNm maximum. Au-delà, le pied en cuivre se sectionne net à la base ou l\'émail saute sur la face visible du cadran : défaut éliminatoire immédiat aux examens AFP / CFC.',
+      'L\'effort vertical exercé lors du chassage des aiguilles traverse le mouvement. Si le module automatique est en place, les contraintes se reportent sur les micro-billes du roulement et les pivots, provoquant des déformations et du jeu prématuré.',
   },
   {
     id: 3,
-    stepRef: 2,
-    question: "Avant de chasser les aiguilles, comment positionnez-vous la tige de remontoir ?",
+    stepRef: 4,
+    question: 'Lors du bridage du cadran sur le posage gigogne, sur quelle zone est-il INTERDIT d\'exercer une pression du doigt ?',
     options: [
-      'En position 1 (remontage), couronne tirée au minimum',
-      "Peu importe, la position de la tige n'influence pas l'aiguillage",
-      "En position mise à l'heure, juste après le saut franc de la date, heures pointées sur 12h00",
-      'En position 0 (plongée), aiguilles libres',
+      'Sur les ponts métalliques en laiton',
+      'Sur le pourtour extérieur de la platine',
+      'Directement sur les pierres (rubis) des ponts de rouage',
+      'Sur le rochet de barillet',
     ],
     correct: 2,
     explanation:
-      "On tourne la tige en position mise à l'heure jusqu'au saut franc de la date, on stoppe net, puis on pose l'aiguille des heures sur 12h00 exactement. Le saut de date tombera alors précisément à 00:00 (tolérance 23h55 – 00:05).",
+      'Règle d\'or d\'atelier suisse : interdiction absolue d\'appuyer sur les pierres des ponts ! Vous risquez d\'ébrécher le rubis ou d\'expulser la goutte d\'huile de lubrification (Moebius 9010), asséchant le pivot et polluant le rouage.',
   },
   {
     id: 4,
-    stepRef: 3,
-    question: "Pourquoi inspecter le cadran en lumière rasante à 45° plutôt qu'en lumière zénithale ?",
+    stepRef: 5,
+    question: 'À quoi sert le doigt de limitation (vis de soutien inférieure) sur le porte-pièce d\'aiguillage ?',
     options: [
-      "La lumière rasante chauffe moins le cadran et préserve l'émail",
-      'Les micro-fibres projettent une ombre portée nette et deviennent visibles',
-      'Elle élimine l\'électricité statique qui attire les poussières',
-      'Elle permet de travailler sans loupe, même à 1x',
+      'À bloquer le balancier pendant le transport',
+      'À soutenir le contre-pivot de la roue de seconde pour éviter de déchasser le rubis ou casser le pivot',
+      'À régler la hauteur de la tige de remontoir',
+      'À mesurer le couple de serrage des vis',
     ],
     correct: 1,
     explanation:
-      "L'éclairage zénithal crée des reflets spéculaires qui masquent les particules. En faisceau rasant à 45° sur fond sombre, chaque micro-fibre projette une ombre portée nette : elle devient visible comme une étoile dans la nuit.",
+      'Lors du chassage de la trotteuse, l\'effort axial sur le canon est considérable. Le doigt de limitation, vissé en appui affleurant franc sous la pierre de seconde centrale, absorbe la force et protège le rubis et le pivot d\'une rupture fatale.',
   },
   {
     id: 5,
-    stepRef: 4,
-    question: 'Comment se monte le joint de glace Hytrel (L-Ring) ?',
+    stepRef: 6,
+    question: 'Quelle est la tolérance officielle d\'un saut de date instantané sur un calibre suisse ?',
     options: [
-      'Graisé au Fomblin UT18 pour faciliter l\'emmanchement',
-      'Strictement à sec, l\'étanchéité vient de l\'écrasement contrôlé',
-      'Humidifié à l\'alcool pour le glissement',
-      'Graisé à la silicone Moebius 9504',
+      'Entre 22h00 et 02h00',
+      'Entre 23h30 et 00h30',
+      'Entre 23h55 et 00h05 (± 5 minutes)',
+      'Exactement 00h00 sans aucune tolérance de seconde',
     ],
-    correct: 1,
+    correct: 2,
     explanation:
-      "STRICTEMENT À SEC ! Le joint de glace assure l'étanchéité par écrasement géométrique. Toute graisse détruit la friction d'emmanchement : la glace saute sous la pression de l'eau. Seuls les joints toriques se graissent au Fomblin.",
+      'La tolérance officielle helvétique pour le saut de date est de ± 5 minutes, soit entre 23h55 et 00h05. C\'est pourquoi on avance au ralenti et on stoppe net dès le saut franc pour chasser les heures à 12h00 pile.',
   },
   {
     id: 6,
-    stepRef: 4,
-    question: 'Avec quel produit lubrifie-t-on les joints toriques de fond et de couronne ?',
-    options: ['Huile Moebius 9010', 'Pâte de rodage diamantée', 'Fomblin UT18 (ou Moebius 8513)', 'Loctite 222'],
-    correct: 2,
-    explanation:
-      'Fomblin UT18, graisse perfluorée chimiquement inerte qui ne sèche jamais : elle empêche le pincement du joint lors du vissage du fond. Le joint de glace, lui, reste à sec.',
-  },
-  {
-    id: 7,
-    stepRef: 6,
-    question: 'Quel frein-filet autorisez-vous sur la tige de remontoir dans la couronne ?',
-    options: ['Loctite 270 (verte)', 'Loctite 243 (bleue)', 'Loctite 222 (violette, démontable)', 'Aucun, la tige reste libre'],
-    correct: 2,
-    explanation:
-      'Loctite 222 violette, démontable à froid. Les 270 et 243 soudent la tige dans la couronne : tout démontage futur devient impossible sans casser la tige nette.',
-  },
-  {
-    id: 8,
-    stepRef: 6,
-    question: "Vous devez couper une tige de remontoir. Quelle est la règle d'or de la coupe ?",
+    stepRef: 8,
+    question: 'Quelle est la tolérance d\'indexation de l\'aiguille des minutes lorsque l\'aiguille des heures pointe sur 12h00 pile ?',
     options: [
-      'Couper 0.20 mm de moins que la cote, puis ajuster à la lime',
-      'Couper exactement à la cote du pied à coulisse, d\'un seul coup',
-      'Couper 0.20 mm de plus pour laisser le joint se compresser',
-      'Couper au tiers, essayer, et recommencer jusqu\'au bon engagement',
-    ],
-    correct: 0,
-    explanation:
-      "Une tige trop courte est irrémédiablement perdue ; une tige un peu longue se retouche à la lime en 10 secondes. On coupe donc toujours 0.20 mm DE MOINS, puis on ébavure l'amorce de filet sur la pierre d'Arkansas à 45°.",
-  },
-  {
-    id: 9,
-    stepRef: 2,
-    question: 'Quelle est la garde G1 minimale (cadran ↔ aiguille des heures) selon la NIHS 91-10 ?',
-    options: ['0.05 mm', '0.10 mm', '0.20 mm', '0.50 mm'],
-    correct: 2,
-    explanation:
-      'G1 ≥ 0.20 mm au-dessus des index appliqués. Viennent ensuite G2 (heures ↔ minutes) ≥ 0.15 mm, G3 (minutes ↔ trotteuse) ≥ 0.15 mm et G4 (trotteuse ↔ glace) ≥ 0.25-0.30 mm.',
-  },
-  {
-    id: 10,
-    stepRef: 7,
-    question: 'Dans quel ordre effectuez-vous les tests du Proofmaster ?',
-    options: [
-      'Surpression +5 bar, puis dépression -0.5 bar',
-      'Dépression -0.5 bar d\'abord, puis surpression',
-      'Indifféremment, l\'ordre n\'a pas d\'importance',
-      'Uniquement le test de surpression, la dépression est facultative',
+      '-5 min à +5 min',
+      '-2 min à +2 min (minutes entre 11h58 et 12h02)',
+      '0 min strict',
+      '-10 min à +10 min',
     ],
     correct: 1,
     explanation:
-      'On commence TOUJOURS par la dépression : si la boîte fuit, le vide écarte légèrement le joint sans danger pour le calibre et l\'appareil alerte sans introduire d\'humidité dans la montre.',
+      'Selon les critères d\'examen suisses, lorsque l\'aiguille des heures est parfaitement alignée sur l\'index de 12h00, l\'aiguille des minutes doit se situer entre 11h58 et 12h02 (tolérance de -2 à +2 minutes).',
+  },
+  {
+    id: 7,
+    stepRef: 9,
+    question: 'Comment prépare-t-on le canon d\'une trotteuse neuve avant le chassage ?',
+    options: [
+      'On le chauffe à la flamme d\'alcool pour le dilater',
+      'On passe un équarrissoir par le dessous à 90° jusqu\'à mi-hauteur maximum pour ébavurer',
+      'On l\'huile abondamment à la Moebius 9010',
+      'On l\'élargit sur toute sa longueur avec une pointe d\'acier',
+    ],
+    correct: 1,
+    explanation:
+      'L\'équarrissoir est introduit par le dessous à 90° jusqu\'à mi-hauteur maximum pour chanfreiner l\'entrée et ébavurer les bavures d\'estampage, sans ovaliser ni détendre le reste du tube de canon.',
+  },
+  {
+    id: 8,
+    stepRef: 10,
+    question: 'Quelle position des aiguilles est recommandée avant d\'extraire la tige pour emboîter le mouvement ?',
+    options: [
+      'Groupées à 15h15 (vers la couronne / 3h)',
+      'Opposées à 6h00 (une en haut, une en bas)',
+      'Superposées à 12h00 pile',
+      'Aucune importance',
+    ],
+    correct: 0,
+    explanation:
+      'En groupant les aiguilles à 15h15 vers la couronne, elles pointent vers le côté le plus accessible et sont totalement dégagées des rebords du posage et de la gorge de boîte lors des manipulations.',
+  },
+  {
+    id: 9,
+    stepRef: 10,
+    question: 'Quel est le risque majeur si l\'on presse trop fort sur le plot de tirette avec le tournevis ?',
+    options: [
+      'On plie la masse oscillante',
+      'On fait déboîter la bascule de tiret, obligeant à redémonter le cadran et les aiguilles',
+      'On détend le ressort de barillet',
+      'On décolle le saphir de boîte',
+    ],
+    correct: 1,
+    explanation:
+      'Un enfoncement excessif du plot de tirette fait sauter la bascule hors de sa gorge de pignon coulant. La remise en place exige la dépose complète des aiguilles, du cadran et de la plaque de maintien de calendrier.',
+  },
+  {
+    id: 10,
+    stepRef: 12,
+    question: 'Comment forme-t-on le cône d\'amorce de filet à 90° sur une tige de remontoir coupée ?',
+    options: [
+      'À la meuleuse d\'établi à sec',
+      'Au mandrin en laiton incliné à 45° roulé d\'avant en arrière sur la pierre d\'Arkansas',
+      'À la pince universelle',
+      'Par martelage sur un tas d\'acier',
+    ],
+    correct: 1,
+    explanation:
+      'La tige est pincée dans un mandrin en laiton, inclinée à 45° sur la pierre d\'Arkansas fine et roulée entre le pouce et l\'index : la rotation combinée à l\'angle de 45° génère un cône parfait à 90° sans bavure.',
   },
   {
     id: 11,
-    stepRef: 7,
-    question: 'À quoi sert le test de condensation (plaque 40°C + goutte à 18°C) ?',
+    stepRef: 12,
+    question: 'Quel frein-filet est EXCLUSIVEMENT prescrit pour visser la couronne sur la tige de remontoir ?',
     options: [
-      'À mesurer la dureté du traitement anti-reflet de la glace',
-      'À tester la résistance mécanique de la glace aux chocs thermiques',
-      "À détecter l'air humide emprisonné lors de l'emboîtage (buée au moindre froid)",
-      'À valider la colle du joint de glace',
+      'Loctite 270 (verte, forte résistance)',
+      'Loctite 243 (bleue, résistance moyenne)',
+      'Loctite 222 (violette, frein faible démontable à froid)',
+      'Colle cyanoacrylate rapide',
     ],
     correct: 2,
     explanation:
-      "Une montre peut passer le test de pression d'air tout en contenant de l'air humide emprisonné à l'emboîtage. Le choc thermique révèle toute buée sur la face interne : aucune trace admissible sous 60 secondes.",
+      'Seule la Loctite 222 violette (faible résistance, démontable à froid) est autorisée. Les 243 et 270 soudent la tige dans la couronne et provoquent la rupture nette de la tige lors des futurs services d\'entretien.',
   },
   {
     id: 12,
-    stepRef: 5,
-    question: "Comment prenez-vous une micro-vis de bride sans risquer de la perdre dans le mouvement ?",
+    stepRef: 13,
+    question: 'Comment doit être orienté le fond de boîte lors de la fermeture à la potence sur calibre ETA ?',
     options: [
-      'Avec des brucelles à pointe courbe, doigt ferme',
-      'Avec un aspirateur de paillasse réglé au minimum',
-      "Une tête d'épingle de Rodico frais sur la panne du tournevis",
-      'En mouillant la vis d\'huile 9010 pour qu\'elle adhère',
+      'Logo ETA vers 6h (en bas), passage tige à droite',
+      'Logo ETA vers 12h (en haut), passage tige à gauche (vers la couronne)',
+      'Peu importe l\'orientation pourvu que le fond soit serré',
+      'Numéro de série orienté vers 3h',
     ],
+    correct: 1,
+    explanation:
+      'Dans les manufactures suisses, l\'orientation du fond respecte une norme stricte : logo ou signature fabricant orientée vers 12h (haut) et dégagement de tige orienté vers la gauche (position 9h / axe de couronne).',
+  },
+  {
+    id: 13,
+    stepRef: 7,
+    question: 'Quelle est la garde minimale G1 (cadran ↔ aiguille des heures) selon la norme NIHS 91-10 ?',
+    options: ['0.05 mm', '0.10 mm', '0.20 mm au-dessus des index', '0.60 mm'],
     correct: 2,
     explanation:
-      "L'astuce du maître : une tête d'épingle de Rodico frais sur la panne. La vis y adhère parfaitement et se guide dans le trou taraudé sans risque de chute dans le balancier-spiral.",
+      'La garde G1 doit être au minimum de 0.20 mm au-dessus du relief le plus haut du cadran (index appliqués). Viennent ensuite G2 (≥ 0.15 mm), G3 (≥ 0.15 mm) et G4 (≥ 0.25-0.30 mm sous la glace).',
+  },
+  {
+    id: 14,
+    stepRef: 11,
+    question: 'Pourquoi interdit-on l\'usage de la soufflette d\'air comprimé directement sur un cadran muni de ses aiguilles ?',
+    options: [
+      'Parce que le souffle fait tourner le balancier trop vite',
+      'Parce que le flux d\'air projette des micro-fibres qui se coincent sous les canons d\'aiguilles',
+      'Parce que l\'air refroidit l\'émail',
+      'Parce que le souffle détend le ressort de tirette',
+    ],
+    correct: 1,
+    explanation:
+      'Le flux d\'air direct projette les particules ambiantes sous les canons des aiguilles et entre le disque de date et la platine, où elles restent piégées et deviennent impossibles à déloger sans tout démonter.',
+  },
+  {
+    id: 15,
+    stepRef: 13,
+    question: 'Avec quel lubrifiant traite-t-on le joint torique du fond de boîte avant fermeture ?',
+    options: [
+      'Huile fine Moebius 9010',
+      'Graisse perfluorée Fomblin UT18 (ou boîte silicone Moebius)',
+      'Graisse graphite haute température',
+      'Aucun, le joint torique se monte toujours strictement à sec',
+    ],
+    correct: 1,
+    explanation:
+      'Les joints toriques (O-Ring) de fond se lubrifient au Fomblin UT18 ou en boîte silicone pour éviter le pincement et l\'écrasement rotatif au vissage. En revanche, le joint de glace Hytrel se monte STRICTEMENT À SEC.',
   },
 ];
 
 // =========================================================================
-// 4. FLASHCARDS DE NORMES (FICHES MÉMO)
+// 4. FLASHCARDS DE NORMES D'ÉTABLI (FICHES MÉMO)
 // =========================================================================
 
 export interface Flashcard {
@@ -371,24 +539,25 @@ export interface Flashcard {
 }
 
 export const FLASHCARDS: Flashcard[] = [
-  { id: 1, tag: 'Gardes NIHS', front: 'G1 — Cadran ↔ Aiguille des heures', back: '≥ 0.20 mm au-dessus des index appliqués (garde index).' },
+  { id: 1, tag: 'Gardes NIHS', front: 'G1 — Cadran ↔ Aiguille des heures', back: '≥ 0.20 mm au-dessus des index appliqués les plus hauts.' },
   { id: 2, tag: 'Gardes NIHS', front: 'G2 — Heures ↔ Minutes', back: '≥ 0.15 mm — parallélisme contrôlé sur 12 h à la loupe 10x.' },
-  { id: 3, tag: 'Gardes NIHS', front: 'G3 — Minutes ↔ Trotteuse', back: '≥ 0.15 mm — liberté de rotation sur le canon des minutes.' },
-  { id: 4, tag: 'Gardes NIHS', front: 'G4 — Trotteuse ↔ Glace saphir', back: '≥ 0.25 à 0.30 mm — garde glace, contrôlée au profile-projecteur.' },
-  { id: 5, tag: 'Couples', front: 'Vis de pied de cadran', back: '1.2 cNm maximum — serrage alternatif après centrage du guichet.' },
-  { id: 6, tag: 'Couples', front: 'Vis de bride d\'emboîtage', back: '1.8 à 2.2 cNm — serrage EN CROIX, jamais en séquence circulaire.' },
-  { id: 7, tag: 'Aiguillage', front: 'Saut de date conforme', back: 'Saut franc entre 23h55 et 00h05 — réglage par position mise à l\'heure.' },
-  { id: 8, tag: 'Joints', front: 'Joint de glace Hytrel', back: 'Montage STRICTEMENT À SEC — étanchéité par écrasement géométrique.' },
-  { id: 9, tag: 'Joints', front: 'Joints toriques fond & couronne', back: 'Graisés au Fomblin UT18 — anti-pincement lors du vissage.' },
-  { id: 10, tag: 'Chimie', front: 'Loctite 222', back: 'Violette DÉMONTABLE, uniquement tige ↔ couronne. Jamais 243 ni 270.' },
-  { id: 11, tag: 'Protocoles', front: 'Lumière rasante', back: '45° sur fond sombre — chaque micro-fibre projette une ombre nette.' },
-  { id: 12, tag: 'Protocoles', front: 'Cycle Proofmaster', back: 'Dépression -0.5 bar AVANT surpression +5 bar, puis condensation 40°C / goutte 18°C.' },
-  { id: 13, tag: 'Aiguillage', front: 'Contrôle des aiguilles', back: 'Loupe 10x sur 12 heures complètes — zéro frottement toléré (NIHS 91-10).' },
-  { id: 14, tag: 'Tige', front: 'Chanfrein du filet', back: "Pierre d'Arkansas à 45° après coupe — sinon le filet refoule le taraudage." },
+  { id: 3, tag: 'Gardes NIHS', front: 'G3 — Minutes ↔ Trotteuse', back: '≥ 0.15 mm — liberté sur toute la circonférence de rotation.' },
+  { id: 4, tag: 'Gardes NIHS', front: 'G4 — Trotteuse ↔ Glace saphir', back: '≥ 0.25 à 0.30 mm — garde glace contrôlée sous lumière rasante.' },
+  { id: 5, tag: 'Aiguillage', front: 'Doigt de limitation sous la seconde', back: 'Vis moletée en appui franc sous la pierre : absorbe la force de chassage pour éviter de casser le pivot.' },
+  { id: 6, tag: 'Aiguillage', front: 'Position des aiguilles au retrait de tige', back: '15h15 (vers 3h / couronne) : dégage les aiguilles des parois de posage et de carrure.' },
+  { id: 7, tag: 'Aiguillage', front: 'Indexation des minutes (NIHS)', back: 'Tolérance : -2 à +2 min (minutes entre 11h58 et 12h02 quand les heures sont à 12h00 pile).' },
+  { id: 8, tag: 'Aiguillage', front: 'Saut de date conforme', back: 'Saut franc net entre 23h55 et 00h05 (± 5 min).' },
+  { id: 9, tag: 'Hygiène', front: 'Propreté du cadran : Rodico ou Martre ?', back: 'ZÉRO Rodico sur cadran ! Dépoussiérage UNIQUEMENT à la brosse marron en poil de martre.' },
+  { id: 10, tag: 'Tige', front: 'Cône d\'amorce de filet sur Arkansas', back: 'Mandrin laiton à 45° roulé entre les doigts : crée un cône parfait à 90° sans bavure.' },
+  { id: 11, tag: 'Chimie', front: 'Frein-filet tige ↔ couronne', back: 'Loctite 222 (violette démontable à froid). Jamais de 243 ni de 270.' },
+  { id: 12, tag: 'Joints', front: 'Joint de glace Hytrel (L-Ring)', back: 'Montage STRICTEMENT À SEC. Aucune graisse ni huile.' },
+  { id: 13, tag: 'Joints', front: 'Joint torique de fond (O-Ring)', back: 'Lubrifié au Fomblin UT18 en boîte silicone pour prévenir tout pincement au vissage.' },
+  { id: 14, tag: 'Emboîtage', front: 'Orientation du fond à la potence', back: 'Logo ETA orienté vers 12h (haut), passage de tige orienté vers la gauche (9h/couronne).' },
+  { id: 15, tag: 'Automatisme', front: 'Dépose module automatique ETA 2824', back: 'Dévisser les 2 vis noires au tournevis 1.20 mm pour préserver les billes de roulement du rotor.' },
 ];
 
 // =========================================================================
-// 5. PRODUITS & OUTILS D'ÉTABLI (LEXIQUE)
+// 5. PRODUITS & OUTILS D'ÉTABLI (LEXIQUE OFFICIEL)
 // =========================================================================
 
 export interface BenchProduct {
@@ -404,28 +573,28 @@ export const BENCH_PRODUCTS: BenchProduct[] = [
     code: 'LOCTITE 222',
     name: 'Frein-Filet Faible (Violet)',
     role: 'Tige ↔ couronne',
-    detail: 'Exclusivement pour la tige dans la couronne. Démontage facile à froid sans chalumeau.',
+    detail: 'Exclusivement réservé à la fixation de la tige dans la couronne. Démontage facile à froid.',
     tone: 'violet',
   },
   {
     code: 'FOMBLIN UT18',
-    name: 'Graisse Perfluorée',
-    role: 'Joints toriques',
-    detail: 'Joints toriques de fond vissé et de tube de couronne. Inerte chimiquement, ne sèche jamais.',
+    name: 'Graisse Perfluorée Neutre',
+    role: 'Joints toriques (O-Ring)',
+    detail: 'Joints de fond et de tube de couronne. Inerte chimiquement, protège contre l\'écrasement et ne sèche jamais.',
     tone: 'emerald',
   },
   {
     code: 'MOEBIUS 9504',
-    name: 'Graisse Contact Métal',
-    role: 'Tirette & tige',
-    detail: 'Gorge de tirette, encoches de tige et dents de pignon coulant lors du remontage final.',
+    name: 'Graisse Contact Métal/Métal',
+    role: 'Tirette & pignon coulant',
+    detail: 'Gorge de tirette, crans de tige et dents de pignon coulant lors du remontage final de la boîte.',
     tone: 'amber',
   },
   {
-    code: 'BERGEON 6938',
-    name: 'Protecteur de Cadran',
-    role: 'Chassage des aiguilles',
-    detail: 'Feuille Mylar ultra-fine intercalée sous les aiguilles pour éliminer tout risque de rayure.',
+    code: 'POIL DE MARTRE',
+    name: 'Brosse Marron Ultra-Douce',
+    role: 'Dépoussiérage cadran',
+    detail: 'La seule méthode agréée pour balayer un cadran habillé sans laisser de voile gras ni rayer les laques.',
     tone: 'sky',
   },
 ];
@@ -442,8 +611,19 @@ export interface Hotspot {
 }
 
 export const SCHEMA_VIEWS: Record<SchemaType, { w: number; h: number }> = {
+  workshop_kit: { w: 500, h: 280 },
+  auto_module_removal: { w: 500, h: 260 },
+  dial_feet_support: { w: 500, h: 260 },
   dial_feet: { w: 500, h: 240 },
+  limitation_finger: { w: 500, h: 280 },
+  date_jump_sync: { w: 500, h: 260 },
+  hours_minutes_fitting: { w: 500, h: 280 },
   hands_clearance: { w: 500, h: 280 },
+  seconds_reaming: { w: 500, h: 280 },
+  safe_stem_release: { w: 500, h: 260 },
+  cleanliness_protocol: { w: 500, h: 260 },
+  arkansas_cone: { w: 500, h: 280 },
+  casing_final: { w: 500, h: 280 },
   dial_protection: { w: 500, h: 280 },
   grazing_beam: { w: 400, h: 200 },
   gaskets_casing: { w: 500, h: 240 },
@@ -453,72 +633,144 @@ export const SCHEMA_VIEWS: Record<SchemaType, { w: number; h: number }> = {
 };
 
 export const SCHEMA_HOTSPOTS: Record<SchemaType, Hotspot[]> = {
+  workshop_kit: [
+    { x: 95, y: 90, title: 'Posage Universel', text: 'Support réglable avec bague de réduction pour caler parfaitement la platine sans toucher le balancier.' },
+    { x: 250, y: 90, title: 'Doigt de limitation', text: 'Porte-pièce muni de sa vis moletée inférieure : soutient le rubis de seconde centrale lors du chassage.' },
+    { x: 405, y: 90, title: 'Posage gigogne + cabron', text: 'Assure un plan d\'appui doux qui protège la laque du cadran lors du bridage des targettes.' },
+    { x: 75, y: 205, title: 'Tournevis rouge 1.20 mm', text: 'Calibre standard suisse pour les vis du module automatique et les vis de brides d\'emboîtage.' },
+    { x: 190, y: 205, title: 'Brucelles en laiton', text: 'Mors doux en laiton : élimine tout risque de rayure sur la platine perlée ou bleuie.' },
+    { x: 310, y: 205, title: 'Pierre d\'Arkansas & Couteau', text: 'Grain d\'Arkansas pour tailler le cône à 90° et lame d\'ouvre-boîte pour ébavurer les premiers filets.' },
+    { x: 430, y: 205, title: 'Brosse poil de martre', text: 'Brosse marron exclusive pour le cadran : élimine les poussières sans aucun risque de trace grasse.' },
+  ],
+  auto_module_removal: [
+    { x: 145, y: 107, title: 'Vis noire n°1', text: 'Vis bleuie/brillant noir du bâti automatique. Dévissage au tournevis rouge 1.20 mm.' },
+    { x: 215, y: 107, title: 'Vis noire n°2', text: 'Deuxième point d\'ancrage du module. Desserrer alternativement sans rayer le pont.' },
+    { x: 180, y: 140, title: 'Rotor & Roulement', text: 'La masse oscillante et son bâti se retirent d\'un bloc pour protéger les micro-billes.' },
+    { x: 385, y: 135, title: 'Règle d\'atelier ETA', text: 'Ne jamais chasser les aiguilles avec le module monté : la pression axiale détruirait le roulement.' },
+  ],
+  dial_feet_support: [
+    { x: 180, y: 185, title: 'Cabron de peau', text: 'Protection impérative sur le posage gigogne pour accueillir la face visible du cadran.' },
+    { x: 120, y: 115, title: 'Interdiction rubis', text: 'JAMAIS d\'appui direct sur les pierres synthétiques : risque d\'expulsion d\'huile ou de casse.' },
+    { x: 180, y: 93, title: 'Appui laiton seul', text: 'La pression de maintien se fait exclusivement sur le laiton métallique des ponts.' },
+    { x: 288, y: 133, title: 'Brides cadran', text: 'Poussées en butée franche avec les brucelles en laiton (jamais de tournevis blessant).' },
+  ],
   dial_feet: [
-    { x: 116, y: 85, title: 'Pieds en cuivre', text: "Deux pieds cylindriques brasés au dos du cadran. Leur rectitude est contrôlée à la loupe 4x : un pied faussé crée une tension asymétrique (voilage, frottement du disque dateur)." },
-    { x: 137, y: 108, title: 'Vis oblique 45°', text: 'Serrage alternatif des deux pieds, couple 1.2 cNm maximum. Au-delà : cisaillement du pied ou saut d\'émail.' },
-    { x: 370, y: 110, title: 'Verrou excentrique', text: 'Alternative professionnelle : le verrou pince le pied sans entaille par une simple rotation d\'un quart de tour.' },
-    { x: 250, y: 219, title: 'Règle maîtresse', text: 'Ne JAMAIS serrer le premier pied à fond sans avoir engagé le second — c\'est la cause n°1 du voilage cadran.' },
+    { x: 116, y: 85, title: 'Pieds en cuivre', text: 'Deux pieds cylindriques brasés au dos du cadran. Rectitude contrôlée à l\'équerre de précision.' },
+    { x: 137, y: 108, title: 'Vis oblique 45°', text: 'Serrage alternatif des deux pieds, couple 1.2 cNm maximum pour éviter de cisailler le pied.' },
+    { x: 370, y: 110, title: 'Verrou excentrique', text: 'Pince le pied sans entaille par une simple rotation d\'un quart de tour.' },
+    { x: 250, y: 219, title: 'Règle maîtresse', text: 'Ne JAMAIS bloquer le 1er pied à fond sans avoir approché le second (risque de voilage).' },
+  ],
+  limitation_finger: [
+    { x: 248, y: 13, title: 'Force axiale F', text: 'Pression de chassage verticale exercée par le posoir lors de l\'enfoncement de la trotteuse.' },
+    { x: 248, y: 107, title: 'Pierre de seconde', text: 'Rubis de contre-pivot recevant l\'extrémité du pivot traversant la chaussée.' },
+    { x: 248, y: 175, title: 'Doigt de limitation', text: 'Vis de soutien moletée amenée en contact franc sous le contre-pivot : absorbe l\'effort.' },
+    { x: 248, y: 235, title: 'Molette de réglage', text: 'Moletée pour un ajustement au doigt sans contraindre ni soulever la platine.' },
+    { x: 98, y: 150, title: 'Sécurité absolue', text: 'Empêche le déchassage de la pierre du pont ou la rupture nette du pivot de rouage.' },
+  ],
+  date_jump_sync: [
+    { x: 155, y: 68, title: 'Saut franc 00h00', text: 'Déclenchement instantané du cliquet de date à minuit pile.' },
+    { x: 210, y: 140, title: 'Guichet de date', text: 'Disque dateur sautant entre 23h55 et 00h05 (tolérance officielle suisse ± 5 min).' },
+    { x: 110, y: 83, title: 'Sens antihoraire', text: 'Rotation lente de la tige en position 3 en ralentissant à l\'approche de minuit.' },
+    { x: 375, y: 140, title: 'Arrêt immédiat', text: 'Stopper net dès le « clic » avant de chasser l\'aiguille des heures à 12h00 pile.' },
+  ],
+  hours_minutes_fitting: [
+    { x: 75, y: 160, title: 'Aiguille des heures', text: 'Chassée à 12h00 pile à fleur de la roue des heures. Parallélisme vérifié sur 360°.' },
+    { x: 70, y: 138, title: 'Aiguille des minutes', text: 'Chassée à 12h00 pile à fleur de la chaussée sans contact avec les index.' },
+    { x: 95, y: 148, title: 'Garde G2 ≥ 0.15 mm', text: 'Espace franc entre le plan des heures et celui des minutes pour éviter tout frottement.' },
+    { x: 377, y: 155, title: 'Indexation ±2 min', text: 'Tolérance stricte : minutes entre 11h58 et 12h02 quand les heures sont à midi pile.' },
   ],
   hands_clearance: [
-    { x: 185, y: 159, title: 'Aiguille des Heures', text: 'Posée en premier, montée à force calibrée sur le canon des heures. Son plan doit rester parallèle au cadran sur 12 h complets.' },
-    { x: 230, y: 118, title: 'Aiguille des Minutes', text: 'Plan intermédiaire. La garde G2 avec les heures doit rester ≥ 0.15 mm même en superposition à 12h00.' },
-    { x: 255, y: 80, title: 'Trotteuse', text: 'Plan supérieur. Sa liberté sur le canon (G3 ≥ 0.15 mm) garantit un démarrage franc au premier appoint.' },
-    { x: 140, y: 138, title: 'G2 ≥ 0.15 mm', text: 'Parallélisme heures/minutes : tolérance NIHS 91-10, contrôlée à la loupe 10x à 12h00, 3h00, 6h00 et 9h00.' },
-    { x: 220, y: 187, title: 'G1 ≥ 0.20 mm', text: 'Garde index : distance minimale entre le plan des heures et les index appliqués (hauteur typique 0.50 mm).' },
-    { x: 140, y: 95, title: 'G3 ≥ 0.15 mm', text: 'Liberté du canon : si G3 est négatif, la trotteuse « plonge » sur les minutes et freine l\'échappement.' },
-    { x: 300, y: 62, title: 'G4 ≥ 0.30 mm', text: 'Garde glace : entre la trotteuse et la face interne du saphir. Trop faible, toute flexion de la glace provoque un arrêt.' },
-    { x: 375, y: 202, title: 'Index appliqué', text: 'Hauteur 0.50 mm typique : c\'est lui qui fixe la cote G1. Un index tordu devient un point dur éliminatoire.' },
+    { x: 185, y: 159, title: 'Aiguille des Heures', text: 'Posée en premier, montée à force calibrée sur le canon des heures.' },
+    { x: 230, y: 118, title: 'Aiguille des Minutes', text: 'Plan intermédiaire. Garde G2 avec les heures ≥ 0.15 mm sur 12 h complètes.' },
+    { x: 255, y: 80, title: 'Trotteuse', text: 'Plan supérieur. Garde G3 ≥ 0.15 mm et garde glace G4 ≥ 0.30 mm.' },
+    { x: 140, y: 138, title: 'G2 ≥ 0.15 mm', text: 'Parallélisme contrôlé à la loupe 10x à 12h, 3h, 6h et 9h.' },
+    { x: 220, y: 187, title: 'G1 ≥ 0.20 mm', text: 'Garde index : distance minimale entre l\'aiguille des heures et les index appliqués.' },
+    { x: 140, y: 95, title: 'G3 ≥ 0.15 mm', text: 'Liberté du canon de trotteuse au-dessus du canon des minutes.' },
+    { x: 300, y: 62, title: 'G4 ≥ 0.30 mm', text: 'Garde glace : distance de sécurité sous la face intérieure du saphir.' },
+  ],
+  seconds_reaming: [
+    { x: 135, y: 110, title: 'Canon de trotteuse', text: 'Alésage tubulaire recevant le pivot de seconde centrale.' },
+    { x: 135, y: 150, title: 'Équarrissage 90°', text: 'Introduit par le dessous à 90° jusqu\'à mi-hauteur max pour ébavurer l\'entrée.' },
+    { x: 365, y: 80, title: 'Garde glace G4 ≥ 0.30 mm', text: 'Distance de sécurité sous le saphir pour absorber la flèche de déformation sous pression.' },
+    { x: 365, y: 120, title: 'Garde G3 ≥ 0.15 mm', text: 'Empêche la trotteuse de toucher le plan des minutes.' },
+    { x: 325, y: 100, title: 'Contrepoids', text: 'Contrôle horizontal du contrepoids : ne doit jamais plonger en avant.' },
+  ],
+  safe_stem_release: [
+    { x: 145, y: 140, title: 'Aiguilles à 15h15', text: 'Groupées vers 3h (couronne) : aucun risque de contact avec les bords de boîte.' },
+    { x: 315, y: 103, title: 'Plot de tirette', text: 'Pression douce et mesurée avec la panne du tournevis rouge 1.20 mm.' },
+    { x: 400, y: 103, title: 'Traction axiale', text: 'Extraction de la tige en ligne droite sans mouvement oscillant.' },
+    { x: 372, y: 175, title: 'Piège de la bascule', text: 'Ne jamais forcer : un enfoncement excessif fait sauter la bascule hors du tiret !' },
+  ],
+  cleanliness_protocol: [
+    { x: 135, y: 100, title: 'ZÉRO Rodico s/ cadran', text: 'Interdiction absolue : laisse des micro-dépôts gras irréversibles sur vernis et laques.' },
+    { x: 365, y: 100, title: 'Brosse poil de martre', text: 'Brosse marron dédiée au cadran : balaie délicatement les particules sans trace.' },
+    { x: 135, y: 190, title: 'Pas de soufflette directe', text: 'La soufflette projette les fibres sous les canons d\'aiguilles et sous le disque dateur.' },
+    { x: 365, y: 190, title: 'Microfibre & Faisceau 45°', text: 'Inspection de la glace et de la boîte sous éclairage rasant à 45°.' },
+  ],
+  arkansas_cone: [
+    { x: 170, y: 190, title: 'Pierre d\'Arkansas', text: 'Support abrasif fin pour rectifier l\'acier sans l\'échauffer ni le bleuir.' },
+    { x: 160, y: 125, title: 'Mandrin laiton à 45°', text: 'Tenu à 45° et roulé d\'avant en arrière pour usiner un cône à 90° sur le premier filet.' },
+    { x: 210, y: 110, title: 'Va-et-vient régulier', text: 'Mouvement fluide entre les doigts pour une concentricité parfaite du cône.' },
+    { x: 380, y: 120, title: 'Ébavurage ouvre-boîte', text: 'Passer la lame de couteau d\'horloger dans le filet pour éliminer le morfil.' },
+    { x: 380, y: 200, title: 'Loctite 222 violette', text: 'Frein-filet faible démontable à froid. Jamais de 243 (bleue) ni de 270 (verte) !' },
+  ],
+  casing_final: [
+    { x: 140, y: 150, title: 'Cercle d\'emboîtage', text: 'Bague de centrage maintenant le calibre concentrique au tube de boîte.' },
+    { x: 92, y: 125, title: 'Brides & vis de boîte', text: '2 vis de boîte serrées en croix à 2.0 cNm dans la gorge de carrure.' },
+    { x: 367, y: 105, title: 'Logo ETA à 12h', text: 'Orientation officielle suisse : logo manufacture positionné en haut à 12h.' },
+    { x: 317, y: 140, title: 'Passage tige à gauche', text: 'Dégagement d\'axe de couronne orienté vers la gauche (position 9h).' },
+    { x: 367, y: 205, title: 'Fermeture potence', text: 'Pression axiale progressive sur joint siliconé au Fomblin UT18 sans voilage.' },
   ],
   dial_protection: [
-    { x: 150, y: 130, title: 'Film Mylar', text: 'Le film protège-cadran s\'interpose systématiquement entre aiguilles et cadran durant le chassage. Il se lève par un coin, jamais par le centre.' },
-    { x: 110, y: 95, title: 'Cadran émaillé', text: 'Surface irréversible : une micro-rayure sur une laque ou un émail ne se rattrape pas. Le cadran se manipule aux doigts gantés, bord périphérique uniquement.' },
-    { x: 370, y: 62, title: 'Pince Presto N°1', text: 'Dépose des aiguilles sans contact avec le cadran : les mors pressent le moyeu, jamais la fente ni laface supérieure.' },
-    { x: 370, y: 97, title: 'Posoir Delrin', text: 'Chassage perpendiculaire avec embout Téflon/Delrin : aucun marquage de la laque, répartition uniforme de la force.' },
-    { x: 370, y: 150, title: 'Rodico & Sureau', text: 'Élimination des micro-fibres par tamponnement doux, vérifié à la loupe 10x. Le sureau « avale » la poussière sans la déplacer.' },
-    { x: 250, y: 257, title: 'Interdiction absolue', text: 'JAMAIS de brucelles métalliques en contact du cadran : toujours interposer le film protecteur.' },
+    { x: 150, y: 130, title: 'Film Mylar', text: 'Protecteur Bergeon 6938 interposé systématiquement sous les aiguilles au chassage.' },
+    { x: 110, y: 95, title: 'Cadran émaillé', text: 'Surface sensible : manipulation par la tranche uniquement avec doigtiers propres.' },
+    { x: 370, y: 62, title: 'Pince Presto N°1', text: 'Dépose axiale des aiguilles sans frottement sur le cadran.' },
+    { x: 370, y: 97, title: 'Posoir Delrin', text: 'Tasseaux en matière synthétique douce pour ne pas rayer le vernis des aiguilles.' },
+    { x: 370, y: 150, title: 'Moelle de sureau', text: 'Nettoyage des pointes de brucelles et aiguilles sans dépôt de résidu.' },
+    { x: 250, y: 257, title: 'Consigne Mylar', text: 'Toujours retirer le film en le faisant glisser parallèlement au cadran.' },
   ],
   grazing_beam: [
-    { x: 70, y: 50, title: 'Lampe à 45°', text: "Lampe d'établi articulée inclinée à 45° : le faisceau rasant transforme chaque relief en relief d'ombre visible." },
-    { x: 240, y: 133, title: 'Micro-fibre révélée', text: 'En zénithal, invisible ; en rasant, la fibre diffuse la lumière et projette une ombre portée nette : elle devient une étoile dans la nuit.' },
-    { x: 302, y: 148, title: 'Ombre portée', text: 'La longueur de l\'ombre indique la hauteur de la particule : plus l\'ombre est longue, plus le corps s\'élève au-dessus du vernis.' },
-    { x: 240, y: 40, title: 'Regard loupe 4x', text: 'L\'œil regarde à contre-faisceau, légèrement à l\'écart de l\'axe du spot, pour capter la lumière diffusée.' },
+    { x: 70, y: 50, title: 'Lampe à 45°', text: 'Faisceau rasant sur fond sombre révélant les micro-poussières invisibles en zénithal.' },
+    { x: 240, y: 133, title: 'Micro-fibre révélée', text: 'Diffuse la lumière et projette une ombre portée nette comme une étoile dans la nuit.' },
+    { x: 302, y: 148, title: 'Ombre portée', text: 'Permet de localiser immédiatement la hauteur et la position de la poussière.' },
+    { x: 240, y: 40, title: 'Regard loupe 4x', text: 'Inspection méthodique secteur par secteur avant le passage en boîte.' },
   ],
   gaskets_casing: [
-    { x: 170, y: 70, title: 'Glace saphir', text: 'Durcie 2000 Vickers, elle repose sur le joint de glace via la lunette. Contrôler la face interne en lumière rasante AVANT l\'insertion du mouvement.' },
-    { x: 130, y: 60, title: 'Joint de glace Hytrel (L-Ring)', text: 'Profil en L qui s\'écrase à l\'emmanchement. Montage STRICTEMENT À SEC : la graisse détruirait la friction et la glace sauterait sous pression.' },
-    { x: 120, y: 170, title: 'Montage à sec', text: 'L\'Hytrel assure l\'étanchéité par écrasement contrôlé. Aucune graisse silicone, aucune huile.' },
-    { x: 400, y: 105, title: 'O-Ring + Fomblin', text: 'Les joints toriques de fond et de couronne, eux, se lubrifient au Fomblin UT18 : le film gras empêche le pincement au vissage.' },
-    { x: 355, y: 170, title: 'Lubrification obligatoire', text: 'Fomblin UT18 ou Moebius 8513 en boîte silicone — une noisette suffit, l\'excès migre sur le mouvement.' },
+    { x: 170, y: 70, title: 'Glace saphir', text: 'Contrôler la face intérieure en lumière rasante avant l\'insertion du calibre.' },
+    { x: 130, y: 60, title: 'Joint Hytrel (L-Ring)', text: 'Joint de glace : montage STRICTEMENT À SEC. Aucune graisse silicone !' },
+    { x: 120, y: 170, title: 'Montage à sec', text: 'L\'Hytrel assure l\'étanchéité par écrasement. La graisse détruit la tenue.' },
+    { x: 400, y: 105, title: 'O-Ring + Fomblin', text: 'Les joints toriques de fond et de tige se lubrifient à la graisse perfluorée Fomblin.' },
+    { x: 355, y: 170, title: 'Boîte silicone', text: 'Boîte à coussinets Bergeon pour une imprégnation fine et homogène sans excès.' },
   ],
   case_assembly: [
-    { x: 250, y: 56, title: 'Glace & joint Hytrel', text: 'Ensemble posé via potence à chasser les verres. Vérifier l\'absence de trace sur la face interne avant fermeture.' },
-    { x: 102, y: 96, title: 'Bride & vis', text: 'Les brides de boîte (casing clamps) verrouillent le mouvement dans la gorge de carrure. Serrage en croix, 1.8 à 2.2 cNm.' },
-    { x: 250, y: 142, title: 'Mouvement habillé', text: 'Calibre + cadran + aiguilles déposés sur un porte-pièce DELRIN ÉVIDÉ : jamais d\'appui sur le balancier ni sur les aiguilles.' },
-    { x: 350, y: 125, title: 'Tube de boîte', text: 'Le tube guide la tige de remontoir. Un calibre en biais (bride trop serrée) fait frotter la tige dans le tube et fausse le remontage.' },
-    { x: 455, y: 140, title: 'Couronne & joint torique', text: 'La couronne plaque contre le tube avec un jeu ≤ 0.05 mm ; le joint torique graissé assure l\'étanchéité dynamique du remontoir.' },
-    { x: 250, y: 233, title: 'Fond vissé & joint', text: 'Fond vissé sur joint torique Fomblin : dernier rempart contre l\'eau. Couple de vissage franc, sans forcer.' },
+    { x: 250, y: 56, title: 'Glace & joint Hytrel', text: 'Posés à la potence avant montage du mouvement.' },
+    { x: 102, y: 96, title: 'Bride & vis', text: 'Brides d\'emboîtage serrées en croix à 2.0 cNm dans la gorge de carrure.' },
+    { x: 250, y: 142, title: 'Mouvement habillé', text: 'Calibre reposant sur un porte-pièce évidé sans contrainte sur le rouage.' },
+    { x: 350, y: 125, title: 'Tube de boîte', text: 'Alignement rigoureux avec le pignon coulant pour éviter tout frottement de tige.' },
+    { x: 455, y: 140, title: 'Couronne & joint', text: 'Jeu sous couronne contrôlé à 0.05 mm en position remontage neutre.' },
+    { x: 250, y: 233, title: 'Fond vissé & joint', text: 'Dernier rempart d\'étanchéité serré au couple manufacturier prescrit.' },
   ],
   stem_cutting: [
-    { x: 77, y: 90, title: 'Carré', text: 'Extrémité d\'entraînement du rochet. Aucune coupe dans cette zone : le carré définit la position de remontage.' },
-    { x: 125, y: 90, title: 'Gorge', text: 'Repli du pignon coulant : elle accueille le levier de tirette. La graisse Moebius 9504 s\'applique ici au remontage.' },
-    { x: 245, y: 90, title: 'Filetage S0.90 / S1.20', text: 'Filetage mâle de fixation de la couronne. L\'amorce doit être chanfreinée à 45° sur pierre d\'Arkansas après coupe.' },
-    { x: 260, y: 42, title: 'Point de coupe L', text: "Règle d'or : couper TOUJOURS 0.20 mm de moins que la cote mesurée, puis ajuster à la lime. Une tige courte est perdue !" },
-    { x: 302, y: 100, title: 'Chute à couper', text: 'Coupe franche à la pince carbure ou au bocfil 3/0 — jamais à la meule (échauffement, recuit du filet).' },
-    { x: 365, y: 90, title: 'Taraudage couronne (A)', text: 'Profondeur utile du taraudage de la couronne : le filet doit s\'engager complet sans buter au fond.' },
-    { x: 365, y: 185, title: 'Loctite 222', text: 'Une micro-touche de Loctite 222 violette (démontable) sur l\'amorce de filet. JAMAIS de 243 ni de 270.' },
+    { x: 77, y: 90, title: 'Carré de remontoir', text: 'Zone motrice d\'entraînement : aucune coupe dans cette partie.' },
+    { x: 125, y: 90, title: 'Gorge de tirette', text: 'Accueille le levier de tirette lubrifié à la graisse Moebius 9504.' },
+    { x: 245, y: 90, title: 'Filetage S0.90 / S1.20', text: 'Filet de vissage de couronne chanfreiné sur Arkansas après découpe.' },
+    { x: 260, y: 42, title: 'Point de coupe L', text: 'Règle d\'or : couper avec +1 mm de marge puis ajuster sur la pierre d\'Arkansas.' },
+    { x: 302, y: 100, title: 'Chute à couper', text: 'Coupe franche à la pince d\'horloger carbure.' },
+    { x: 365, y: 90, title: 'Taraudage couronne', text: 'Profondeur utile vérifiée pour un vissage complet sans butée prématurée.' },
+    { x: 365, y: 185, title: 'Loctite 222', text: 'Micro-touche de frein-filet violet démontable à froid.' },
   ],
   waterproof_testing: [
-    { x: 140, y: 140, title: 'Cloche à air', text: 'Enceinte étanche : la déformation élastique de la carrure sous pression est mesurée sans immersion.' },
-    { x: 140, y: 118, title: 'Palpeur LVDT', text: 'Capteur de déplacement à 0.1 µm : il trace la courbe de déformation en temps réel.' },
-    { x: 360, y: 75, title: 'Courbe conforme', text: 'Stabilisation rapide puis plateau : moins de 0.1 µm/min de dérive = montre étanche.' },
-    { x: 360, y: 112, title: 'Fuite détectée', text: 'Déformation qui s\'effondre : l\'air s\'échappe par un joint pincé, sec ou coupé.' },
-    { x: 370, y: 160, title: 'ISO 22810', text: 'Conformité 10 BAR / 100 m validée après cycle -0.5 bar puis +5 bar.' },
-    { x: 250, y: 257, title: 'Test de condensation', text: 'Plaque à 40°C, goutte d\'eau à 18°C sur la glace : aucune buée interne admissible sous 60 secondes.' },
+    { x: 140, y: 140, title: 'Cloche étanche', text: 'Mesure de déformation micrométrique sous pression sans immersion.' },
+    { x: 140, y: 118, title: 'Palpeur LVDT', text: 'Capteur haute précision mesurant la flexion élastique de la carrure.' },
+    { x: 360, y: 75, title: 'Courbe étanche', text: 'Déformation stable : moins de 0.1 µm de fuite par minute.' },
+    { x: 360, y: 112, title: 'Fuite détectée', text: 'Chute de la courbe trahissant un défaut de joint ou un pincement.' },
+    { x: 370, y: 160, title: 'Norme ISO 22810', text: 'Cycle dépression -0.5 bar puis surpression +5 à +10 bar conforme.' },
+    { x: 250, y: 257, title: 'Choc thermique 40°C/18°C', text: 'Test de condensation sur plaque chaude : aucune trace de buée interne.' },
   ],
 };
 
 // =========================================================================
-// 7. UTILITAIRES — NOTE SUISSE
+// 7. UTILITAIRES — NOTE SUISSE (ÉCHELLE 1 À 6)
 // =========================================================================
 
 export function swissNote(score: number, max: number): number {
@@ -527,8 +779,8 @@ export function swissNote(score: number, max: number): number {
 }
 
 export function swissMention(note: number): { label: string; tone: 'emerald' | 'sky' | 'amber' | 'red' } {
-  if (note >= 5.5) return { label: 'Très Bien — Excellence', tone: 'emerald' };
-  if (note >= 4.5) return { label: 'Bien — Compétence validée', tone: 'sky' };
-  if (note >= 4.0) return { label: 'Suffisant — Seuil de réussite', tone: 'amber' };
-  return { label: 'Insuffisant — Reprendre l\'atelier', tone: 'red' };
+  if (note >= 5.5) return { label: 'Très Bien — Maîtrise d\'Atelier', tone: 'emerald' };
+  if (note >= 4.5) return { label: 'Bien — Compétence Validée', tone: 'sky' };
+  if (note >= 4.0) return { label: 'Suffisant — Seuil de Réussite', tone: 'amber' };
+  return { label: 'Insuffisant — Reprendre les Gestes d\'Atelier', tone: 'red' };
 }

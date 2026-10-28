@@ -26,21 +26,23 @@ export default function Simulateurs({ openLoupe }: { openLoupe: (step: StepData)
   return (
     <div className="space-y-6 hl-fade">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2 bg-cream-track p-1.5 rounded-2xl border border-cream-border overflow-x-auto">
+        <div className="flex items-center gap-2 bg-cream-track dark:bg-slate-800 p-1.5 rounded-2xl border border-cream-border dark:border-slate-700 overflow-x-auto">
           {TABS.map((t) => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
               className={`px-4 py-2 rounded-xl font-label text-xs font-bold transition whitespace-nowrap flex items-center gap-1.5 ${
-                tab === t.id ? 'bg-bronze text-white shadow-sm' : 'text-ink-soft hover:text-bronze-dark hover:bg-cream-card'
+                tab === t.id
+                  ? 'bg-bronze text-white shadow-sm'
+                  : 'text-ink-soft dark:text-slate-300 hover:text-bronze-dark dark:hover:text-amber-400 hover:bg-cream-card dark:hover:bg-slate-700'
               }`}
             >
               {t.icon} {t.label}
             </button>
           ))}
         </div>
-        <span className="font-label text-[11px] text-ink-soft hidden sm:block">
-          Trois bancs d'essai virtuels · objectifs d'examen AFP / CFC
+        <span className="font-label text-[11px] text-ink-soft dark:text-slate-400 hidden sm:block">
+          Trois bancs d'essai virtuels · conformité aux normes suisses NIHS &amp; ISO
         </span>
       </div>
 
