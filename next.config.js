@@ -43,6 +43,11 @@ const nextConfig = {
         destination: '/theorie/histoire-horlogerie-suisse',
         permanent: true,
       },
+      {
+        source: '/theorie/mouvements/roue-trois-pommes',
+        destination: '/theorie/mouvements/roue-trois-bras',
+        permanent: true,
+      },
     ];
   },
   experimental: {

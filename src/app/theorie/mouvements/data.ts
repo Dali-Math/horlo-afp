@@ -681,7 +681,7 @@ export const concepts: ConceptGroup[] = [
           "https://cdn.horlolearn.ch/roue-rencontre/pont-independant.jpg",
           "https://cdn.horlolearn.ch/roue-rencontre/ajustage-hauteur.jpg"
         ],
-        relatedConcepts: ["roue-barillet", "roue-trois-pommes", "systeme-fixation"]
+        relatedConcepts: ["roue-barillet", "roue-trois-bras", "systeme-fixation"]
       },
 
       { 
@@ -721,43 +721,44 @@ export const concepts: ConceptGroup[] = [
           "https://cdn.horlolearn.ch/roue-aubier/breguet-aubier.jpg",
           "https://cdn.horlolearn.ch/roue-aubier/ajustage-socle.jpg"
         ],
-        relatedConcepts: ["roue-trois-pommes", "engrenage-module", "roue-de-rencontre"]
+        relatedConcepts: ["roue-trois-bras", "engrenage-module", "roue-de-rencontre"]
       },
 
       { 
-        id: 'roue-trois-pommes', 
-        title: "Roue à Trois Pommes", 
-        desc: "Roue de seconde avec 3 branches. Légèreté et équilibrage.", 
+        id: 'roue-trois-bras', 
+        title: "Roue des Secondes à 3 Bras", 
+        desc: "Roue de finissage ajourée à 3 bras à 120°. Réduction drastique d'inertie et équilibrage de haute précision.", 
         level: "Débutant",
-        tags: ["seconde", "equilibrage", "design", "legerete"],
-        manufactures: ["Rolex", "Omega", "ETA"],
+        tags: ["seconde", "rouage", "equilibrage", "inertie", "nihs"],
+        manufactures: ["Rolex", "Omega", "ETA", "Patek Philippe"],
         details: {
-          principle: "Réduction masse tout en maintenant rigidité. 3 branches à 120°. Centrage amélioré.",
+          principle: "Réduction maximale de l'inertie rotative (I = m·r²) sur le mobile tournant le plus vite du rouage de finissage. Les 3 bras évidés à 120° maintiennent une parfaite rigidité géométrique tout en facilitant le centrage et l'équilibrage dynamique.",
           materials: [
-            "Laiton ou or",
-            "Pivots acier",
-            "Équilibre dynamique"
+            "Laiton horloger (CuZn39Pb2) ou maillechort",
+            "Pignon en acier trempé 20AP poli miroir",
+            "Denture cycloïdale selon norme NIHS 20-25"
           ],
           dimensions: {
             "Masse réduite": "-40% vs roue pleine",
-            "Inertie": "0.8 mg·cm² (vs 1.3 pleine)",
-            "Rondeur": "< 0.002 mm"
+            "Inertie dynamique": "0.8 mg·cm² (vs 1.3 pleine)",
+            "Épaisseur serge": "0.15 à 0.22 mm",
+            "Faux-rond / Battement": "< 0.002 mm"
           },
-          adjustment: "Équilibrage dynamique après usinage. Repérage masse lourde. Matage ou perçage compensateur.",
+          adjustment: "Vérification du faux-plat et du faux-rond au compas aux huit-chiffres. Équilibrage dynamique sur outil aux balanciers. Contrôle du jeu d'ébat axial (0.015 - 0.030 mm).",
           commonErrors: [
-            "Branche mal calée → désaxement",
-            "Équilibrage négligé → vibrations",
-            "Frottement sur platine"
+            "Bras voilé lors du chassage sur pignon → faux-plat",
+            "Dépôt d'huile accidentel sur la denture → arrêt par adhérence",
+            "Mauvais calage du pignon de seconde → frottement sur platine ou pont"
           ],
           tools: [
-            "Vibrateur équilibrage",
-            "Tour diviseur",
-            "Foret 0.3 mm"
+            "Compas aux huit-chiffres",
+            "Outil à river les roues",
+            "Loupe d'horloger 10x / 12x",
+            "Brucelle n°3 ou n°5"
           ]
         },
         gallery: [
-          "https://cdn.horlolearn.ch/roue-trois-pommes/rolex-3135-roue.jpg",
-          "https://cdn.horlolearn.ch/roue-trois-pommes/equilibrage-dynamique.jpg"
+          "/images/mouvements/roue-trois-bras.svg"
         ],
         relatedConcepts: ["equilibrage-balancier", "roue-barillet", "finissage-roues"]
       },
@@ -1705,7 +1706,7 @@ export const concepts: ConceptGroup[] = [
           "https://cdn.horlolearn.ch/equilibrage/vibrateur-auto.jpg",
           "https://cdn.horlolearn.ch/equilibrage/balancier-equilibre.jpg"
         ],
-        relatedConcepts: ["roue-trois-pommes", "inertie-balancier", "taux-oscillation"]
+        relatedConcepts: ["roue-trois-bras", "inertie-balancier", "taux-oscillation"]
       },
 
       { 

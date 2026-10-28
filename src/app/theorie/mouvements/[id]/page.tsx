@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   BookOpen, Target, AlertTriangle, Lightbulb, TrendingUp, 
   Award, CheckCircle2, ArrowLeft, Bookmark, BookmarkPlus,
-  ChevronRight, Star, Sparkles, Trophy, Zap, Flag
+  ChevronRight, Star, Layers, Trophy, Zap, Flag
 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
@@ -81,7 +81,7 @@ const TABS = [
   { id: 'mistakes', label: 'Erreurs', icon: AlertTriangle },
   { id: 'tips', label: 'Conseils', icon: Lightbulb },
   { id: 'progression', label: 'Progression', icon: TrendingUp },
-  { id: 'variations', label: 'Variations', icon: Sparkles }
+  { id: 'variations', label: 'Variations', icon: Layers }
 ] as const;
 
 type TabId = typeof TABS[number]['id'];
@@ -614,7 +614,7 @@ export default function ConceptDetailPage() {
                 exit={{ opacity: 0, x: -20 }}
               >
                 <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6 flex items-center gap-2">
-                  <Sparkles className="w-6 h-6 text-purple-600" />
+                  <Layers className="w-6 h-6 text-purple-600" />
                   Variations et concepts liés
                 </h2>
 
@@ -632,7 +632,7 @@ export default function ConceptDetailPage() {
                           transition={{ delay: index * 0.1 }}
                           className="flex items-start gap-3 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-xl border-2 border-purple-200"
                         >
-                          <Sparkles className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
+                          <Layers className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
                           <span className="text-slate-900 dark:text-slate-100 font-medium">
                             {variation}
                           </span>
