@@ -19,7 +19,6 @@ import {
   Maximize2,
   ZoomIn,
   X,
-  Sparkles,
   Layers,
   FileText
 } from 'lucide-react';
@@ -335,7 +334,6 @@ export default function OutillageKitSection() {
   const [activeTab, setActiveTab] = useState<'outillage' | 'kit'>('outillage');
   const [selectedTool, setSelectedTool] = useState<AtelierTool>(ATELIER_TOOLS[0]);
   const [selectedKit, setSelectedKit] = useState<KitElement>(KIT_ELEMENTS[0]);
-  const [toolViewMode, setToolViewMode] = useState<'photo' | 'row'>('photo');
 
   // État modale d'agrandissement d'image
   const [lightboxImage, setLightboxImage] = useState<{ src: string; title: string; subtitle: string } | null>(null);
@@ -479,36 +477,15 @@ export default function OutillageKitSection() {
               <p className="text-xs text-bronze-dark dark:text-amber-400 mt-0.5 font-medium">{selectedTool.role}</p>
             </div>
 
-            {/* GRAND VISUEL RÉEL DE L'OUTIL AVEC SÉLECTEUR PHOTO / EXTRAIT ORIGINAL */}
+            {/* GRAND VISUEL RÉEL DE L'OUTIL AVEC LOUPE 10X */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-[11px] font-label">
-                <div className="flex items-center gap-1 bg-cream-tile dark:bg-slate-950 p-0.5 rounded-lg border border-cream-border dark:border-slate-800">
-                  <button
-                    onClick={() => setToolViewMode('photo')}
-                    className={`px-2 py-0.5 rounded text-[10px] font-bold transition ${
-                      toolViewMode === 'photo'
-                        ? 'bg-bronze text-white shadow-sm'
-                        : 'text-ink-soft dark:text-slate-400 hover:text-ink dark:hover:text-white'
-                    }`}
-                  >
-                    Photo de l'outil
-                  </button>
-                  <button
-                    onClick={() => setToolViewMode('row')}
-                    className={`px-2 py-0.5 rounded text-[10px] font-bold transition ${
-                      toolViewMode === 'row'
-                        ? 'bg-bronze text-white shadow-sm'
-                        : 'text-ink-soft dark:text-slate-400 hover:text-ink dark:hover:text-white'
-                    }`}
-                  >
-                    Extrait planche
-                  </button>
-                </div>
+                <span className="text-ink-soft dark:text-slate-400 font-medium">Vue réelle de l'instrument</span>
 
                 <button
                   onClick={() =>
                     setLightboxImage({
-                      src: toolViewMode === 'photo' ? selectedTool.image : selectedTool.rowImage,
+                      src: selectedTool.image,
                       title: selectedTool.name,
                       subtitle: selectedTool.role,
                     })
@@ -523,7 +500,7 @@ export default function OutillageKitSection() {
               <div
                 onClick={() =>
                   setLightboxImage({
-                    src: toolViewMode === 'photo' ? selectedTool.image : selectedTool.rowImage,
+                    src: selectedTool.image,
                     title: selectedTool.name,
                     subtitle: selectedTool.role,
                   })
@@ -531,7 +508,7 @@ export default function OutillageKitSection() {
                 className="relative w-full h-44 rounded-2xl overflow-hidden border border-cream-border dark:border-slate-800 bg-cream-tile dark:bg-slate-950 flex items-center justify-center p-3 cursor-zoom-in group shadow-inner"
               >
                 <img
-                  src={toolViewMode === 'photo' ? selectedTool.image : selectedTool.rowImage}
+                  src={selectedTool.image}
                   alt={selectedTool.name}
                   className="max-w-full max-h-full object-contain filter drop-shadow-md group-hover:scale-105 transition duration-300"
                 />
@@ -560,7 +537,7 @@ export default function OutillageKitSection() {
             {/* Recommandation du Maître d'Atelier */}
             <div className="p-3.5 rounded-xl bg-amber-500/10 dark:bg-amber-950/40 border border-amber-500/30 space-y-1.5">
               <span className="flex items-center gap-1.5 text-xs font-label font-bold text-amber-900 dark:text-amber-300">
-                <Sparkles className="w-3.5 h-3.5" /> RECOMMANDATION DU MAÎTRE D'ATELIER :
+                <Wrench className="w-3.5 h-3.5 text-amber-700 dark:text-amber-400 shrink-0" /> RECOMMANDATION DU MAÎTRE D'ATELIER :
               </span>
               <p className="text-xs leading-relaxed text-amber-950/90 dark:text-amber-100/90">{selectedTool.benchTip}</p>
             </div>

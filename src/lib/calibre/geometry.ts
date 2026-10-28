@@ -119,7 +119,7 @@ export function createCotesDeGeneveTexture(): THREE.CanvasTexture {
   tex.wrapS = THREE.RepeatWrapping;
   tex.wrapT = THREE.RepeatWrapping;
   tex.repeat.set(1.15, 1.15);
-  if ('colorSpace' in tex) (tex as any).colorSpace = (THREE as any).SRGBColorSpace; else (tex as any).encoding = (THREE as any).sRGBEncoding;
+  if ('colorSpace' in tex) (tex as any).colorSpace = (THREE as any).SRGBColorSpace || 'srgb'; else (tex as any).encoding = 3001;
   tex.anisotropy = maxAnisotropy;
   cachedCotesDeGeneve = tex;
   return tex;
@@ -167,7 +167,7 @@ export function createPerlageTexture(): THREE.CanvasTexture {
   const tex = new THREE.CanvasTexture(canvas);
   tex.wrapS = THREE.RepeatWrapping;
   tex.wrapT = THREE.RepeatWrapping;
-  if ('colorSpace' in tex) (tex as any).colorSpace = (THREE as any).SRGBColorSpace; else (tex as any).encoding = (THREE as any).sRGBEncoding;
+  if ('colorSpace' in tex) (tex as any).colorSpace = (THREE as any).SRGBColorSpace || 'srgb'; else (tex as any).encoding = 3001;
   tex.anisotropy = maxAnisotropy;
   cachedPerlage = tex;
   return tex;
@@ -514,7 +514,7 @@ export function createModernDialTexture(): THREE.CanvasTexture {
   const tex = new THREE.CanvasTexture(canvas);
   tex.wrapS = THREE.ClampToEdgeWrapping;
   tex.wrapT = THREE.ClampToEdgeWrapping;
-  if ('colorSpace' in tex) (tex as any).colorSpace = (THREE as any).SRGBColorSpace; else (tex as any).encoding = (THREE as any).sRGBEncoding;
+  if ('colorSpace' in tex) (tex as any).colorSpace = (THREE as any).SRGBColorSpace || 'srgb'; else (tex as any).encoding = 3001;
   tex.anisotropy = maxAnisotropy;
   return tex;
 }
@@ -544,7 +544,7 @@ export function createDateDiscTexture(dayNumber: number): THREE.CanvasTexture {
   ctx.fillText(String(dayNumber).padStart(2, '0'), 128, 134);
 
   const tex = new THREE.CanvasTexture(canvas);
-  if ('colorSpace' in tex) (tex as any).colorSpace = (THREE as any).SRGBColorSpace; else (tex as any).encoding = (THREE as any).sRGBEncoding;
+  if ('colorSpace' in tex) (tex as any).colorSpace = (THREE as any).SRGBColorSpace || 'srgb'; else (tex as any).encoding = 3001;
   return tex;
 }
 

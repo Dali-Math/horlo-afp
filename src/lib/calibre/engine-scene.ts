@@ -69,7 +69,7 @@ export function buildCalibreScene(container: HTMLDivElement, xrayFactor: number)
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
   renderer.setSize(w, h);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  if ('outputColorSpace' in renderer) (renderer as any).outputColorSpace = (THREE as any).SRGBColorSpace; else (renderer as any).outputEncoding = (THREE as any).sRGBEncoding;
+  if ('outputColorSpace' in renderer) (renderer as any).outputColorSpace = (THREE as any).SRGBColorSpace || 'srgb'; else (renderer as any).outputEncoding = 3001;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.12;
   renderer.shadowMap.enabled = true;

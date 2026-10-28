@@ -19,7 +19,6 @@ import {
   AlertTriangle,
   Wrench,
   ZoomIn,
-  Sparkles,
 } from 'lucide-react';
 import { STEPS_DATA, type StepData, type SchemaType } from '@/lib/emboitage/data';
 import { SchemaWithHotspots } from '@/lib/emboitage/schemas';
