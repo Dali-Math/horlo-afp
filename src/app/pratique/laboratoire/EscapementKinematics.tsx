@@ -219,14 +219,14 @@ export default function EscapementKinematics() {
         {/* Grille principale : Schéma vectoriel SVG (7 cols) + Fiche pédagogique (5 cols) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Schéma Haute Précision SVG */}
-          <div className="lg:col-span-7 rounded-2xl bg-[#070A10] border border-slate-800 p-4 space-y-2">
-            <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-800 text-xs font-mono">
-              <span className="text-amber-400 font-bold">
+          <div className="lg:col-span-7 rounded-2xl bg-slate-100 dark:bg-[#070A10] border border-slate-300 dark:border-slate-800 p-4 space-y-2 shadow-inner">
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-300 dark:border-slate-800 text-xs font-mono">
+              <span className="text-amber-600 dark:text-amber-400 font-bold">
                 VUE MICROSCOPIQUE : ANCRE, ROUE D’ÉCHAPPEMENT &amp; DOUBLE PLATEAU
               </span>
 
               <div className="flex items-center gap-3">
-                <label className="flex items-center gap-1.5 cursor-pointer text-slate-300 select-none">
+                <label className="flex items-center gap-1.5 cursor-pointer text-slate-700 dark:text-slate-300 select-none">
                   <input
                     type="checkbox"
                     checked={showVectors}
@@ -235,7 +235,7 @@ export default function EscapementKinematics() {
                   />
                   <span>Tirage &amp; Vecteurs</span>
                 </label>
-                <label className="flex items-center gap-1.5 cursor-pointer text-rose-300 select-none">
+                <label className="flex items-center gap-1.5 cursor-pointer text-rose-700 dark:text-rose-300 select-none">
                   <input
                     type="checkbox"
                     checked={showOil}
@@ -255,7 +255,7 @@ export default function EscapementKinematics() {
                   y1="30"
                   x2="300"
                   y2="510"
-                  stroke="#1E293B"
+                  className="stroke-slate-400 dark:stroke-[#1E293B]"
                   strokeWidth="1.5"
                   strokeDasharray="6 6"
                 />
@@ -283,7 +283,7 @@ export default function EscapementKinematics() {
                     strokeWidth="8"
                     strokeOpacity="0.3"
                   />
-                  <circle cx="0" cy="0" r="35" fill="#1E293B" stroke="#D4AF37" strokeWidth="2" />
+                  <circle cx="0" cy="0" r="35" className="fill-slate-200 dark:fill-[#1E293B] stroke-amber-500" strokeWidth="2" />
                   {/* 15 dents club */}
                   {Array.from({ length: 15 }).map((_, i) => (
                     <g key={i} transform={`rotate(${i * 24})`}>
@@ -314,15 +314,13 @@ export default function EscapementKinematics() {
                   {/* Corps d'ancre */}
                   <path
                     d="M -85 35 L 0 -10 L 85 35 L 65 52 L 0 18 L -65 52 Z"
-                    fill="#475569"
-                    stroke="#CBD5E1"
+                    className="fill-slate-300 dark:fill-[#475569] stroke-slate-500 dark:stroke-[#CBD5E1]"
                     strokeWidth="2"
                   />
                   {/* Baguette d'ancre et fourchette */}
                   <path
                     d="M -9 0 L -6 -105 L -24 -125 L -16 -138 L 0 -118 L 16 -138 L 24 -125 L 6 -105 L 9 0 Z"
-                    fill="#64748B"
-                    stroke="#E2E8F0"
+                    className="fill-slate-400 dark:fill-[#64748B] stroke-slate-600 dark:stroke-[#E2E8F0]"
                     strokeWidth="1.8"
                   />
                   {/* Dard de sécurité */}
@@ -386,16 +384,14 @@ export default function EscapementKinematics() {
                     cx="0"
                     cy="0"
                     r="56"
-                    fill="#1E293B"
+                    className="fill-slate-200 dark:fill-[#1E293B] stroke-amber-500"
                     fillOpacity="0.85"
-                    stroke="#D4AF37"
                     strokeWidth="2.5"
                   />
                   {/* Petit plateau avec encoche pour passage du dard */}
                   <path
                     d="M -8 28.8 A 30 30 0 1 1 8 28.8 Q 0 18 -8 28.8 Z"
-                    fill="#334155"
-                    stroke="#38BDF8"
+                    className="fill-slate-300 dark:fill-[#334155] stroke-sky-500"
                     strokeWidth="2"
                   />
                   {/* Ellipse en rubis synthétique */}

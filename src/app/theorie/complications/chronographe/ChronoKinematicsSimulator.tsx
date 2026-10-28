@@ -9,7 +9,6 @@ import {
   Compass,
   CheckCircle2,
   Sliders,
-  Sparkles,
   Info,
 } from 'lucide-react';
 
@@ -174,8 +173,8 @@ export default function ChronoKinematicsSimulator() {
       {/* Main Simulation Viewport */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left (7 cols): Animated Vector CAD SVG */}
-        <div className="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3">
-          <div className="flex items-center justify-between text-xs font-mono text-slate-400 pb-2 border-b border-slate-800">
+        <div className="lg:col-span-7 bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-2xl p-4 shadow-xl space-y-3">
+          <div className="flex items-center justify-between text-xs font-mono text-slate-600 dark:text-slate-400 pb-2 border-b border-slate-300 dark:border-slate-800">
             <span className="text-amber-400 font-semibold flex items-center gap-1.5">
               <Compass className="w-3.5 h-3.5" />
               CINÉMATIQUE CAD DES LEVIERS, CAME &amp; CŒUR
@@ -196,13 +195,13 @@ export default function ChronoKinematicsSimulator() {
               </defs>
 
               {/* Background Plate */}
-              <rect x="20" y="20" width="600" height="360" rx="14" fill="#0B0F19" stroke="#1E293B" strokeWidth="2" />
+              <rect x="20" y="20" width="600" height="360" rx="14" className="fill-white dark:fill-[#0B0F19] stroke-slate-300 dark:stroke-[#1E293B]" strokeWidth="2" />
 
               {/* 1. COMMAND SYSTEM (Top Center) */}
               {arch === 'column' ? (
                 /* Column Wheel */
                 <g transform="translate(320, 85)">
-                  <circle cx="0" cy="0" r="42" fill="#1E293B" stroke="#D4AF37" strokeWidth="2.5" />
+                  <circle cx="0" cy="0" r="42" className="fill-slate-100 dark:fill-[#1E293B] stroke-amber-500" strokeWidth="2.5" />
                   <g transform={`rotate(${colAngle})`} style={{ transition: 'transform 0.25s ease-out' }}>
                     {[0, 60, 120, 180, 240, 300].map((deg) => (
                       <rect
@@ -231,8 +230,7 @@ export default function ChronoKinematicsSimulator() {
                   <g transform={`rotate(${shuttleRot})`} style={{ transition: 'transform 0.25s ease-out' }}>
                     <path
                       d="M -55 -15 L 55 -25 L 45 28 L -45 20 Z"
-                      fill="#1E293B"
-                      stroke="#38BDF8"
+                      className="fill-slate-100 dark:fill-[#1E293B] stroke-sky-500"
                       strokeWidth="2.5"
                     />
                     <circle cx="0" cy="0" r="12" fill="#0F172A" stroke="#38BDF8" strokeWidth="2" />
@@ -247,7 +245,7 @@ export default function ChronoKinematicsSimulator() {
 
               {/* 2. CONTINUOUS 4TH WHEEL (Driving Gear, Left) */}
               <g transform="translate(175, 210)">
-                <circle cx="0" cy="0" r="46" fill="#1E293B" stroke="#64748B" strokeWidth="2" strokeDasharray="4 3" />
+                <circle cx="0" cy="0" r="46" className="fill-slate-100 dark:fill-[#1E293B] stroke-slate-400 dark:stroke-[#64748B]" strokeWidth="2" strokeDasharray="4 3" />
                 <g transform={`rotate(${wheelAngle * 2})`}>
                   <line x1="-38" y1="0" x2="38" y2="0" stroke="#64748B" strokeWidth="1.5" />
                   <line x1="0" y1="-38" x2="0" y2="38" stroke="#64748B" strokeWidth="1.5" />

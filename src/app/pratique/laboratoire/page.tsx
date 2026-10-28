@@ -10,7 +10,8 @@ import {
   Wrench,
   Sliders,
   Layers,
-  Sparkles,
+  Timer,
+  Gauge,
 } from 'lucide-react';
 import WitschiSimulator from './WitschiSimulator';
 import EscapementKinematics from './EscapementKinematics';
@@ -84,7 +85,7 @@ export default function LaboratoirePage() {
                   href="/pratique/defi-chronometre"
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs font-mono font-bold text-cyan-600 dark:text-cyan-400 hover:border-cyan-400 transition"
                 >
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Timer className="w-3.5 h-3.5" />
                   <span>Défi Chronométré WhatsApp</span>
                 </Link>
               </div>
@@ -177,7 +178,7 @@ export default function LaboratoirePage() {
                   : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-800/50'
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5" />
+              <Gauge className="w-3.5 h-3.5" />
               <span>7. Ajustements ISO</span>
             </button>
 

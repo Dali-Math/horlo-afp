@@ -10,7 +10,6 @@ import {
   ArrowDown,
   Info,
   ShieldCheck,
-  Sparkles,
   Sliders,
   ShieldAlert,
 } from 'lucide-react';
@@ -235,7 +234,7 @@ export default function BenchPressSimulator() {
           </p>
 
           {/* SVG Visualizer of Press Dies & Watch Case */}
-          <div className="bg-slate-950 border border-slate-800 rounded-xl p-3">
+          <div className="bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl p-3">
             <svg viewBox="0 0 440 165" className="w-full h-auto select-none">
               {/* Upper Die */}
               <g
@@ -301,15 +300,14 @@ export default function BenchPressSimulator() {
                 {/* Bezel & Case Middle */}
                 <path
                   d="M -72 -8 L -52 -22 L 52 -22 L 72 -8 L 72 22 L -72 22 Z"
-                  fill="#334155"
-                  stroke="#CBD5E1"
+                  className="fill-slate-200 dark:fill-[#334155] stroke-slate-400 dark:stroke-[#CBD5E1]"
                   strokeWidth="2"
                 />
                 <text
                   x="0"
                   y="6"
                   textAnchor="middle"
-                  fill="#D4AF37"
+                  className="fill-amber-700 dark:fill-[#D4AF37]"
                   fontFamily="JetBrains Mono, monospace"
                   fontSize="10"
                   fontWeight="bold"

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Wrench, CheckCircle2, AlertTriangle, Droplet, Sparkles, Check, Sliders } from "lucide-react";
+import { Wrench, CheckCircle2, AlertTriangle, Droplet, Check, Sliders } from "lucide-react";
 
 type ThreadKey = "M0.40" | "M0.50" | "M0.60" | "M0.70" | "M0.80" | "M0.90" | "M1.00" | "M1.20";
 
@@ -179,8 +179,8 @@ export default function TappingBenchSimulator() {
 
             <svg viewBox="0 0 440 175" className="w-full h-auto">
               {/* Metal Plate Cross-Section */}
-              <rect x="65" y="55" width="125" height="105" fill="#334155" stroke="#94A3B8" strokeWidth="2" />
-              <rect x="250" y="55" width="125" height="105" fill="#334155" stroke="#94A3B8" strokeWidth="2" />
+              <rect x="65" y="55" width="125" height="105" className="fill-slate-300 dark:fill-[#334155] stroke-slate-500 dark:stroke-[#94A3B8]" strokeWidth="2" />
+              <rect x="250" y="55" width="125" height="105" className="fill-slate-300 dark:fill-[#334155] stroke-slate-500 dark:stroke-[#94A3B8]" strokeWidth="2" />
               {/* Drilled Hole Walls */}
               <path d="M 190 55 L 182 70 L 190 85 L 182 100 L 190 115 L 182 130 L 190 145" fill="none" stroke="#D4AF37" strokeWidth="2.5" />
               <path d="M 250 55 L 258 70 L 250 85 L 258 100 L 250 115 L 258 130 L 250 145" fill="none" stroke="#D4AF37" strokeWidth="2.5" />
@@ -288,7 +288,7 @@ export default function TappingBenchSimulator() {
           </div>
 
           {/* SVG Zoom x50 */}
-          <div className="bg-slate-950 border border-slate-800 rounded-xl p-4">
+          <div className="bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl p-4">
             <div className="text-[10px] font-mono text-slate-400 uppercase mb-1 flex justify-between">
               <span>COUPE DE PROFIL (×50) : LAME ACIER TREMPÉ VS FENTE DE VIS</span>
               <span className="text-amber-400 font-bold">Fente : 0.16 mm</span>
@@ -297,8 +297,7 @@ export default function TappingBenchSimulator() {
               {/* Screw Head with Slot */}
               <path
                 d="M 85 175 L 85 110 Q 135 90 190 95 L 190 148 L 250 148 L 250 95 Q 305 90 355 110 L 355 175 Z"
-                fill="#334155"
-                stroke="#CBD5E1"
+                className="fill-slate-300 dark:fill-[#334155] stroke-slate-500 dark:stroke-[#CBD5E1]"
                 strokeWidth="2"
               />
               <text x="135" y="145" textAnchor="middle" fill="#94A3B8" fontFamily="monospace" fontSize="9.5">

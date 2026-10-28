@@ -7,7 +7,6 @@ import {
   AlertTriangle,
   Compass,
   CheckCircle2,
-  Sparkles,
   Info,
   Clock,
   ShieldAlert,
@@ -166,8 +165,8 @@ export default function KeylessSimulator() {
       {/* Main Simulation Viewport */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* SVG Mechanism (7 cols) */}
-        <div className="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-2xl p-4 shadow-xl relative overflow-hidden">
-          <div className="flex items-center justify-between text-xs font-mono text-slate-400 pb-2 mb-2 border-b border-slate-800">
+        <div className="lg:col-span-7 bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-2xl p-4 shadow-xl relative overflow-hidden">
+          <div className="flex items-center justify-between text-xs font-mono text-slate-600 dark:text-slate-400 pb-2 mb-2 border-b border-slate-300 dark:border-slate-800">
             <span className="flex items-center gap-1.5 text-amber-400 font-semibold">
               <Compass className="w-3.5 h-3.5" />
               VUE TECHNIQUE CAD — CÔTÉ PONT DE TIGE &amp; TIRETTE
@@ -187,8 +186,7 @@ export default function KeylessSimulator() {
                 cx="250"
                 cy="250"
                 r="215"
-                fill="#0b0f19"
-                stroke="#334155"
+                className="fill-white dark:fill-[#0b0f19] stroke-slate-300 dark:stroke-[#334155]"
                 strokeWidth="2"
               />
               <circle
@@ -204,7 +202,7 @@ export default function KeylessSimulator() {
                 x="250"
                 y="52"
                 textAnchor="middle"
-                fill="#64748B"
+                className="fill-slate-600 dark:fill-[#64748B]"
                 fontFamily="JetBrains Mono, monospace"
                 fontSize="10"
               >

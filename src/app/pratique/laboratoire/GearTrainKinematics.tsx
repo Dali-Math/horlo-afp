@@ -7,7 +7,6 @@ import {
   Pause,
   RotateCw,
   RotateCcw,
-  Sparkles,
   Info,
   CheckCircle2,
   Droplets,
@@ -288,13 +287,13 @@ export default function GearTrainKinematics() {
       {/* Main Simulation Viewport (SVG + Mobile Inspector) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* SVG Animated Gear Train (7 cols) */}
-        <div className="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-2xl p-4 shadow-xl">
-          <div className="flex items-center justify-between text-xs font-mono pb-2 mb-2 border-b border-slate-800">
+        <div className="lg:col-span-7 bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-2xl p-4 shadow-xl">
+          <div className="flex items-center justify-between text-xs font-mono pb-2 mb-2 border-b border-slate-300 dark:border-slate-800">
             <span className="text-amber-400 font-semibold flex items-center gap-1.5">
               <Compass className="w-3.5 h-3.5" />
               CLIQUEZ SUR UN MOBILE POUR L&apos;INSPECTER :
             </span>
-            <span className="text-slate-400 text-[11px]">
+            <span className="text-slate-600 dark:text-slate-400 text-[11px]">
               Sens : <span className="text-emerald-400">↻ Horaire</span> /{' '}
               <span className="text-sky-400">↺ Anti-Horaire</span>
             </span>
@@ -324,7 +323,7 @@ export default function GearTrainKinematics() {
                     />
                     <line x1="-60" y1="0" x2="60" y2="0" stroke="#D4AF37" strokeWidth="1.5" />
                     <line x1="0" y1="-60" x2="0" y2="60" stroke="#D4AF37" strokeWidth="1.5" />
-                    <circle cx="0" cy="0" r="14" fill="#1E293B" stroke="#CBD5E1" strokeWidth="2" />
+                    <circle cx="0" cy="0" r="14" className="fill-slate-200 dark:fill-[#1E293B] stroke-slate-400 dark:stroke-[#CBD5E1]" strokeWidth="2" />
                   </g>
                 </g>
                 <text
@@ -368,7 +367,7 @@ export default function GearTrainKinematics() {
                       strokeDasharray="6 3"
                     />
                     <line x1="-46" y1="0" x2="46" y2="0" stroke="#38BDF8" strokeWidth="1.5" />
-                    <circle cx="0" cy="0" r="13" fill="#0F172A" stroke="#F59E0B" strokeWidth="2" />
+                    <circle cx="0" cy="0" r="13" className="fill-slate-200 dark:fill-[#0F172A] stroke-amber-500" strokeWidth="2" />
                   </g>
                 </g>
                 <text
@@ -412,7 +411,7 @@ export default function GearTrainKinematics() {
                       strokeDasharray="5 3"
                     />
                     <line x1="-40" y1="0" x2="40" y2="0" stroke="#D4AF37" strokeWidth="1.5" />
-                    <circle cx="0" cy="0" r="11" fill="#0F172A" stroke="#F59E0B" strokeWidth="2" />
+                    <circle cx="0" cy="0" r="11" className="fill-slate-200 dark:fill-[#0F172A] stroke-amber-500" strokeWidth="2" />
                   </g>
                 </g>
                 <text
@@ -456,7 +455,7 @@ export default function GearTrainKinematics() {
                       strokeDasharray="5 3"
                     />
                     <line x1="-38" y1="0" x2="38" y2="0" stroke="#10B981" strokeWidth="1.5" />
-                    <circle cx="0" cy="0" r="10" fill="#0F172A" stroke="#F59E0B" strokeWidth="2" />
+                    <circle cx="0" cy="0" r="10" className="fill-slate-200 dark:fill-[#0F172A] stroke-amber-500" strokeWidth="2" />
                   </g>
                 </g>
                 <text

@@ -244,12 +244,14 @@ export default function WitschiSimulator() {
             }
           }
 
-          // Rendu du fond et de la grille du chrono-comparateur
-          ctx.fillStyle = '#06090F';
+          const isDark = typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
+
+          // Rendu du fond et de la grille du chrono-comparateur (Mode Sombre & Clair)
+          ctx.fillStyle = isDark ? '#06090F' : '#F8FAFC';
           ctx.fillRect(0, 0, w, h);
 
-          // Grille métrologique
-          ctx.strokeStyle = 'rgba(37, 48, 69, 0.55)';
+          // Grille métrologique haute précision
+          ctx.strokeStyle = isDark ? 'rgba(37, 48, 69, 0.55)' : 'rgba(203, 213, 225, 0.8)';
           ctx.lineWidth = 1;
           for (let x = 24; x < w; x += 48) {
             ctx.beginPath();
@@ -265,7 +267,7 @@ export default function WitschiSimulator() {
           }
 
           // Ligne médiane zéro
-          ctx.strokeStyle = 'rgba(212, 175, 55, 0.3)';
+          ctx.strokeStyle = isDark ? 'rgba(212, 175, 55, 0.3)' : 'rgba(217, 119, 6, 0.45)';
           ctx.setLineDash([6, 6]);
           ctx.beginPath();
           ctx.moveTo(0, h * 0.52);
@@ -273,26 +275,26 @@ export default function WitschiSimulator() {
           ctx.stroke();
           ctx.setLineDash([]);
 
-          // Curseur de défilement
-          ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+          // Curseur de défilement Witschi
+          ctx.strokeStyle = isDark ? 'rgba(56, 189, 248, 0.45)' : 'rgba(2, 132, 199, 0.6)';
           ctx.beginPath();
           ctx.moveTo(scanXRef.current, 0);
           ctx.lineTo(scanXRef.current, h);
           ctx.stroke();
 
-          // Tracé des points acoustiques
+          // Tracé des points acoustiques (Contraste parfait clair/sombre)
           dotsRef.current.forEach((pt) => {
             ctx.fillStyle = pt.knocking
               ? '#F43F5E'
               : pt.parity === 0
-              ? '#D4AF37'
-              : '#38BDF8';
+              ? (isDark ? '#D4AF37' : '#D97706')
+              : (isDark ? '#38BDF8' : '#0284C7');
             ctx.beginPath();
             ctx.arc(pt.x, pt.y, 2.5, 0, Math.PI * 2);
             ctx.fill();
 
             if (pt.knocking) {
-              ctx.fillStyle = 'rgba(244, 63, 94, 0.45)';
+              ctx.fillStyle = isDark ? 'rgba(244, 63, 94, 0.45)' : 'rgba(225, 29, 72, 0.55)';
               ctx.beginPath();
               ctx.arc(pt.x, pt.y + 16, 2, 0, Math.PI * 2);
               ctx.fill();
@@ -363,8 +365,8 @@ export default function WitschiSimulator() {
       {/* --- BANDEAU DIGITAL WITSCHI WATCH EXPERT --- */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         {/* Affichage LCD 4 Cadres */}
-        <div className="lg:col-span-8 bg-[#090D14] border-2 border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xl">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-2.5 mb-3">
+        <div className="lg:col-span-8 bg-slate-100 dark:bg-[#090D14] border-2 border-slate-300 dark:border-slate-800 rounded-2xl p-4 shadow-xl">
+          <div className="flex items-center justify-between border-b border-slate-300 dark:border-slate-800 pb-2.5 mb-3">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
               <span className="font-mono text-xs uppercase tracking-widest text-amber-500 dark:text-amber-400 font-bold">
@@ -378,7 +380,7 @@ export default function WitschiSimulator() {
                 className={`px-3 py-1 rounded-xl text-xs font-mono font-bold border transition flex items-center gap-1.5 ${
                   audioEnabled
                     ? 'bg-amber-500 text-slate-950 border-amber-400'
-                    : 'bg-slate-900 text-slate-300 border-slate-700 hover:border-amber-500'
+                    : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-amber-500'
                 }`}
               >
                 {audioEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
@@ -390,7 +392,7 @@ export default function WitschiSimulator() {
                   dotsRef.current = [];
                   scanXRef.current = 24;
                 }}
-                className="px-2.5 py-1 rounded-xl bg-slate-900 border border-slate-700 text-slate-400 hover:text-white text-xs font-mono transition"
+                className="px-2.5 py-1 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-xs font-mono transition"
                 title="Effacer le tracé"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -400,7 +402,7 @@ export default function WitschiSimulator() {
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono">
             {/* Marche */}
-            <div className="bg-[#0F1623] border border-slate-800 rounded-xl p-3">
+            <div className="bg-white dark:bg-[#0F1623] border border-slate-200 dark:border-slate-800 rounded-xl p-3 shadow-sm">
               <div className="flex items-center justify-between text-[11px] text-slate-400">
                 <span>MARCHE</span>
                 <span
@@ -415,7 +417,7 @@ export default function WitschiSimulator() {
                   {Math.abs(effectiveRate) <= 6 ? 'COSC OK' : Math.abs(effectiveRate) <= 15 ? 'TOLÉRÉ' : 'DÉRÉGLÉ'}
                 </span>
               </div>
-              <div className="text-2xl sm:text-3xl font-bold text-white mt-1">
+              <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mt-1">
                 {effectiveRate >= 0 ? `+${effectiveRate.toFixed(1)}` : effectiveRate.toFixed(1)}{' '}
                 <span className="text-xs text-slate-400">s/j</span>
               </div>
@@ -423,7 +425,7 @@ export default function WitschiSimulator() {
             </div>
 
             {/* Amplitude */}
-            <div className="bg-[#0F1623] border border-slate-800 rounded-xl p-3">
+            <div className="bg-white dark:bg-[#0F1623] border border-slate-200 dark:border-slate-800 rounded-xl p-3 shadow-sm">
               <div className="flex items-center justify-between text-[11px] text-slate-400">
                 <span>AMPLITUDE</span>
                 <span
@@ -445,7 +447,7 @@ export default function WitschiSimulator() {
             </div>
 
             {/* Repère */}
-            <div className="bg-[#0F1623] border border-slate-800 rounded-xl p-3">
+            <div className="bg-white dark:bg-[#0F1623] border border-slate-200 dark:border-slate-800 rounded-xl p-3 shadow-sm">
               <div className="flex items-center justify-between text-[11px] text-slate-400">
                 <span>REPÈRE</span>
                 <span
@@ -465,7 +467,7 @@ export default function WitschiSimulator() {
             </div>
 
             {/* Angle de Levée & Calibre */}
-            <div className="bg-[#0F1623] border border-slate-800 rounded-xl p-3">
+            <div className="bg-white dark:bg-[#0F1623] border border-slate-200 dark:border-slate-800 rounded-xl p-3 shadow-sm">
               <div className="flex items-center justify-between text-[11px] text-slate-400">
                 <span>LEVÉE</span>
                 <span className="text-[10px] text-amber-400">
@@ -493,8 +495,8 @@ export default function WitschiSimulator() {
                 onClick={() => handleSelectCalibre('2824')}
                 className={`py-2 px-3 rounded-xl border font-mono text-xs font-bold transition ${
                   calibre === '2824'
-                    ? 'border-amber-500 bg-slate-900 text-amber-400 shadow'
-                    : 'border-slate-300 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                    ? 'border-amber-500 bg-amber-500 text-slate-950 font-bold shadow'
+                    : 'border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-400 hover:border-amber-400'
                 }`}
               >
                 ETA 2824-2 (50° · 4 Hz)
@@ -503,8 +505,8 @@ export default function WitschiSimulator() {
                 onClick={() => handleSelectCalibre('6497')}
                 className={`py-2 px-3 rounded-xl border font-mono text-xs font-bold transition ${
                   calibre === '6497'
-                    ? 'border-amber-500 bg-slate-900 text-amber-400 shadow'
-                    : 'border-slate-300 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                    ? 'border-amber-500 bg-amber-500 text-slate-950 font-bold shadow'
+                    : 'border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-400 hover:border-amber-400'
                 }`}
               >
                 ETA 6497-1 (44° · 2.5 Hz)
@@ -542,9 +544,9 @@ export default function WitschiSimulator() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Écran graphique Canvas + 6 Scénarios de Panne (7 cols) */}
         <div className="lg:col-span-7 space-y-4">
-          <div className="bg-[#06090F] border-2 border-slate-800 rounded-2xl overflow-hidden shadow-2xl relative">
-            <div className="px-4 py-2 bg-[#0E1420] border-b border-slate-800 flex flex-wrap items-center justify-between text-xs font-mono">
-              <span className="text-slate-300 font-bold flex items-center gap-1.5">
+          <div className="bg-white dark:bg-[#06090F] border-2 border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xl relative">
+            <div className="px-4 py-2 bg-slate-100 dark:bg-[#0E1420] border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between text-xs font-mono">
+              <span className="text-slate-700 dark:text-slate-300 font-bold flex items-center gap-1.5">
                 <Activity className="w-3.5 h-3.5 text-amber-400" />
                 DIAGRAMME ACOUSTIQUE (PENTE = MARCHE · ÉCART = REPÈRE)
               </span>
@@ -637,13 +639,12 @@ export default function WitschiSimulator() {
             </div>
 
             {/* Schéma SVG Vectoriel du Coq Etachron */}
-            <div className="bg-[#0B0F17] border border-slate-800 rounded-xl p-3 flex items-center justify-center">
+            <div className="bg-slate-100 dark:bg-[#0B0F17] border border-slate-300 dark:border-slate-800 rounded-xl p-3 flex items-center justify-center">
               <svg viewBox="0 0 320 180" className="w-full max-w-[280px] h-auto">
                 {/* Corps du Coq */}
                 <path
                   d="M 35 90 C 35 30, 145 15, 285 55 L 285 125 C 145 165, 35 150, 35 90 Z"
-                  fill="#1E293B"
-                  stroke="#64748B"
+                  className="fill-slate-200 dark:fill-[#1E293B] stroke-slate-400 dark:stroke-[#64748B]"
                   strokeWidth="2"
                 />
                 <text x="235" y="52" fill="#10B981" fontFamily="monospace" fontSize="14" fontWeight="bold">
@@ -680,7 +681,7 @@ export default function WitschiSimulator() {
                 </g>
 
                 {/* Incabloc central */}
-                <circle cx="110" cy="90" r="22" fill="#334155" stroke="#D4AF37" strokeWidth="2" />
+                <circle cx="110" cy="90" r="22" className="fill-slate-300 dark:fill-[#334155] stroke-amber-500" strokeWidth="2" />
                 <circle cx="110" cy="90" r="11" fill="#E11D48" stroke="#FDA4AF" strokeWidth="1.5" />
                 <path
                   d="M 96 84 Q 110 72 124 84 M 96 96 Q 110 108 124 96"

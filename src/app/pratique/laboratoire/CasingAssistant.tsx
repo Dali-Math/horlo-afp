@@ -9,7 +9,6 @@ import {
   ClipboardCheck,
   Check,
   ShieldCheck,
-  Sparkles,
   ShieldAlert,
   Info,
 } from 'lucide-react';
@@ -116,7 +115,7 @@ export default function CasingAssistant() {
           </div>
 
           {/* SVG Profil d'aiguilles */}
-          <div className="bg-slate-950 border border-slate-800 rounded-xl p-3">
+          <div className="bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl p-3">
             <svg viewBox="0 0 460 170" className="w-full h-auto select-none">
               {/* Glace Saphir supérieure */}
               <line x1="20" y1="26" x2="440" y2="26" stroke="#38BDF8" strokeWidth="2.5" strokeDasharray="5 3" />
@@ -125,7 +124,7 @@ export default function CasingAssistant() {
               </text>
 
               {/* Canon central de minuterie & tenon trotteuse */}
-              <rect x="35" y="45" width="22" height="105" fill="#475569" stroke="#94A3B8" strokeWidth="1" />
+              <rect x="35" y="45" width="22" height="105" className="fill-slate-300 dark:fill-[#475569] stroke-slate-400 dark:stroke-[#94A3B8]" strokeWidth="1" />
               <rect x="42" y="32" width="8" height="25" fill="#CBD5E1" stroke="#E2E8F0" strokeWidth="1" />
 
               {/* Trotteuse de seconde */}
@@ -152,7 +151,7 @@ export default function CasingAssistant() {
               </text>
 
               {/* Cadran et index appliqués */}
-              <line x1="20" y1="145" x2="440" y2="145" stroke="#94A3B8" strokeWidth="3" />
+              <line x1="20" y1="145" x2="440" y2="145" className="stroke-slate-400 dark:stroke-[#94A3B8]" strokeWidth="3" />
               <rect x="350" y="125" width="24" height="20" rx="2" fill="#F59E0B" stroke="#D4AF37" strokeWidth="1" />
               <rect x="180" y="130" width="16" height="15" rx="1" fill="#64748B" stroke="#94A3B8" strokeWidth="1" />
               <text x="35" y="160" fill="#94A3B8" fontFamily="monospace" fontSize="9">

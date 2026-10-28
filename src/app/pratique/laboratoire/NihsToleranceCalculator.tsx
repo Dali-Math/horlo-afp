@@ -8,7 +8,6 @@ import {
   AlertTriangle,
   Info,
   ShieldCheck,
-  Sparkles,
   Layers,
   RotateCcw,
 } from 'lucide-react';
@@ -373,8 +372,8 @@ export default function NihsToleranceCalculator() {
         </div>
 
         {/* Right Column (7 cols): Dynamic SVG Zero-Line Diagram & Cross Section */}
-        <div className="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-2xl p-4 shadow-xl">
-          <div className="flex items-center justify-between text-xs font-mono text-slate-400 pb-2 mb-2 border-b border-slate-800">
+        <div className="lg:col-span-7 bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-2xl p-4 shadow-xl">
+          <div className="flex items-center justify-between text-xs font-mono text-slate-600 dark:text-slate-400 pb-2 mb-2 border-b border-slate-300 dark:border-slate-800">
             <span className="text-amber-400 font-semibold flex items-center gap-1.5">
               <Compass className="w-3.5 h-3.5" />
               DIAGRAMME DES ÉCARTS PAR RAPPORT À LA LIGNE ZÉRO
@@ -387,17 +386,17 @@ export default function NihsToleranceCalculator() {
           <div className="w-full aspect-[650/360]">
             <svg viewBox="0 0 650 360" className="w-full h-full select-none">
               {/* Grid Lines */}
-              <line x1="40" y1="90" x2="430" y2="90" stroke="#1E293B" strokeDasharray="3 3" />
-              <line x1="40" y1="135" x2="430" y2="135" stroke="#1E293B" strokeDasharray="3 3" />
-              <line x1="40" y1="225" x2="430" y2="225" stroke="#1E293B" strokeDasharray="3 3" />
-              <line x1="40" y1="270" x2="430" y2="270" stroke="#1E293B" strokeDasharray="3 3" />
+              <line x1="40" y1="90" x2="430" y2="90" className="stroke-slate-300 dark:stroke-[#1E293B]" strokeDasharray="3 3" />
+              <line x1="40" y1="135" x2="430" y2="135" className="stroke-slate-300 dark:stroke-[#1E293B]" strokeDasharray="3 3" />
+              <line x1="40" y1="225" x2="430" y2="225" className="stroke-slate-300 dark:stroke-[#1E293B]" strokeDasharray="3 3" />
+              <line x1="40" y1="270" x2="430" y2="270" className="stroke-slate-300 dark:stroke-[#1E293B]" strokeDasharray="3 3" />
 
               {/* Zero Line */}
-              <line x1="40" y1={zeroY} x2="430" y2={zeroY} stroke="#CBD5E1" strokeWidth="2.5" />
+              <line x1="40" y1={zeroY} x2="430" y2={zeroY} className="stroke-slate-700 dark:stroke-[#CBD5E1]" strokeWidth="2.5" />
               <text
                 x="45"
                 y={zeroY - 8}
-                fill="#CBD5E1"
+                className="fill-slate-700 dark:fill-[#CBD5E1]"
                 fontFamily="JetBrains Mono, monospace"
                 fontSize="11"
                 fontWeight="bold"

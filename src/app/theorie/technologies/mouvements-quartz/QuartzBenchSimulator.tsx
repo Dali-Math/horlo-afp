@@ -123,9 +123,9 @@ export default function QuartzBenchSimulator() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Column (7 cols): Interactive SVG Movement & Lavet Step Motor */}
-        <div className="lg:col-span-7 bg-slate-950 rounded-2xl border border-slate-800 p-5 shadow-inner space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono border-b border-slate-800 pb-3">
-            <span className="text-slate-300 flex items-center gap-1.5">
+        <div className="lg:col-span-7 bg-slate-100 dark:bg-slate-950 rounded-2xl border border-slate-300 dark:border-slate-800 p-5 shadow-inner space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono border-b border-slate-300 dark:border-slate-800 pb-3">
+            <span className="text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
               <Activity className="w-4 h-4 text-amber-400" />
               FLUX MAGNÉTIQUE STATOR &amp; ROTOR BIPOLAIRE
             </span>
@@ -154,8 +154,8 @@ export default function QuartzBenchSimulator() {
                 className="cursor-pointer transition-opacity hover:opacity-90"
                 onClick={() => setTestMode("voltage")}
               >
-                <circle cx="85" cy="115" r="52" fill="#1E293B" stroke={testMode === "voltage" ? "#F59E0B" : "#94A3B8"} strokeWidth="3" />
-                <circle cx="85" cy="115" r="42" fill="#334155" stroke="#CBD5E1" strokeWidth="1.5" strokeDasharray="4 3" />
+                <circle cx="85" cy="115" r="52" className="fill-slate-200 dark:fill-[#1E293B]" stroke={testMode === "voltage" ? "#F59E0B" : "#94A3B8"} strokeWidth="3" />
+                <circle cx="85" cy="115" r="42" className="fill-slate-300 dark:fill-[#334155]" stroke="#CBD5E1" strokeWidth="1.5" strokeDasharray="4 3" />
                 <text x="85" y="102" textAnchor="middle" fill="#F8FAFC" fontFamily="monospace" fontSize="11" fontWeight="bold">PILE 371</text>
                 <text x="85" y="118" textAnchor="middle" fill="#38BDF8" fontFamily="monospace" fontSize="10">Ag₂O • 1.55V</text>
                 <text
@@ -178,7 +178,7 @@ export default function QuartzBenchSimulator() {
                 className="cursor-pointer transition-opacity hover:opacity-90"
                 onClick={() => setTestMode("consumption")}
               >
-                <rect x="175" y="55" width="145" height="125" rx="8" fill="#0F172A" stroke={testMode === "consumption" ? "#F59E0B" : "#38BDF8"} strokeWidth="2" />
+                <rect x="175" y="55" width="145" height="125" rx="8" className="fill-slate-200 dark:fill-[#0F172A]" stroke={testMode === "consumption" ? "#F59E0B" : "#38BDF8"} strokeWidth="2" />
                 <text x="247" y="78" textAnchor="middle" fill="#38BDF8" fontFamily="monospace" fontSize="10" fontWeight="bold">CIRCUIT CMOS</text>
                 <rect x="195" y="92" width="105" height="28" rx="12" fill="#334155" stroke="#CBD5E1" strokeWidth="1.5" />
                 <text x="247" y="110" textAnchor="middle" fill="#FDE047" fontFamily="monospace" fontSize="9.5" fontWeight="bold">QUARTZ 32&apos;768 Hz</text>
@@ -237,7 +237,7 @@ export default function QuartzBenchSimulator() {
                 </text>
 
                 {/* Stator Bore + Asymmetric Notches */}
-                <circle cx="565" cy="160" r="46" fill="#070A0F" stroke="#475569" strokeWidth="2" />
+                <circle cx="565" cy="160" r="46" className="fill-slate-100 dark:fill-[#070A0F]" stroke="#475569" strokeWidth="2" />
                 <circle cx="532" cy="127" r="7" fill="#1E293B" stroke="#D4AF37" strokeWidth="1.5" />
                 <circle cx="598" cy="193" r="7" fill="#1E293B" stroke="#D4AF37" strokeWidth="1.5" />
                 <text x="615" y="122" fill="#D4AF37" fontFamily="monospace" fontSize="8">Encoches 35°</text>

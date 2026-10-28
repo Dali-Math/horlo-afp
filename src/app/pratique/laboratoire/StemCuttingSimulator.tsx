@@ -8,7 +8,6 @@ import {
   AlertTriangle,
   Info,
   Droplets,
-  Sparkles,
   ShieldCheck,
   ShieldAlert,
   Compass,
@@ -109,8 +108,8 @@ export default function StemCuttingSimulator() {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left (7 cols): Interactive CAD Cross-Section SVG */}
-        <div className="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono border-b border-slate-800 pb-3">
+        <div className="lg:col-span-7 bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-2xl p-4 shadow-xl space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono border-b border-slate-300 dark:border-slate-800 pb-3">
             <span className="text-amber-400 font-semibold flex items-center gap-1.5">
               <Compass className="w-3.5 h-3.5" />
               COUPE AXIALE : MOUVEMENT ETA 2824-2 ➔ CARRURE ➔ TUBE ➔ COURONNE
@@ -461,7 +460,7 @@ export default function StemCuttingSimulator() {
               onClick={handleApplyOptimalCut}
               className="p-2.5 rounded-xl border border-amber-500/50 bg-amber-500/15 hover:bg-amber-500 hover:text-slate-950 text-xs font-mono text-amber-400 font-bold flex items-center justify-center gap-2 transition"
             >
-              <Sparkles className="w-3.5 h-3.5" />
+              <Scissors className="w-3.5 h-3.5" />
               <span>Coupe Idéale Auto</span>
             </button>
 

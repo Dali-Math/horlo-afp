@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sparkles, Eye, ShieldCheck, AlertTriangle, CheckCircle2, RotateCcw, Sliders } from "lucide-react";
+import { Eye, ShieldCheck, AlertTriangle, CheckCircle2, RotateCcw, Sliders } from "lucide-react";
 
 export default function PolishingBenchSimulator() {
   const [phase, setPhase] = useState<1 | 2 | 3>(1);
@@ -59,7 +59,7 @@ export default function PolishingBenchSimulator() {
       {/* Section Header */}
       <div className="border-b border-slate-200 dark:border-slate-800 pb-5">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 mb-2">
-          <Sparkles className="w-3.5 h-3.5" />
+          <Eye className="w-3.5 h-3.5" />
           <span>Finitions &amp; Habillage Haute Horlogerie • Touret, Lapidaire &amp; Contrôle Optique</span>
         </div>
         <h2 className="text-xl sm:text-2xl font-bold font-serif text-slate-900 dark:text-white">
@@ -155,7 +155,7 @@ export default function PolishingBenchSimulator() {
           </div>
 
           {/* SVG Lug Cross-Section & Wheel Contact */}
-          <div className="bg-slate-950 border border-slate-800 rounded-xl p-4">
+          <div className="bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl p-4">
             <svg viewBox="0 0 440 190" className="w-full h-auto">
               {/* Watch Lug Profile */}
               <path
@@ -164,8 +164,7 @@ export default function PolishingBenchSimulator() {
                     ? "M 75 165 L 75 85 L 205 85 Q 235 90 295 140 L 295 165 Z"
                     : "M 75 165 L 75 85 L 225 85 L 295 135 L 295 165 Z"
                 }
-                fill="#334155"
-                stroke="#E2E8F0"
+                className="fill-slate-200 dark:fill-[#334155] stroke-slate-500 dark:stroke-[#E2E8F0]"
                 strokeWidth="2.5"
               />
               <text x="150" y="132" textAnchor="middle" fill="#94A3B8" fontFamily="monospace" fontSize="10" fontWeight="bold">
@@ -264,7 +263,7 @@ export default function PolishingBenchSimulator() {
           </div>
 
           {/* SVG Optical Mire Reflection */}
-          <div className="bg-slate-950 border border-slate-800 rounded-xl p-4">
+          <div className="bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 rounded-xl p-4">
             <div className="text-[10px] font-mono text-slate-400 uppercase mb-2 flex justify-between">
               <span>REFLET DES LIGNES DE MIRE SUR LE CHANFREIN DE CORNE</span>
               <span className={`font-bold ${edgeRounding <= 15 ? "text-emerald-400" : "text-rose-400"}`}>
@@ -273,8 +272,8 @@ export default function PolishingBenchSimulator() {
             </div>
             <svg viewBox="0 0 440 200" className="w-full h-auto">
               {/* Facet 1 (Top Plane) & Facet 2 (Bevel Plane) */}
-              <polygon points="30,25 220,25 220,175 30,175" fill="#1E293B" stroke="#475569" strokeWidth="1.5" />
-              <polygon points="220,25 410,45 410,175 220,175" fill="#0F172A" stroke="#475569" strokeWidth="1.5" />
+              <polygon points="30,25 220,25 220,175 30,175" className="fill-slate-200 dark:fill-[#1E293B] stroke-slate-300 dark:stroke-[#475569]" strokeWidth="1.5" />
+              <polygon points="220,25 410,45 410,175 220,175" className="fill-slate-300 dark:fill-[#0F172A] stroke-slate-300 dark:stroke-[#475569]" strokeWidth="1.5" />
 
               {/* Central Ridge Line */}
               <line
