@@ -372,55 +372,55 @@ export function LimitationFingerSVG() {
       <rect width="500" height="280" rx="10" className="theme-bg" strokeWidth="1.2" />
 
       {/* Titre */}
-      <text x="250" y="24" className="theme-title" textAnchor="middle">
+      <text x="250" y="20" className="theme-title" textAnchor="middle">
         PORTE-PIÈCE À VIS DE LIMITATION SOUS LA PIERRE DE SECONDE
       </text>
 
       {/* Coupe centrale */}
-      <g transform="translate(180, 45)">
-        <rect x="68" y="10" width="4" height="150" fill="#cbd5e1" stroke="#334155" strokeWidth="0.8" />
+      <g transform="translate(180, 58)">
+        <rect x="68" y="10" width="4" height="142" fill="#cbd5e1" stroke="#334155" strokeWidth="0.8" />
         
         {/* Pont supérieur */}
-        <rect x="10" y="60" width="120" height="20" rx="2" fill="#94a3b8" stroke="#334155" strokeWidth="1.2" />
-        <rect x="62" y="62" width="16" height="16" rx="2" fill="url(#rubyCenterGrad)" stroke="#9f1239" strokeWidth="1" />
+        <rect x="10" y="55" width="120" height="18" rx="2" fill="#94a3b8" stroke="#334155" strokeWidth="1.2" />
+        <rect x="62" y="56" width="16" height="16" rx="2" fill="url(#rubyCenterGrad)" stroke="#9f1239" strokeWidth="1" />
         
         {/* Pont inférieur */}
-        <rect x="10" y="140" width="120" height="20" rx="2" fill="#94a3b8" stroke="#334155" strokeWidth="1.2" />
-        <rect x="62" y="142" width="16" height="16" rx="2" fill="url(#rubyCenterGrad)" stroke="#9f1239" strokeWidth="1" />
+        <rect x="10" y="132" width="120" height="18" rx="2" fill="#94a3b8" stroke="#334155" strokeWidth="1.2" />
+        <rect x="62" y="133" width="16" height="16" rx="2" fill="url(#rubyCenterGrad)" stroke="#9f1239" strokeWidth="1" />
 
         {/* DOIGT DE LIMITATION */}
-        <g transform="translate(58, 160)">
-          <polygon points="12,0 6,15 18,15" fill="url(#fingerGrad)" stroke="#78350f" strokeWidth="1" />
-          <rect x="8" y="15" width="8" height="45" fill="url(#fingerGrad)" stroke="#78350f" strokeWidth="0.8" />
-          <rect x="-10" y="60" width="44" height="14" rx="2" fill="#d97706" stroke="#451a03" strokeWidth="1" />
-          <line x1="-4" y1="60" x2="-4" y2="74" stroke="#78350f" strokeWidth="1" />
-          <line x1="4" y1="60" x2="4" y2="74" stroke="#78350f" strokeWidth="1" />
-          <line x1="12" y1="60" x2="12" y2="74" stroke="#78350f" strokeWidth="1" />
-          <line x1="20" y1="60" x2="20" y2="74" stroke="#78350f" strokeWidth="1" />
-          <line x1="28" y1="60" x2="28" y2="74" stroke="#78350f" strokeWidth="1" />
+        <g transform="translate(58, 150)">
+          <polygon points="12,0 6,14 18,14" fill="url(#fingerGrad)" stroke="#78350f" strokeWidth="1" />
+          <rect x="8" y="14" width="8" height="42" fill="url(#fingerGrad)" stroke="#78350f" strokeWidth="0.8" />
+          <rect x="-10" y="56" width="44" height="13" rx="2" fill="#d97706" stroke="#451a03" strokeWidth="1" />
+          <line x1="-4" y1="56" x2="-4" y2="69" stroke="#78350f" strokeWidth="1" />
+          <line x1="4" y1="56" x2="4" y2="69" stroke="#78350f" strokeWidth="1" />
+          <line x1="12" y1="56" x2="12" y2="69" stroke="#78350f" strokeWidth="1" />
+          <line x1="20" y1="56" x2="20" y2="69" stroke="#78350f" strokeWidth="1" />
+          <line x1="28" y1="56" x2="28" y2="69" stroke="#78350f" strokeWidth="1" />
         </g>
 
         {/* Force F */}
         <g transform="translate(70, -2)">
-          <rect x="-6" y="-12" width="12" height="18" fill="#38bdf8" stroke="#0284c7" strokeWidth="1" />
-          <path d="M0,8 L0,18 M-4,13 L0,18 L4,13" stroke="#dc2626" strokeWidth="2.5" strokeLinecap="round" />
-          <text x="0" y="-16" fill="#dc2626" fontSize="8" fontWeight="bold" fontFamily="var(--font-jbmono), monospace" textAnchor="middle">
+          <rect x="-6" y="-8" width="12" height="15" fill="#38bdf8" stroke="#0284c7" strokeWidth="1" />
+          <path d="M0,8 L0,16 M-3,12 L0,16 L3,12" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" />
+          <text x="14" y="5" fill="#dc2626" fontSize="7.5" fontWeight="bold" fontFamily="var(--font-jbmono), monospace">
             Force F
           </text>
         </g>
 
         {/* Réaction R */}
-        <g transform="translate(70, 182)">
-          <path d="M0,0 L0,-14 M-4,-8 L0,-14 L4,-8" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" />
-          <text x="22" y="-6" fill="#15803d" fontSize="8" fontWeight="bold" fontFamily="var(--font-jbmono), monospace">
+        <g transform="translate(70, 172)">
+          <path d="M0,0 L0,-12 M-3,-8 L0,-12 L3,-8" stroke="#16a34a" strokeWidth="2" strokeLinecap="round" />
+          <text x="18" y="-4" fill="#15803d" fontSize="7.5" fontWeight="bold" fontFamily="var(--font-jbmono), monospace">
             Appui R
           </text>
         </g>
       </g>
 
       {/* Cartouche d'explication à gauche */}
-      <g transform="translate(25, 55)">
-        <rect x="0" y="0" width="145" height="190" rx="6" className="theme-box" strokeWidth="1" />
+      <g transform="translate(25, 48)">
+        <rect x="0" y="0" width="145" height="198" rx="6" className="theme-box" strokeWidth="1" />
         <text x="12" y="20" className="theme-title">FONCTION DU DOIGT :</text>
         <line x1="12" y1="26" x2="133" y2="26" stroke="#d97706" strokeWidth="0.8" />
         
@@ -437,17 +437,17 @@ export function LimitationFingerSVG() {
           doigt de limitation.
         </text>
 
-        <rect x="8" y="134" width="129" height="46" rx="4" className="theme-alert-bg" strokeWidth="0.8" />
-        <text x="14" y="146" fill="#b91c1c" fontSize="7.5" fontWeight="bold" fontFamily="var(--font-jbmono), monospace">
+        <rect x="8" y="136" width="129" height="50" rx="4" className="theme-alert-bg" strokeWidth="0.8" />
+        <text x="14" y="150" fill="#b91c1c" fontSize="7.5" fontWeight="bold" fontFamily="var(--font-jbmono), monospace">
           SANS CE DOIGT :
         </text>
-        <text x="14" y="157" className="theme-sub">• Déchassage du rubis</text>
-        <text x="14" y="167" className="theme-sub">• Rupture pivot de seconde</text>
+        <text x="14" y="163" className="theme-sub">• Déchassage du rubis</text>
+        <text x="14" y="174" className="theme-sub">• Rupture pivot de seconde</text>
       </g>
 
       {/* Cartouche à droite */}
-      <g transform="translate(340, 55)">
-        <rect x="0" y="0" width="135" height="190" rx="6" className="theme-box" strokeWidth="1" />
+      <g transform="translate(340, 48)">
+        <rect x="0" y="0" width="135" height="198" rx="6" className="theme-box" strokeWidth="1" />
         <text x="12" y="20" fill="#2563eb" fontSize="9" fontWeight="bold" fontFamily="var(--font-jbmono), monospace">
           RÉGLAGE VIS SOUTIEN
         </text>
@@ -460,13 +460,13 @@ export function LimitationFingerSVG() {
         <text x="16" y="100" className="theme-sub">la roue tourne libre</text>
         <text x="16" y="112" className="theme-sub">avant le chassage.</text>
 
-        <rect x="8" y="130" width="119" height="50" rx="4" className="theme-success-bg" strokeWidth="0.8" />
-        <text x="14" y="145" fill="#047857" fontSize="7.5" fontWeight="bold" fontFamily="var(--font-jbmono), monospace">
+        <rect x="8" y="134" width="119" height="54" rx="4" className="theme-success-bg" strokeWidth="0.8" />
+        <text x="14" y="149" fill="#047857" fontSize="7.5" fontWeight="bold" fontFamily="var(--font-jbmono), monospace">
           CONSEIL MAÎTRE :
         </text>
-        <text x="14" y="157" className="theme-sub">Dévisser d'1/8e de tour</text>
-        <text x="14" y="167" className="theme-sub">après aiguillage pour</text>
-        <text x="14" y="176" className="theme-sub">libérer le calibre !</text>
+        <text x="14" y="161" className="theme-sub">Dévisser d'1/8e de tour</text>
+        <text x="14" y="171" className="theme-sub">après aiguillage pour</text>
+        <text x="14" y="180" className="theme-sub">libérer le calibre !</text>
       </g>
     </svg>
   );
