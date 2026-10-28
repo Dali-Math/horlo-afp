@@ -8,7 +8,7 @@
  * Strictement conforme aux standards de l'artisan horloger suisse (NIHS, ISO 22810, ETA 2824-2).
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import {
   Wrench,
@@ -339,6 +339,16 @@ export default function OutillageKitSection() {
 
   // État modale d'agrandissement d'image
   const [lightboxImage, setLightboxImage] = useState<{ src: string; title: string; subtitle: string } | null>(null);
+
+  // Écoute de la touche Échap pour fermer la modale
+  useEffect(() => {
+    if (!lightboxImage) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLightboxImage(null);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [lightboxImage]);
 
   return (
     <div className="space-y-6">
