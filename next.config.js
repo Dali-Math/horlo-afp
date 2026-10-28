@@ -49,7 +49,6 @@ const nextConfig = {
     outputFileTracingExcludes: {
       '*': [
         'public/**/*',
-        'node_modules/**/*',
         '*.pdf',
         '*.mp4',
         'public/videos/**/*',

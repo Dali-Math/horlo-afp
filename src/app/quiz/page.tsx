@@ -88,7 +88,7 @@ function App() {
   const getCompletedCount = () => completedQuizzes.length;
 
   return (
-    <div className="quiz-page-shell min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white">
+    <div className="quiz-page-shell min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white overflow-x-clip">
       <ParticlesBackground />
       <ProgressTracker progress={progress} />
 
