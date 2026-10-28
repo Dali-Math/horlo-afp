@@ -38,9 +38,12 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "HorloLearn – Passion & Découverte Horlogère Suisse",
+  title: {
+    default: "HorloLearn – Savoir-Faire & Haute Horlogerie Suisse",
+    template: "%s | HorloLearn",
+  },
   description:
-    "HorloLearn partage la passion de l'horlogerie suisse à travers des fiches techniques, quiz, vidéos et ressources destinées aux amateurs et curieux du monde horloger.",
+    "Plateforme suisse de référence pour l'apprentissage horloger : calibres 3D interactifs, micro-mécanique, lubrification NIHS, diagnostic d'établi et culture des manufactures.",
   keywords: [
     "horlogerie suisse",
     "ETA 6497",
@@ -51,7 +54,7 @@ export const metadata: Metadata = {
   ],
   metadataBase: new URL(SITE.domain),
   openGraph: {
-    title: "HorloLearn – Passion & Découverte Horlogère Suisse",
+    title: "HorloLearn – Savoir-Faire & Haute Horlogerie Suisse",
     description:
       "Plateforme indépendante dédiée aux passionnés d'horlogerie suisse. Découvrez les mécanismes, les gestes et les savoir-faire horlogers à travers des ressources pédagogiques accessibles à tous.",
     url: SITE.domain,
