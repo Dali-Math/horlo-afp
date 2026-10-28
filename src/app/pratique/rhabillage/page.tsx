@@ -14,7 +14,7 @@ import {
   ZoomIn,
   X,
   ChevronRight,
-  Sparkles,
+  
   Info
 } from "lucide-react";
 
@@ -42,28 +42,28 @@ function EscapementSVG() {
           <stop offset="100%" stopColor="#ca8a04" />
         </radialGradient>
       </defs>
-      <rect width="400" height="220" rx="8" fill="#070a10" stroke="#1f293d" strokeWidth="1" />
-      <g opacity="0.12">
-        <path d="M0,40 H400 M0,80 H400 M0,120 H400 M0,160 H400" stroke="#94a3b8" strokeDasharray="2,4" />
-        <path d="M40,0 V220 M80,0 V220 M120,0 V220 M160,0 V220 M200,0 V220 M240,0 V220 M280,0 V220 M320,0 V220 M360,0 V220" stroke="#94a3b8" strokeDasharray="2,4" />
+      <rect width="400" height="220" rx="8" className="fill-slate-100 dark:fill-[#070a10] stroke-slate-300 dark:stroke-[#1f293d]" strokeWidth="1" />
+      <g opacity="0.15">
+        <path d="M0,40 H400 M0,80 H400 M0,120 H400 M0,160 H400" className="stroke-slate-400 dark:stroke-[#94a3b8]" strokeDasharray="2,4" />
+        <path d="M40,0 V220 M80,0 V220 M120,0 V220 M160,0 V220 M200,0 V220 M240,0 V220 M280,0 V220 M320,0 V220 M360,0 V220" className="stroke-slate-400 dark:stroke-[#94a3b8]" strokeDasharray="2,4" />
       </g>
       <path d="M80,150 L140,105 L260,105 L320,150 L300,165 L250,128 L150,128 L100,165 Z" fill="url(#steelGrad)" stroke="#64748b" strokeWidth="1.5" />
-      <circle cx="200" cy="116" r="9" fill="#0f172a" stroke="#cbd5e1" strokeWidth="1.5" />
-      <circle cx="200" cy="116" r="3" fill="#38bdf8" />
+      <circle cx="200" cy="116" r="9" className="fill-white dark:fill-[#0f172a] stroke-slate-400 dark:stroke-[#cbd5e1]" strokeWidth="1.5" />
+      <circle cx="200" cy="116" r="3" fill="#0284c7" />
       <path d="M194,125 L190,175 L180,185 L188,188 L196,170 L204,170 L212,188 L220,185 L210,175 L206,125 Z" fill="url(#steelGrad)" stroke="#64748b" strokeWidth="1" />
-      <line x1="200" y1="130" x2="200" y2="182" stroke="#e2e8f0" strokeWidth="1.8" />
-      <polygon points="120,80 155,103 145,123 110,100" fill="url(#rubyGrad)" stroke="#f43f5e" strokeWidth="1.5" />
-      <line x1="120" y1="80" x2="155" y2="103" stroke="#facc15" strokeWidth="2.8" strokeLinecap="round" />
+      <line x1="200" y1="130" x2="200" y2="182" className="stroke-slate-600 dark:stroke-[#e2e8f0]" strokeWidth="1.8" />
+      <polygon points="120,80 155,103 145,123 110,100" fill="url(#rubyGrad)" stroke="#e11d48" strokeWidth="1.5" />
+      <line x1="120" y1="80" x2="155" y2="103" stroke="#eab308" strokeWidth="2.8" strokeLinecap="round" />
       <ellipse cx="137" cy="91" rx="5" ry="3.5" transform="rotate(33 137 91)" fill="url(#oil9415)" stroke="#fff" strokeWidth="0.8" />
-      <text x="60" y="70" fill="#f43f5e" fontSize="9" fontFamily="monospace" fontWeight="bold">Palette d'Entrée</text>
-      <polygon points="280,80 245,103 255,123 290,100" fill="url(#rubyGrad)" stroke="#f43f5e" strokeWidth="1.5" />
-      <line x1="280" y1="80" x2="245" y2="103" stroke="#facc15" strokeWidth="2.8" strokeLinecap="round" />
+      <text x="60" y="70" className="fill-rose-700 dark:fill-[#f43f5e]" fontSize="9" fontFamily="monospace" fontWeight="bold">Palette d'Entrée</text>
+      <polygon points="280,80 245,103 255,123 290,100" fill="url(#rubyGrad)" stroke="#e11d48" strokeWidth="1.5" />
+      <line x1="280" y1="80" x2="245" y2="103" stroke="#eab308" strokeWidth="2.8" strokeLinecap="round" />
       <ellipse cx="262" cy="91" rx="5" ry="3.5" transform="rotate(-33 262 91)" fill="url(#oil9415)" stroke="#fff" strokeWidth="0.8" />
-      <text x="260" y="70" fill="#f43f5e" fontSize="9" fontFamily="monospace" fontWeight="bold">Palette de Sortie</text>
-      <rect x="12" y="182" width="376" height="30" rx="5" fill="#0f172a" stroke="#d4af37" strokeWidth="0.8" />
+      <text x="260" y="70" className="fill-rose-700 dark:fill-[#f43f5e]" fontSize="9" fontFamily="monospace" fontWeight="bold">Palette de Sortie</text>
+      <rect x="12" y="182" width="376" height="30" rx="5" className="fill-amber-50 dark:fill-[#0f172a] stroke-amber-500/50 dark:stroke-[#d4af37]" strokeWidth="0.8" />
       <circle cx="24" cy="197" r="4.5" fill="#eab308" />
-      <text x="35" y="195" fill="#fef08a" fontSize="8.5" fontFamily="monospace" fontWeight="bold">LUBRIFICATION 9415 : PLAN D'IMPULSION SEULEMENT</text>
-      <text x="35" y="206" fill="#94a3b8" fontSize="8" fontFamily="sans-serif">1 micro-goutte sur 2-3 dents de la roue. Le plan de repos et le corps restent 100% secs.</text>
+      <text x="35" y="195" className="fill-amber-900 dark:fill-[#fef08a]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">LUBRIFICATION 9415 : PLAN D'IMPULSION SEULEMENT</text>
+      <text x="35" y="206" className="fill-slate-700 dark:fill-[#94a3b8]" fontSize="8" fontFamily="sans-serif">1 micro-goutte sur 2-3 dents de la roue. Le plan de repos et le corps restent 100% secs.</text>
     </svg>
   );
 }
@@ -88,27 +88,27 @@ function IncablocSVG() {
           <stop offset="100%" stopColor="#881337" />
         </linearGradient>
       </defs>
-      <rect width="400" height="220" rx="8" fill="#070a10" stroke="#1f293d" strokeWidth="1" />
-      <g opacity="0.12">
-        <path d="M0,40 H400 M0,80 H400 M0,120 H400 M0,160 H400" stroke="#94a3b8" strokeDasharray="2,4" />
-        <path d="M40,0 V220 M80,0 V220 M120,0 V220 M160,0 V220 M200,0 V220 M240,0 V220 M280,0 V220 M320,0 V220 M360,0 V220" stroke="#94a3b8" strokeDasharray="2,4" />
+      <rect width="400" height="220" rx="8" className="fill-slate-100 dark:fill-[#070a10] stroke-slate-300 dark:stroke-[#1f293d]" strokeWidth="1" />
+      <g opacity="0.15">
+        <path d="M0,40 H400 M0,80 H400 M0,120 H400 M0,160 H400" className="stroke-slate-400 dark:stroke-[#94a3b8]" strokeDasharray="2,4" />
+        <path d="M40,0 V220 M80,0 V220 M120,0 V220 M160,0 V220 M200,0 V220 M240,0 V220 M280,0 V220 M320,0 V220 M360,0 V220" className="stroke-slate-400 dark:stroke-[#94a3b8]" strokeDasharray="2,4" />
       </g>
       <path d="M120,50 L280,50 L260,140 L230,160 L170,160 L140,140 Z" fill="url(#brassGrad)" stroke="#ca8a04" strokeWidth="1.5" opacity="0.85" />
       <path d="M160,110 L240,110 L230,145 L170,145 Z" fill="url(#rubyCap)" stroke="#fda4af" strokeWidth="1" />
-      <circle cx="200" cy="128" r="4" fill="#0f172a" stroke="#fff" strokeWidth="0.8" />
-      <text x="250" y="132" fill="#fda4af" fontSize="8.5" fontFamily="monospace">Pierre percée olivée</text>
+      <circle cx="200" cy="128" r="4" className="fill-white dark:fill-[#0f172a] stroke-slate-700 dark:stroke-[#fff]" strokeWidth="0.8" />
+      <text x="250" y="132" className="fill-rose-700 dark:fill-[#fda4af]" fontSize="8.5" fontFamily="monospace">Pierre percée olivée</text>
       <rect x="155" y="75" width="90" height="25" rx="3" fill="url(#rubyCap)" stroke="#f43f5e" strokeWidth="1.2" />
-      <text x="255" y="92" fill="#f43f5e" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Contre-pivot (Rubis)</text>
-      <ellipse cx="200" cy="87" rx="22" ry="7.5" fill="url(#oil9010)" stroke="#bfdbfe" strokeWidth="1.2" />
-      <text x="14" y="90" fill="#60a5fa" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Goutte Moebius 9010 ➔</text>
-      <path d="M140,62 C150,45 180,42 200,52 C220,42 250,45 260,62 C265,70 250,70 240,65 C225,58 210,68 200,68 C190,68 175,58 160,65 C150,70 135,70 140,62 Z" fill="none" stroke="#e2e8f0" strokeWidth="2" strokeLinecap="round" />
-      <text x="160" y="38" fill="#e2e8f0" fontSize="8.5" fontFamily="monospace">Ressort Lyre Incabloc</text>
-      <line x1="200" y1="175" x2="200" y2="128" stroke="#38bdf8" strokeWidth="2.5" strokeLinecap="round" />
-      <text x="210" y="172" fill="#38bdf8" fontSize="8.5" fontFamily="monospace">Pivot de balancier</text>
-      <rect x="12" y="182" width="376" height="30" rx="5" fill="#0f172a" stroke="#3b82f6" strokeWidth="0.8" />
-      <circle cx="24" cy="197" r="4.5" fill="#3b82f6" />
-      <text x="35" y="195" fill="#93c5fd" fontSize="8.5" fontFamily="monospace" fontWeight="bold">HUILAGE CONTRE-PIVOT : GOUTTE DE 1/2 À 2/3 DU DIAMÈTRE</text>
-      <text x="35" y="206" fill="#94a3b8" fontSize="8" fontFamily="sans-serif">La goutte de Moebius 9010 doit être parfaitement centrée et ronde. Zéro débordement.</text>
+      <text x="255" y="92" className="fill-rose-700 dark:fill-[#f43f5e]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Contre-pivot (Rubis)</text>
+      <ellipse cx="200" cy="87" rx="22" ry="7.5" fill="url(#oil9010)" stroke="#93c5fd" strokeWidth="1.2" />
+      <text x="14" y="90" className="fill-sky-700 dark:fill-[#60a5fa]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Goutte Moebius 9010 ➔</text>
+      <path d="M140,62 C150,45 180,42 200,52 C220,42 250,45 260,62 C265,70 250,70 240,65 C225,58 210,68 200,68 C190,68 175,58 160,65 C150,70 135,70 140,62 Z" fill="none" className="stroke-slate-600 dark:stroke-[#e2e8f0]" strokeWidth="2" strokeLinecap="round" />
+      <text x="160" y="38" className="fill-slate-700 dark:fill-[#e2e8f0]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Ressort Lyre Incabloc</text>
+      <line x1="200" y1="175" x2="200" y2="128" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" />
+      <text x="210" y="172" className="fill-sky-700 dark:fill-[#38bdf8]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Pivot de balancier</text>
+      <rect x="12" y="182" width="376" height="30" rx="5" className="fill-sky-50 dark:fill-[#0f172a] stroke-sky-400 dark:stroke-[#3b82f6]" strokeWidth="0.8" />
+      <circle cx="24" cy="197" r="4.5" fill="#0284c7" />
+      <text x="35" y="195" className="fill-sky-950 dark:fill-[#93c5fd]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">HUILAGE CONTRE-PIVOT : GOUTTE DE 1/2 À 2/3 DU DIAMÈTRE</text>
+      <text x="35" y="206" className="fill-slate-700 dark:fill-[#94a3b8]" fontSize="8" fontFamily="sans-serif">La goutte de Moebius 9010 doit être parfaitement centrée et ronde. Zéro débordement.</text>
     </svg>
   );
 }
@@ -123,30 +123,30 @@ function OscillatingPinionSVG() {
           <stop offset="100%" stopColor="#1e293b" />
         </linearGradient>
       </defs>
-      <rect width="400" height="220" rx="8" fill="#070a10" stroke="#1f293d" strokeWidth="1" />
-      <g opacity="0.12">
-        <path d="M0,40 H400 M0,80 H400 M0,120 H400 M0,160 H400" stroke="#94a3b8" strokeDasharray="2,4" />
-        <path d="M40,0 V220 M80,0 V220 M120,0 V220 M160,0 V220 M200,0 V220 M240,0 V220 M280,0 V220 M320,0 V220 M360,0 V220" stroke="#94a3b8" strokeDasharray="2,4" />
+      <rect width="400" height="220" rx="8" className="fill-slate-100 dark:fill-[#070a10] stroke-slate-300 dark:stroke-[#1f293d]" strokeWidth="1" />
+      <g opacity="0.15">
+        <path d="M0,40 H400 M0,80 H400 M0,120 H400 M0,160 H400" className="stroke-slate-400 dark:stroke-[#94a3b8]" strokeDasharray="2,4" />
+        <path d="M40,0 V220 M80,0 V220 M120,0 V220 M160,0 V220 M200,0 V220 M240,0 V220 M280,0 V220 M320,0 V220 M360,0 V220" className="stroke-slate-400 dark:stroke-[#94a3b8]" strokeDasharray="2,4" />
       </g>
-      <circle cx="280" cy="55" r="50" fill="none" stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="4,2" />
-      <text x="240" y="30" fill="#e2e8f0" fontSize="8.5" fontFamily="monospace">Roue de Chronographe</text>
+      <circle cx="280" cy="55" r="50" fill="none" className="stroke-slate-500 dark:stroke-[#94a3b8]" strokeWidth="1.5" strokeDasharray="4,2" />
+      <text x="240" y="30" className="fill-slate-800 dark:fill-[#e2e8f0]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Roue de Chronographe</text>
       <circle cx="100" cy="155" r="45" fill="none" stroke="#eab308" strokeWidth="1.5" strokeDasharray="4,2" />
-      <text x="45" y="180" fill="#fde047" fontSize="8.5" fontFamily="monospace">Roue de Seconde</text>
-      <line x1="120" y1="145" x2="230" y2="65" stroke="#38bdf8" strokeWidth="3.5" strokeLinecap="round" />
-      <circle cx="125" cy="142" r="14" fill="url(#steelG)" stroke="#38bdf8" strokeWidth="1.5" />
-      <text x="75" y="125" fill="#38bdf8" fontSize="8" fontFamily="monospace">Pignon Inférieur</text>
-      <circle cx="225" cy="68" r="14" fill="url(#steelG)" stroke="#f43f5e" strokeWidth="1.5" />
-      <text x="210" y="98" fill="#f43f5e" fontSize="8" fontFamily="monospace">Pignon Supérieur</text>
-      <path d="M236,58 L255,54" stroke="#eab308" strokeWidth="1.5" />
-      <circle cx="245" cy="56" r="3" fill="#eab308" />
-      <text x="252" y="74" fill="#fef08a" fontSize="8" fontFamily="monospace" fontWeight="bold">Engrènement 1/3</text>
-      <circle cx="175" cy="155" r="7" fill="#0f172a" stroke="#ca8a04" strokeWidth="1.5" />
-      <line x1="171" y1="155" x2="179" y2="155" stroke="#ca8a04" strokeWidth="1.5" />
-      <text x="135" y="172" fill="#ca8a04" fontSize="7.5" fontFamily="monospace">Vis Excentrique</text>
-      <rect x="12" y="182" width="376" height="30" rx="5" fill="#0f172a" stroke="#ca8a04" strokeWidth="0.8" />
+      <text x="45" y="180" className="fill-amber-700 dark:fill-[#fde047]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Roue de Seconde</text>
+      <line x1="120" y1="145" x2="230" y2="65" stroke="#0284c7" strokeWidth="3.5" strokeLinecap="round" />
+      <circle cx="125" cy="142" r="14" fill="url(#steelG)" stroke="#0284c7" strokeWidth="1.5" />
+      <text x="75" y="125" className="fill-sky-700 dark:fill-[#38bdf8]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Pignon Inférieur</text>
+      <circle cx="225" cy="68" r="14" fill="url(#steelG)" stroke="#e11d48" strokeWidth="1.5" />
+      <text x="210" y="98" className="fill-rose-700 dark:fill-[#f43f5e]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Pignon Supérieur</text>
+      <path d="M236,58 L255,54" stroke="#ca8a04" strokeWidth="1.5" />
+      <circle cx="245" cy="56" r="3" fill="#ca8a04" />
+      <text x="252" y="74" className="fill-amber-800 dark:fill-[#fef08a]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Engrènement 1/3</text>
+      <circle cx="175" cy="155" r="7" className="fill-white dark:fill-[#0f172a] stroke-amber-600 dark:stroke-[#ca8a04]" strokeWidth="1.5" />
+      <line x1="171" y1="155" x2="179" y2="155" className="stroke-amber-600 dark:stroke-[#ca8a04]" strokeWidth="1.5" />
+      <text x="135" y="172" className="fill-amber-700 dark:fill-[#ca8a04]" fontSize="7.5" fontFamily="monospace" fontWeight="bold">Vis Excentrique</text>
+      <rect x="12" y="182" width="376" height="30" rx="5" className="fill-amber-50 dark:fill-[#0f172a] stroke-amber-500/50 dark:stroke-[#ca8a04]" strokeWidth="0.8" />
       <circle cx="24" cy="197" r="4.5" fill="#eab308" />
-      <text x="35" y="195" fill="#fef08a" fontSize="8.5" fontFamily="monospace" fontWeight="bold">PIGNON OSCILLANT (BREVET 1887) : PROFONDEUR 1/3 DE DENT</text>
-      <text x="35" y="206" fill="#94a3b8" fontSize="8" fontFamily="sans-serif">Régler via l'excentrique. Trop profond = blocage d'amplitude. Trop court = saut de chrono.</text>
+      <text x="35" y="195" className="fill-amber-900 dark:fill-[#fef08a]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">PIGNON OSCILLANT (BREVET 1887) : PROFONDEUR 1/3 DE DENT</text>
+      <text x="35" y="206" className="fill-slate-700 dark:fill-[#94a3b8]" fontSize="8" fontFamily="sans-serif">Régler via l'excentrique. Trop profond = blocage d'amplitude. Trop court = saut de chrono.</text>
     </svg>
   );
 }
@@ -161,30 +161,26 @@ function CamShuttleSVG() {
           <stop offset="100%" stopColor="#0f172a" />
         </linearGradient>
       </defs>
-      <rect width="400" height="220" rx="8" fill="#070a10" stroke="#1f293d" strokeWidth="1" />
-      <g opacity="0.12">
-        <path d="M0,40 H400 M0,80 H400 M0,120 H400 M0,160 H400" stroke="#94a3b8" strokeDasharray="2,4" />
-        <path d="M40,0 V220 M80,0 V220 M120,0 V220 M160,0 V220 M200,0 V220 M240,0 V220 M280,0 V220 M320,0 V220 M360,0 V220" stroke="#94a3b8" strokeDasharray="2,4" />
+      <rect width="400" height="220" rx="8" className="fill-slate-100 dark:fill-[#070a10] stroke-slate-300 dark:stroke-[#1f293d]" strokeWidth="1" />
+      <g opacity="0.15">
+        <path d="M0,40 H400 M0,80 H400 M0,120 H400 M0,160 H400" className="stroke-slate-400 dark:stroke-[#94a3b8]" strokeDasharray="2,4" />
+        <path d="M40,0 V220 M80,0 V220 M120,0 V220 M160,0 V220 M200,0 V220 M240,0 V220 M280,0 V220 M320,0 V220 M360,0 V220" className="stroke-slate-400 dark:stroke-[#94a3b8]" strokeDasharray="2,4" />
       </g>
-      <path d="M120,50 L260,50 L280,80 L290,130 L250,155 L160,155 L130,120 L110,80 Z" fill="url(#camGrad)" stroke="#94a3b8" strokeWidth="1.8" />
-      <circle cx="195" cy="105" r="8" fill="#020617" stroke="#38bdf8" strokeWidth="2" />
-      <circle cx="195" cy="105" r="2.5" fill="#38bdf8" />
-      <path d="M120,50 L180,50 L195,75 L140,75 Z" fill="#3b82f6" opacity="0.25" stroke="#60a5fa" strokeWidth="1" />
-      <text x="35" y="55" fill="#60a5fa" fontSize="8" fontFamily="monospace">Étage 1 : Départ (2h) ➔</text>
-      <path d="M220,55 L275,78 L265,110 L210,95 Z" fill="#eab308" opacity="0.25" stroke="#facc15" strokeWidth="1" />
-      <text x="285" y="85" fill="#facc15" fontSize="8" fontFamily="monospace">➔ Étage 2 : Stop</text>
-      <path d="M150,130 L255,130 L240,152 L165,152 Z" fill="#ef4444" opacity="0.25" stroke="#f87171" strokeWidth="1" />
-      <text x="250" y="160" fill="#f87171" fontSize="8" fontFamily="monospace">➔ Étage 3 : RàZ</text>
-      <circle cx="155" cy="62" r="4" fill="#fb923c" stroke="#fff" strokeWidth="1" />
-      <circle cx="250" cy="88" r="4" fill="#fb923c" stroke="#fff" strokeWidth="1" />
-      <circle cx="195" cy="140" r="4" fill="#fb923c" stroke="#fff" strokeWidth="1" />
-      <text x="170" y="65" fill="#fb923c" fontSize="7.5" fontFamily="monospace">9504</text>
-      <text x="220" y="90" fill="#fb923c" fontSize="7.5" fontFamily="monospace">9504</text>
-      <text x="205" y="143" fill="#fb923c" fontSize="7.5" fontFamily="monospace">9504</text>
-      <rect x="12" y="182" width="376" height="30" rx="5" fill="#0f172a" stroke="#ca8a04" strokeWidth="0.8" />
-      <circle cx="24" cy="197" r="4.5" fill="#eab308" />
-      <text x="35" y="195" fill="#fef08a" fontSize="8.5" fontFamily="monospace" fontWeight="bold">NAVETTE À 3 ÉTAGES DU 7750 : GRAISSAGE MOEBIUS 9504</text>
-      <text x="35" y="206" fill="#94a3b8" fontSize="8" fontFamily="sans-serif">Déposer un film microscopique de graisse synthétique 9504 sur les rampes de friction.</text>
+      <polygon points="120,70 170,50 250,55 310,100 270,140 180,145 130,115" fill="url(#camGrad)" stroke="#64748b" strokeWidth="2" />
+      <text x="140" y="55" className="fill-slate-800 dark:fill-[#cbd5e1]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Came Navette 7750 (Acier)</text>
+      <circle cx="210" cy="100" r="12" className="fill-white dark:fill-[#0f172a] stroke-slate-500 dark:stroke-[#94a3b8]" strokeWidth="2" />
+      <circle cx="210" cy="100" r="4" fill="#ca8a04" />
+      <text x="235" y="103" className="fill-slate-600 dark:fill-[#94a3b8]" fontSize="8" fontFamily="monospace">Axe de pivotement</text>
+      <path d="M80,80 L130,115" stroke="#0284c7" strokeWidth="3" strokeLinecap="round" />
+      <circle cx="80" cy="80" r="6" fill="#0284c7" />
+      <text x="20" y="85" className="fill-sky-700 dark:fill-[#60a5fa]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Doigt de commande</text>
+      <line x1="270" y1="140" x2="310" y2="160" stroke="#f43f5e" strokeWidth="2.5" strokeLinecap="round" />
+      <ellipse cx="290" cy="150" rx="8" ry="4" fill="#ca8a04" opacity="0.8" />
+      <text x="240" y="175" className="fill-rose-700 dark:fill-[#f43f5e]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Plan de glissement Moebius 9504</text>
+      <rect x="12" y="182" width="376" height="30" rx="5" className="fill-amber-50 dark:fill-[#0f172a] stroke-amber-500/50 dark:stroke-[#d4af37]" strokeWidth="0.8" />
+      <circle cx="24" cy="197" r="4.5" fill="#ca8a04" />
+      <text x="35" y="195" className="fill-amber-900 dark:fill-[#fef08a]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">CAME NAVETTE (VALJOUX 7750) : GRAISSAGE MOEBIUS 9504 SUR PLANS DE FROTTEMENT</text>
+      <text x="35" y="206" className="fill-slate-700 dark:fill-[#94a3b8]" fontSize="8" fontFamily="sans-serif">Moebius 9504 uniquement sur les becs de commande et le sautoir. Zéro excès sous la navette.</text>
     </svg>
   );
 }
@@ -193,37 +189,32 @@ function ReversingWheelsSVG() {
   return (
     <svg viewBox="0 0 400 220" className="w-full h-auto drop-shadow-md rounded-lg" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <radialGradient id="goldGear" cx="50%" cy="50%" r="50%">
+        <linearGradient id="goldW" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#fef08a" />
-          <stop offset="70%" stopColor="#ca8a04" />
+          <stop offset="50%" stopColor="#eab308" />
           <stop offset="100%" stopColor="#854d0e" />
-        </radialGradient>
+        </linearGradient>
       </defs>
-      <rect width="400" height="220" rx="8" fill="#070a10" stroke="#1f293d" strokeWidth="1" />
-      <g opacity="0.12">
-        <path d="M0,40 H400 M0,80 H400 M0,120 H400 M0,160 H400" stroke="#94a3b8" strokeDasharray="2,4" />
-        <path d="M40,0 V220 M80,0 V220 M120,0 V220 M160,0 V220 M200,0 V220 M240,0 V220 M280,0 V220 M320,0 V220 M360,0 V220" stroke="#94a3b8" strokeDasharray="2,4" />
+      <rect width="400" height="220" rx="8" className="fill-slate-100 dark:fill-[#070a10] stroke-slate-300 dark:stroke-[#1f293d]" strokeWidth="1" />
+      <g opacity="0.15">
+        <path d="M0,40 H400 M0,80 H400 M0,120 H400 M0,160 H400" className="stroke-slate-400 dark:stroke-[#94a3b8]" strokeDasharray="2,4" />
+        <path d="M40,0 V220 M80,0 V220 M120,0 V220 M160,0 V220 M200,0 V220 M240,0 V220 M280,0 V220 M320,0 V220 M360,0 V220" className="stroke-slate-400 dark:stroke-[#94a3b8]" strokeDasharray="2,4" />
       </g>
-      <circle cx="140" cy="100" r="45" fill="url(#goldGear)" stroke="#eab308" strokeWidth="1.5" />
-      <circle cx="140" cy="100" r="28" fill="#070a10" stroke="#ca8a04" strokeWidth="1.2" />
-      <path d="M140,82 L146,95 L158,100 L146,105 L140,118 L134,105 L122,100 L134,95 Z" fill="#94a3b8" stroke="#cbd5e1" strokeWidth="1" />
-      <circle cx="140" cy="100" r="6" fill="#020617" stroke="#38bdf8" strokeWidth="1.5" />
-      <text x="90" y="45" fill="#fde047" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Roue Inverseuse 1</text>
-      <circle cx="240" cy="100" r="45" fill="url(#goldGear)" stroke="#eab308" strokeWidth="1.5" />
-      <circle cx="240" cy="100" r="28" fill="#070a10" stroke="#ca8a04" strokeWidth="1.2" />
-      <path d="M240,82 L246,95 L258,100 L246,105 L240,118 L234,105 L222,100 L234,95 Z" fill="#94a3b8" stroke="#cbd5e1" strokeWidth="1" />
-      <circle cx="240" cy="100" r="6" fill="#020617" stroke="#38bdf8" strokeWidth="1.5" />
-      <text x="210" y="45" fill="#fde047" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Roue Inverseuse 2</text>
-      <ellipse cx="190" cy="100" rx="6" ry="12" fill="none" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="2,2" />
-      <rect x="135" y="152" width="130" height="22" rx="4" fill="#831843" stroke="#f43f5e" strokeWidth="1" />
-      <text x="145" y="167" fill="#fbcfe8" fontSize="8.5" fontFamily="monospace" fontWeight="bold">LUBETA V105 SEUL</text>
-      <circle cx="330" cy="95" r="18" fill="#450a0a" stroke="#ef4444" strokeWidth="2" />
-      <line x1="318" y1="83" x2="342" y2="107" stroke="#ef4444" strokeWidth="2.5" />
-      <text x="306" y="125" fill="#ef4444" fontSize="7.5" fontFamily="monospace" fontWeight="bold">PAS D'HUILE</text>
-      <rect x="12" y="182" width="376" height="30" rx="5" fill="#0f172a" stroke="#f43f5e" strokeWidth="0.8" />
-      <circle cx="24" cy="197" r="4.5" fill="#f43f5e" />
-      <text x="35" y="195" fill="#fbcfe8" fontSize="8.5" fontFamily="monospace" fontWeight="bold">PIÈGE MAJEUR 2824 : INTERDICTION TOTALE DE GRAISSER LES CLIQUEURS</text>
-      <text x="35" y="206" fill="#94a3b8" fontSize="8" fontFamily="sans-serif">Tremper 15 min dans bain Lubeta V105 puis sécher. L'huile classique colle les cliquets.</text>
+      <circle cx="150" cy="95" r="50" className="fill-slate-200 dark:fill-[#0f172a] stroke-slate-400 dark:stroke-[#cbd5e1]" strokeWidth="1.5" />
+      <circle cx="150" cy="95" r="42" fill="none" stroke="#ca8a04" strokeWidth="2" strokeDasharray="5,2" />
+      <circle cx="150" cy="95" r="16" fill="url(#goldW)" stroke="#ca8a04" strokeWidth="1.5" />
+      <text x="90" y="35" className="fill-amber-700 dark:fill-[#facc15]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Inverseuse 1 (1488)</text>
+      <circle cx="250" cy="95" r="50" className="fill-slate-200 dark:fill-[#0f172a] stroke-slate-400 dark:stroke-[#cbd5e1]" strokeWidth="1.5" />
+      <circle cx="250" cy="95" r="42" fill="none" stroke="#ca8a04" strokeWidth="2" strokeDasharray="5,2" />
+      <circle cx="250" cy="95" r="16" fill="url(#goldW)" stroke="#ca8a04" strokeWidth="1.5" />
+      <text x="210" y="35" className="fill-amber-700 dark:fill-[#facc15]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Inverseuse 2 (1488)</text>
+      <path d="M195,85 L205,95 L195,105" fill="none" stroke="#e11d48" strokeWidth="2.5" />
+      <text x="165" y="98" className="fill-slate-700 dark:fill-[#e2e8f0]" fontSize="8" fontFamily="monospace" fontWeight="bold">Cliquet interne</text>
+      <text x="15" y="160" className="fill-rose-700 dark:fill-[#f43f5e]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">⚠️ PIÈGE MAJEUR 2824 : ZÉRO HUILE CLASSIQUE</text>
+      <rect x="12" y="182" width="376" height="30" rx="5" className="fill-rose-50 dark:fill-[#0f172a] stroke-rose-400 dark:stroke-[#f43f5e]" strokeWidth="0.8" />
+      <circle cx="24" cy="197" r="4.5" fill="#e11d48" />
+      <text x="35" y="195" className="fill-rose-950 dark:fill-[#fbcfe8]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">ROUES INVERSEUSES : LUBRIFICATION AU LUBETA V105 UNIQUEMENT</text>
+      <text x="35" y="206" className="fill-slate-700 dark:fill-[#94a3b8]" fontSize="8" fontFamily="sans-serif">Tremper 1 min dans bain Lubeta V105, égoutter et sécher sous cloche. Ne jamais huiler au pique-huile !</text>
     </svg>
   );
 }
@@ -232,35 +223,35 @@ function BarrelMainspringSVG() {
   return (
     <svg viewBox="0 0 400 220" className="w-full h-auto drop-shadow-md rounded-lg" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <radialGradient id="drumGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#1e293b" />
-          <stop offset="85%" stopColor="#0f172a" />
-          <stop offset="100%" stopColor="#ca8a04" />
+        <radialGradient id="barrelGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#fef08a" />
+          <stop offset="60%" stopColor="#eab308" />
+          <stop offset="100%" stopColor="#a16207" />
         </radialGradient>
       </defs>
-      <rect width="400" height="220" rx="8" fill="#070a10" stroke="#1f293d" strokeWidth="1" />
-      <g opacity="0.12">
-        <path d="M0,40 H400 M0,80 H400 M0,120 H400 M0,160 H400" stroke="#94a3b8" strokeDasharray="2,4" />
-        <path d="M40,0 V220 M80,0 V220 M120,0 V220 M160,0 V220 M200,0 V220 M240,0 V220 M280,0 V220 M320,0 V220 M360,0 V220" stroke="#94a3b8" strokeDasharray="2,4" />
+      <rect width="400" height="220" rx="8" className="fill-slate-100 dark:fill-[#070a10] stroke-slate-300 dark:stroke-[#1f293d]" strokeWidth="1" />
+      <g opacity="0.15">
+        <path d="M0,40 H400 M0,80 H400 M0,120 H400 M0,160 H400" className="stroke-slate-400 dark:stroke-[#94a3b8]" strokeDasharray="2,4" />
+        <path d="M40,0 V220 M80,0 V220 M120,0 V220 M160,0 V220 M200,0 V220 M240,0 V220 M280,0 V220 M320,0 V220 M360,0 V220" className="stroke-slate-400 dark:stroke-[#94a3b8]" strokeDasharray="2,4" />
       </g>
-      <circle cx="160" cy="100" r="60" fill="url(#drumGrad)" stroke="#eab308" strokeWidth="2" />
-      <circle cx="160" cy="100" r="64" fill="none" stroke="#ca8a04" strokeWidth="1" strokeDasharray="3,3" />
-      <circle cx="160" cy="100" r="50" fill="none" stroke="#64748b" strokeWidth="1" />
-      <circle cx="160" cy="100" r="42" fill="none" stroke="#64748b" strokeWidth="1" />
-      <circle cx="160" cy="100" r="34" fill="none" stroke="#64748b" strokeWidth="1" />
-      <circle cx="160" cy="100" r="16" fill="#020617" stroke="#38bdf8" strokeWidth="2" />
-      <circle cx="160" cy="100" r="5" fill="#38bdf8" />
-      <path d="M216,80 C222,95 222,105 216,120" fill="none" stroke="#ef4444" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="218" cy="100" r="4.5" fill="#ef4444" stroke="#fff" strokeWidth="1" />
-      <text x="235" y="95" fill="#f87171" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Moebius 8217</text>
-      <text x="235" y="108" fill="#94a3b8" fontSize="7.5" fontFamily="sans-serif">3 touches sur la paroi</text>
-      <text x="235" y="45" fill="#38bdf8" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Moebius HP-1300</text>
-      <text x="235" y="58" fill="#94a3b8" fontSize="7.5" fontFamily="sans-serif">Pivot supérieur & inférieur</text>
-      <line x1="230" y1="52" x2="175" y2="92" stroke="#38bdf8" strokeWidth="1.2" strokeDasharray="2,2" />
-      <rect x="12" y="182" width="376" height="30" rx="5" fill="#0f172a" stroke="#ca8a04" strokeWidth="0.8" />
-      <circle cx="24" cy="197" r="4.5" fill="#eab308" />
-      <text x="35" y="195" fill="#fef08a" fontSize="8.5" fontFamily="monospace" fontWeight="bold">DOUBLE LUBRIFICATION DU BARILLET SUISSE</text>
-      <text x="35" y="206" fill="#94a3b8" fontSize="8" fontFamily="sans-serif">Moebius HP-1300 sur l'arbre (frottement lourd). Graisse freinante 8217 sur la bride.</text>
+      <circle cx="160" cy="95" r="65" className="fill-amber-50/50 dark:fill-[#0f172a] stroke-amber-600 dark:stroke-[#ca8a04]" strokeWidth="2.5" />
+      <text x="175" y="32" className="fill-amber-700 dark:fill-[#ca8a04]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Tambour de Barillet</text>
+      <path d="M160,95 A55,55 0 0,0 215,95 A50,50 0 0,1 160,145 A45,45 0 0,1 115,95 A40,40 0 0,1 160,55 A35,35 0 0,1 195,95" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" />
+      <path d="M215,75 A63,63 0 0,1 223,105" fill="none" stroke="#e11d48" strokeWidth="4.5" strokeLinecap="round" />
+      <circle cx="218" cy="78" r="3.5" fill="#ca8a04" />
+      <circle cx="223" cy="92" r="3.5" fill="#ca8a04" />
+      <circle cx="221" cy="104" r="3.5" fill="#ca8a04" />
+      <text x="210" y="70" className="fill-rose-700 dark:fill-[#f43f5e]" fontSize="8" fontFamily="monospace" fontWeight="bold">Moebius 8217</text>
+      <text x="210" y="82" className="fill-rose-600 dark:fill-[#fda4af]" fontSize="7.5" fontFamily="monospace">(Graisse freinante)</text>
+      <line x1="223" y1="105" x2="250" y2="120" stroke="#cbd5e1" strokeWidth="1" />
+      <text x="235" y="115" className="fill-slate-800 dark:fill-[#cbd5e1]" fontSize="8" fontFamily="monospace" fontWeight="bold">Bride Glissante</text>
+      <text x="235" y="127" className="fill-slate-600 dark:fill-[#94a3b8]" fontSize="7.5" fontFamily="monospace">6 encoches tambour</text>
+      <circle cx="160" cy="95" r="16" className="fill-slate-200 dark:fill-[#1e293b] stroke-slate-500 dark:stroke-[#cbd5e1]" strokeWidth="2" />
+      <rect x="156" y="80" width="8" height="30" rx="1.5" fill="#ca8a04" />
+      <rect x="12" y="182" width="376" height="30" rx="5" className="fill-emerald-50 dark:fill-[#0f172a] stroke-emerald-500/50 dark:stroke-[#10b981]" strokeWidth="0.8" />
+      <circle cx="24" cy="197" r="4.5" fill="#10b981" />
+      <text x="35" y="195" className="fill-emerald-950 dark:fill-[#6ee7b7]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">BARILLET AUTOMATIQUE : 3 TOUCHES DE MOEBIUS 8217 SUR LA PAROI</text>
+      <text x="35" y="206" className="fill-slate-700 dark:fill-[#94a3b8]" fontSize="8" fontFamily="sans-serif">Permet le glissement de la bride à pleine charge pour éviter le sur-armage et le rebat.</text>
     </svg>
   );
 }
@@ -268,27 +259,33 @@ function BarrelMainspringSVG() {
 function DateForbiddenSVG() {
   return (
     <svg viewBox="0 0 400 220" className="w-full h-auto drop-shadow-md rounded-lg" xmlns="http://www.w3.org/2000/svg">
-      <rect width="400" height="220" rx="8" fill="#070a10" stroke="#1f293d" strokeWidth="1" />
-      <g opacity="0.12">
-        <path d="M0,40 H400 M0,80 H400 M0,120 H400 M0,160 H400" stroke="#94a3b8" strokeDasharray="2,4" />
-        <path d="M40,0 V220 M80,0 V220 M120,0 V220 M160,0 V220 M200,0 V220 M240,0 V220 M280,0 V220 M320,0 V220 M360,0 V220" stroke="#94a3b8" strokeDasharray="2,4" />
+      <defs>
+        <radialGradient id="discGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#1e293b" />
+          <stop offset="100%" stopColor="#0f172a" />
+        </radialGradient>
+      </defs>
+      <rect width="400" height="220" rx="8" className="fill-slate-100 dark:fill-[#070a10] stroke-slate-300 dark:stroke-[#1f293d]" strokeWidth="1" />
+      <g opacity="0.15">
+        <path d="M0,40 H400 M0,80 H400 M0,120 H400 M0,160 H400" className="stroke-slate-400 dark:stroke-[#94a3b8]" strokeDasharray="2,4" />
+        <path d="M40,0 V220 M80,0 V220 M120,0 V220 M160,0 V220 M200,0 V220 M240,0 V220 M280,0 V220 M320,0 V220 M360,0 V220" className="stroke-slate-400 dark:stroke-[#94a3b8]" strokeDasharray="2,4" />
       </g>
-      <circle cx="160" cy="100" r="55" fill="#0f172a" stroke="#334155" strokeWidth="2" />
+      <circle cx="160" cy="100" r="55" className="fill-slate-200 dark:fill-[#0f172a] stroke-slate-400 dark:stroke-[#334155]" strokeWidth="2" />
       <path d="M160,45 A55,55 0 0,1 214,115" fill="none" stroke="#ef4444" strokeWidth="10" strokeLinecap="round" opacity="0.65" />
-      <text x="175" y="80" fill="#fca5a5" fontSize="9" fontFamily="monospace" fontWeight="bold">ZONE INTERDITE</text>
-      <text x="175" y="93" fill="#f87171" fontSize="8" fontFamily="monospace">20h00 ➔ 03h00</text>
+      <text x="175" y="80" className="fill-rose-700 dark:fill-[#fca5a5]" fontSize="9" fontFamily="monospace" fontWeight="bold">ZONE INTERDITE</text>
+      <text x="175" y="93" className="fill-rose-600 dark:fill-[#f87171]" fontSize="8" fontFamily="monospace">20h00 ➔ 03h00</text>
       <circle cx="160" cy="100" r="68" fill="none" stroke="#ca8a04" strokeWidth="1.5" strokeDasharray="6,3" />
-      <line x1="160" y1="100" x2="195" y2="60" stroke="#fbbf24" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="160" cy="100" r="5" fill="#fff" />
-      <path d="M225,50 L240,65 L255,55" fill="none" stroke="#60a5fa" strokeWidth="2" />
-      <text x="245" y="45" fill="#60a5fa" fontSize="8" fontFamily="monospace">Sautoir</text>
-      <rect x="250" y="85" width="135" height="45" rx="5" fill="#450a0a" stroke="#ef4444" strokeWidth="1" />
-      <text x="260" y="102" fill="#fca5a5" fontSize="8" fontFamily="monospace" fontWeight="bold">⚠️ RISQUE DE RUPTURE</text>
-      <text x="260" y="118" fill="#fecaca" fontSize="7.5" fontFamily="sans-serif">Casse du doigt ou des dents du disque en correction rapide.</text>
-      <rect x="12" y="182" width="376" height="30" rx="5" fill="#0f172a" stroke="#ef4444" strokeWidth="0.8" />
+      <line x1="160" y1="100" x2="195" y2="60" stroke="#f59e0b" strokeWidth="3" strokeLinecap="round" />
+      <circle cx="160" cy="100" r="5" className="fill-slate-800 dark:fill-white" />
+      <path d="M225,50 L240,65 L255,55" fill="none" stroke="#0284c7" strokeWidth="2" />
+      <text x="245" y="45" className="fill-sky-700 dark:fill-[#60a5fa]" fontSize="8" fontFamily="monospace" fontWeight="bold">Sautoir</text>
+      <rect x="250" y="85" width="135" height="45" rx="5" className="fill-rose-100 dark:fill-[#450a0a] stroke-rose-400 dark:stroke-[#ef4444]" strokeWidth="1" />
+      <text x="260" y="102" className="fill-rose-900 dark:fill-[#fca5a5]" fontSize="8" fontFamily="monospace" fontWeight="bold">⚠️ RISQUE DE RUPTURE</text>
+      <text x="260" y="118" className="fill-rose-800 dark:fill-[#fecaca]" fontSize="7.5" fontFamily="sans-serif">Casse du doigt ou des dents du disque en correction rapide.</text>
+      <rect x="12" y="182" width="376" height="30" rx="5" className="fill-rose-50 dark:fill-[#0f172a] stroke-rose-400 dark:stroke-[#ef4444]" strokeWidth="0.8" />
       <circle cx="24" cy="197" r="4.5" fill="#ef4444" />
-      <text x="35" y="195" fill="#fca5a5" fontSize="8.5" fontFamily="monospace" fontWeight="bold">RÈGLE D'OR : RÉGLER L'HEURE À 06H00 AVANT DE CORRIGER LA DATE</text>
-      <text x="35" y="206" fill="#94a3b8" fontSize="8" fontFamily="sans-serif">À 06h00, le doigt d'entraînement est à l'opposé du disque. Sécurité totale garantie.</text>
+      <text x="35" y="195" className="fill-rose-950 dark:fill-[#fca5a5]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">RÈGLE D'OR : RÉGLER L'HEURE À 06H00 AVANT DE CORRIGER LA DATE</text>
+      <text x="35" y="206" className="fill-slate-700 dark:fill-[#94a3b8]" fontSize="8" fontFamily="sans-serif">À 06h00, le doigt d'entraînement est à l'opposé du disque. Sécurité totale garantie.</text>
     </svg>
   );
 }
@@ -302,33 +299,31 @@ function TrainEndshakesSVG() {
           <stop offset="100%" stopColor="#9f1239" />
         </linearGradient>
       </defs>
-      <rect width="400" height="220" rx="8" fill="#070a10" stroke="#1f293d" strokeWidth="1" />
-      <g opacity="0.12">
-        <path d="M0,40 H400 M0,80 H400 M0,120 H400 M0,160 H400" stroke="#94a3b8" strokeDasharray="2,4" />
-        <path d="M40,0 V220 M80,0 V220 M120,0 V220 M160,0 V220 M200,0 V220 M240,0 V220 M280,0 V220 M320,0 V220 M360,0 V220" stroke="#94a3b8" strokeDasharray="2,4" />
+      <rect width="400" height="220" rx="8" className="fill-slate-100 dark:fill-[#070a10] stroke-slate-300 dark:stroke-[#1f293d]" strokeWidth="1" />
+      <g opacity="0.15">
+        <path d="M0,40 H400 M0,80 H400 M0,120 H400 M0,160 H400" className="stroke-slate-400 dark:stroke-[#94a3b8]" strokeDasharray="2,4" />
+        <path d="M40,0 V220 M80,0 V220 M120,0 V220 M160,0 V220 M200,0 V220 M240,0 V220 M280,0 V220 M320,0 V220 M360,0 V220" className="stroke-slate-400 dark:stroke-[#94a3b8]" strokeDasharray="2,4" />
       </g>
-      <rect x="80" y="45" width="240" height="20" rx="4" fill="#1e293b" stroke="#64748b" strokeWidth="1.2" />
-      <text x="145" y="40" fill="#94a3b8" fontSize="8.5" fontFamily="monospace">Pont de Rouage (Supérieur)</text>
-      <rect x="80" y="145" width="240" height="25" rx="4" fill="#1e293b" stroke="#ca8a04" strokeWidth="1.2" />
-      <text x="160" y="180" fill="#ca8a04" fontSize="8.5" fontFamily="monospace">Platine de Base</text>
+      <rect x="80" y="45" width="240" height="20" rx="4" className="fill-slate-200 dark:fill-[#1e293b] stroke-slate-400 dark:stroke-[#64748b]" strokeWidth="1.2" />
+      <text x="145" y="40" className="fill-slate-700 dark:fill-[#94a3b8]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Pont de Rouage (Supérieur)</text>
+      <rect x="80" y="145" width="240" height="25" rx="4" className="fill-amber-50 dark:fill-[#1e293b] stroke-amber-600 dark:stroke-[#ca8a04]" strokeWidth="1.2" />
+      <text x="160" y="180" className="fill-amber-800 dark:fill-[#ca8a04]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Platine de Base</text>
       <rect x="185" y="55" width="30" height="10" rx="2" fill="url(#rubyG)" stroke="#fda4af" strokeWidth="0.8" />
       <rect x="185" y="145" width="30" height="10" rx="2" fill="url(#rubyG)" stroke="#fda4af" strokeWidth="0.8" />
-      <line x1="200" y1="58" x2="200" y2="152" stroke="#38bdf8" strokeWidth="3" strokeLinecap="round" />
+      <line x1="200" y1="58" x2="200" y2="152" stroke="#0284c7" strokeWidth="3" strokeLinecap="round" />
       <line x1="130" y1="105" x2="270" y2="105" stroke="#facc15" strokeWidth="4" />
-      <path d="M260,88 L230,102 L260,116" fill="none" stroke="#cbd5e1" strokeWidth="2" />
-      <text x="270" y="105" fill="#cbd5e1" fontSize="8" fontFamily="monospace">Brucelles N°3</text>
-      <line x1="165" y1="65" x2="165" y2="78" stroke="#38bdf8" strokeWidth="1.8" />
-      <path d="M162,68 L165,63 L168,68 M162,75 L165,80 L168,75" fill="none" stroke="#38bdf8" strokeWidth="1.5" />
-      <text x="85" y="75" fill="#38bdf8" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Ébat: 0.02 mm</text>
-      <rect x="12" y="182" width="376" height="30" rx="5" fill="#0f172a" stroke="#38bdf8" strokeWidth="0.8" />
-      <circle cx="24" cy="197" r="4.5" fill="#38bdf8" />
-      <text x="35" y="195" fill="#93c5fd" fontSize="8.5" fontFamily="monospace" fontWeight="bold">CONTRÔLE DES ÉBATS AUX BRUCELLES AVANT TOUT VISSAGE À FOND</text>
-      <text x="35" y="206" fill="#94a3b8" fontSize="8" fontFamily="sans-serif">Chaque mobile doit avoir un jeu perceptible (0.015 - 0.030 mm) et tourner avec inertie.</text>
+      <path d="M260,88 L230,102 L260,116" fill="none" className="stroke-slate-500 dark:stroke-[#cbd5e1]" strokeWidth="2" />
+      <text x="270" y="105" className="fill-slate-700 dark:fill-[#cbd5e1]" fontSize="8" fontFamily="monospace" fontWeight="bold">Brucelles N°3</text>
+      <line x1="165" y1="65" x2="165" y2="78" stroke="#0284c7" strokeWidth="1.8" />
+      <path d="M162,68 L165,63 L168,68 M162,75 L165,80 L168,75" fill="none" stroke="#0284c7" strokeWidth="1.5" />
+      <text x="85" y="75" className="fill-sky-700 dark:fill-[#38bdf8]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">Ébat: 0.02 mm</text>
+      <rect x="12" y="182" width="376" height="30" rx="5" className="fill-sky-50 dark:fill-[#0f172a] stroke-sky-400 dark:stroke-[#3b82f6]" strokeWidth="0.8" />
+      <circle cx="24" cy="197" r="4.5" fill="#0284c7" />
+      <text x="35" y="195" className="fill-sky-950 dark:fill-[#93c5fd]" fontSize="8.5" fontFamily="monospace" fontWeight="bold">CONTRÔLE DES ÉBATS AUX BRUCELLES AVANT TOUT VISSAGE À FOND</text>
+      <text x="35" y="206" className="fill-slate-700 dark:fill-[#94a3b8]" fontSize="8" fontFamily="sans-serif">Chaque mobile doit avoir un jeu perceptible (0.015 - 0.030 mm) et tourner avec inertie.</text>
     </svg>
   );
 }
-
-// Map string keys to SVG components
 function renderSvgByKey(key: string) {
   switch (key) {
     case "escapement": return <EscapementSVG />;
@@ -1265,7 +1260,7 @@ export default function RhabillagePage() {
                           <div
                             key={img}
                             onClick={() => setLoupeModal({ isOpen: true, stepIdx: step.num - 1 })}
-                            className="bg-black/40 border border-slate-100 dark:border-white/10 p-2 rounded-lg flex flex-col items-center hover:border-amber-500/50 transition group cursor-pointer"
+                            className="bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 p-2 rounded-lg flex flex-col items-center hover:border-amber-500/50 transition group cursor-pointer shadow-sm"
                           >
                             <img
                               src={GITHUB_RAW_BASE + img}
@@ -1275,7 +1270,7 @@ export default function RhabillagePage() {
                                 (e.currentTarget as HTMLImageElement).src = LOCAL_IMG_BASE + img;
                               }}
                             />
-                            <span className="text-[9px] font-mono text-slate-400 group-hover:text-amber-400 mt-1 truncate w-full text-center">
+                            <span className="text-[9px] font-mono text-slate-600 dark:text-slate-400 group-hover:text-amber-500 mt-1 truncate w-full text-center">
                               {img.replace(".png", "").replace(".jpg", "")}
                             </span>
                           </div>
@@ -1304,40 +1299,40 @@ export default function RhabillagePage() {
 
         {/* Modal: Loupe d'Atelier 10x */}
         {loupeModal.isOpen && (
-          <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 transition-all">
-            <div className="relative w-full max-w-4xl bg-[#0d121f] border border-amber-500/40 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 transition-all">
+            <div className="relative w-full max-w-4xl bg-white dark:bg-[#0d121f] border border-slate-200 dark:border-amber-500/40 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
               
               {/* Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-black/40">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-black/40">
                 <div className="flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center font-mono font-bold text-sm">
+                  <span className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-500 flex items-center justify-center font-mono font-bold text-sm">
                     🔍
                   </span>
                   <div>
-                    <h3 className="text-base sm:text-lg font-bold text-white tracking-wide">
+                    <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-wide">
                       {cal.name} — Étape #{modalStep.num} : {modalStep.title}
                     </h3>
-                    <span className="text-xs font-mono text-amber-400/80">
+                    <span className="text-xs font-mono text-amber-600 dark:text-amber-400/80">
                       Outillage : {modalStep.tool} | Couple : {modalStep.torque} | Lubrifiant : {modalStep.oil}
                     </span>
                   </div>
                 </div>
                 <button
                   onClick={() => setLoupeModal({ isOpen: false, stepIdx: 0 })}
-                  className="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center transition-colors text-lg"
+                  className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white flex items-center justify-center transition-colors text-lg"
                 >
                   ✕
                 </button>
               </div>
 
               {/* Body */}
-              <div className="p-6 overflow-y-auto flex-1 flex flex-col items-center justify-center bg-[#070a10]">
+              <div className="p-6 overflow-y-auto flex-1 flex flex-col items-center justify-center bg-slate-100 dark:bg-[#070a10]">
                 <div className="w-full flex items-center justify-center">
                   {activeCalibre === "eta6497" && modalStep.images && modalStep.images.length > 0 ? (
                     <div className="flex flex-col items-center gap-4 w-full">
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-2xl">
                         {modalStep.images.map((img) => (
-                          <div key={img} className="bg-black/60 border border-amber-500/30 p-3 rounded-xl flex flex-col items-center">
+                          <div key={img} className="bg-white dark:bg-black/60 border border-slate-200 dark:border-amber-500/30 p-3 rounded-xl flex flex-col items-center shadow-sm">
                             <img
                               src={GITHUB_RAW_BASE + img}
                               alt={img}
@@ -1346,15 +1341,15 @@ export default function RhabillagePage() {
                                 (e.currentTarget as HTMLImageElement).src = LOCAL_IMG_BASE + img;
                               }}
                             />
-                            <span className="text-[10px] font-mono text-amber-400 mt-2 text-center truncate w-full">
+                            <span className="text-[10px] font-mono text-amber-600 dark:text-amber-400 mt-2 text-center truncate w-full font-bold">
                               {img.replace(".png", "").replace(".jpg", "")}
                             </span>
                           </div>
                         ))}
                       </div>
                       {modalStep.svgType && (
-                        <div className="w-full max-w-xl mt-4 border-t border-white/10 pt-4">
-                          <span className="text-xs font-mono text-slate-400 block mb-2 text-center">
+                        <div className="w-full max-w-xl mt-4 border-t border-slate-200 dark:border-white/10 pt-4">
+                          <span className="text-xs font-mono text-slate-600 dark:text-slate-400 block mb-2 text-center font-bold">
                             Schéma Vectoriel Complémentaire :
                           </span>
                           {renderSvgByKey(modalStep.svgType)}
@@ -1369,25 +1364,25 @@ export default function RhabillagePage() {
                 </div>
 
                 {/* Micro Annotations */}
-                <div className="w-full mt-5 p-4 rounded-xl bg-black/60 border border-white/10 text-xs font-mono text-slate-300">
-                  <div className="flex items-center gap-2 text-amber-400 font-bold mb-1">
+                <div className="w-full mt-5 p-4 rounded-xl bg-white dark:bg-black/60 border border-slate-200 dark:border-white/10 text-xs font-mono text-slate-800 dark:text-slate-300 shadow-sm">
+                  <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 font-bold mb-1">
                     <span>🔬 Directives d'Établi & Précision Micro-Mécanique :</span>
                   </div>
-                  <p className="font-sans text-slate-300 leading-relaxed text-xs">
+                  <p className="font-sans text-slate-700 dark:text-slate-300 leading-relaxed text-xs">
                     <strong>Consigne :</strong> {modalStep.remontage}
                   </p>
-                  <p className="font-sans text-red-400 leading-relaxed text-xs mt-2">
+                  <p className="font-sans text-rose-600 dark:text-red-400 leading-relaxed text-xs mt-2">
                     <strong>Piège critique :</strong> {modalStep.trap}
                   </p>
                 </div>
               </div>
 
               {/* Footer */}
-              <div className="px-6 py-3 border-t border-white/10 bg-black/40 flex justify-between items-center text-xs font-mono">
-                <span className="text-slate-400">Norme Horlogère Suisse NIHS & Contrôle Loupe 10x</span>
+              <div className="px-6 py-3 border-t border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-black/40 flex justify-between items-center text-xs font-mono">
+                <span className="text-slate-500 dark:text-slate-400">Norme Horlogère Suisse NIHS & Contrôle Loupe 10x</span>
                 <button
                   onClick={() => setLoupeModal({ isOpen: false, stepIdx: 0 })}
-                  className="px-4 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold hover:bg-amber-400 transition"
+                  className="px-4 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold hover:bg-amber-400 transition shadow-sm"
                 >
                   Fermer la loupe
                 </button>
