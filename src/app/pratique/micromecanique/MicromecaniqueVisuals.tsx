@@ -315,7 +315,7 @@ export function PrepMachineVisual({ onZoom }: { onZoom?: () => void }) {
       <line x1="250" y1="73" x2="396" y2="73" stroke="#38bdf8" strokeDasharray="6 3" />
       <line className="dim" x1="30" y1="148" x2="30" y2="100" markerStart="url(#aG)" markerEnd="url(#aG)" />
       <text className="g" x="38" y="128" fontSize="11" fontWeight="600">H = 70.00</text>
-      <text className="d" x="100" y="172" fontSize="9">CHARIOT PLAQUÉ CONTRE LE BANC</text>
+      <text fill="#94a3b8" x="100" y="172" fontSize="9" fontWeight="600">CHARIOT PLAQUÉ CONTRE LE BANC</text>
     </svg>
   );
 
