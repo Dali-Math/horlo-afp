@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import TappingBenchSimulator from './TappingBenchSimulator';
 import PolishingBenchSimulator from './PolishingBenchSimulator';
+import { PrepMachineVisual, BarStickoutVisual, OriginVisual, FacingPassesVisual, LatheAnatomyVisual } from './MicromecaniqueVisuals';
 import Link from 'next/link';
 import {
   Compass,
@@ -503,6 +504,7 @@ export default function MicromecaniqueModulePage() {
         </div>
       </div>
 
+      <LatheAnatomyVisual />
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
         {/* Photo réelle en Base64 */}
         <div className="lg:col-span-6 relative rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700/80 shadow-sm dark:shadow-2xl group bg-slate-100 dark:bg-slate-900 aspect-[16/11]">
@@ -597,6 +599,7 @@ export default function MicromecaniqueModulePage() {
         
         {/* ÉTAPE 1 : PRÉPARATION */}
         <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 hover:border-amber-500/40 transition-all space-y-4 shadow-sm dark:shadow-lg flex flex-col justify-between">
+          <PrepMachineVisual />
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 font-bold text-xs border border-amber-500/20 uppercase tracking-wider">Étape 1</span>
@@ -630,6 +633,7 @@ export default function MicromecaniqueModulePage() {
 
         {/* ÉTAPE 2 & 3 : POSITIONNEMENT */}
         <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 hover:border-cyan-500/40 transition-all space-y-4 shadow-sm dark:shadow-lg flex flex-col justify-between">
+          <BarStickoutVisual />
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="px-2.5 py-1 rounded-lg bg-cyan-500/10 text-cyan-400 font-bold text-xs border border-cyan-500/20 uppercase tracking-wider">Étapes 2 &amp; 3</span>
@@ -659,6 +663,7 @@ export default function MicromecaniqueModulePage() {
 
         {/* ÉTAPE 4 À 6 : ORIGINE */}
         <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/40 transition-all space-y-4 shadow-sm dark:shadow-lg flex flex-col justify-between">
+          <OriginVisual />
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 font-bold text-xs border border-emerald-500/20 uppercase tracking-wider">Étapes 4 à 6</span>
@@ -688,6 +693,7 @@ export default function MicromecaniqueModulePage() {
 
         {/* ÉTAPE 7 : DRESSAGE DE FACE */}
         <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 hover:border-yellow-500/40 transition-all space-y-4 shadow-sm dark:shadow-lg flex flex-col justify-between">
+          <FacingPassesVisual />
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="px-2.5 py-1 rounded-lg bg-yellow-500/10 text-yellow-400 font-bold text-xs border border-yellow-500/20 uppercase tracking-wider">Étape 7</span>
