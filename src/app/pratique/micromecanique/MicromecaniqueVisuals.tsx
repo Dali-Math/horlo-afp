@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { ZoomIn, X } from "lucide-react";
 
 // =========================================================================
@@ -168,9 +169,14 @@ export function TechnicalLoupeModal({
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  return (
+  if (!isOpen || !mounted) return null;
+
+  return createPortal(
     <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 transition-all">
       <div className="relative w-full max-w-5xl bg-white dark:bg-[#0d121f] border border-slate-200 dark:border-amber-500/40 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
         {/* En-tête de la Loupe */}
@@ -258,7 +264,8 @@ export function TechnicalLoupeModal({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
