@@ -130,46 +130,46 @@ export default function Examen({ best, onScore }: ExamenProps) {
       </div>
 
       {/* Carte score & note suisse */}
-      <div className="lg:col-span-4 bg-[#221B10] text-cream rounded-3xl border border-bronze/40 p-6 sm:p-8 shadow-xl space-y-6 lg:sticky lg:top-32">
+      <div className="lg:col-span-4 bg-cream-card dark:bg-slate-900 text-ink dark:text-slate-100 rounded-3xl border border-cream-border dark:border-slate-800 p-6 sm:p-8 shadow-xl space-y-6 lg:sticky lg:top-32">
         <div>
-          <span className="inline-block text-[10px] uppercase font-label font-bold tracking-widest text-bronze-light bg-bronze/20 px-2.5 py-0.5 rounded border border-bronze/30">
+          <span className="inline-block text-[10px] uppercase font-label font-bold tracking-widest text-bronze dark:text-amber-400 bg-bronze/10 dark:bg-amber-400/10 px-2.5 py-0.5 rounded border border-bronze/20 dark:border-amber-400/20">
             Évaluation d'établi
           </span>
-          <h3 className="font-display text-2xl mt-2 text-white">Bilan de l'emboîtage</h3>
+          <h3 className="font-display text-2xl mt-2 text-ink dark:text-slate-100">Bilan de l'emboîtage</h3>
         </div>
 
         {/* Note géante */}
-        <div className="rounded-2xl bg-white/[0.04] border border-white/10 p-5 text-center">
-          <div className="text-xs font-label uppercase tracking-wider text-bronze-light">Note helvétique</div>
-          <div className="font-label text-6xl font-bold tracking-tight text-white my-1">
+        <div className="rounded-2xl bg-cream-tile dark:bg-slate-800/80 border border-cream-border dark:border-slate-700 p-5 text-center">
+          <div className="text-xs font-label uppercase tracking-wider text-bronze-dark dark:text-amber-400 font-semibold">Note helvétique</div>
+          <div className="font-label text-6xl font-bold tracking-tight text-ink dark:text-white my-1">
             {note.toFixed(1)}
           </div>
           <div className={`font-label text-sm font-bold ${mentionCls}`}>{mention.label}</div>
-          <div className="text-xs font-label text-cream/60 mt-2">
-            Points cumulés : <strong className="text-white">{totalScore}</strong> / {EXAM_TOTAL}
+          <div className="text-xs font-label text-ink-soft dark:text-slate-400 mt-2">
+            Points cumulés : <strong className="text-ink dark:text-white font-bold">{totalScore}</strong> / {EXAM_TOTAL}
           </div>
         </div>
 
         {/* Alerte éliminatoire */}
         {eliminatoryFailed && (
-          <div className="rounded-xl border border-red-500/50 bg-red-950/60 p-3.5 text-xs text-red-200 leading-relaxed flex items-start gap-2.5">
-            <ShieldAlert className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+          <div className="rounded-xl border border-red-500/40 bg-red-500/10 dark:bg-red-950/60 p-3.5 text-xs text-red-950 dark:text-red-200 leading-relaxed flex items-start gap-2.5">
+            <ShieldAlert className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
             <div>
-              <strong className="block text-red-300 font-bold mb-0.5">Note 1.0 immédiate</strong>
+              <strong className="block text-red-700 dark:text-red-300 font-bold mb-0.5">Note 1.0 immédiate</strong>
               La moindre poussière sous la glace ou résidu de Rodico sur le cadran annule l'ensemble du travail selon les exigences de la haute horlogerie suisse.
             </div>
           </div>
         )}
 
         {/* Barème suisse */}
-        <div className="space-y-1.5 text-xs font-label border-t border-white/10 pt-4 text-cream/70">
+        <div className="space-y-1.5 text-xs font-label border-t border-cream-border dark:border-slate-800 pt-4 text-ink-soft dark:text-slate-400">
           <div className="flex justify-between">
             <span>6.0 — Travail d'exception</span>
-            <span className="text-emerald-400 font-bold">29-30 pts</span>
+            <span className="text-emerald-600 dark:text-emerald-400 font-bold">29-30 pts</span>
           </div>
           <div className="flex justify-between">
             <span>5.0 — Très bon travail</span>
-            <span className="text-sky-300 font-bold">24-28 pts</span>
+            <span className="text-sky-600 dark:text-sky-300 font-bold">24-28 pts</span>
           </div>
           <div className="flex justify-between">
             <span>4.0 — Seuil de réussite</span>
@@ -182,11 +182,11 @@ export default function Examen({ best, onScore }: ExamenProps) {
         </div>
 
         {best !== null && (
-          <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs font-label text-cream/70">
+          <div className="pt-2 border-t border-cream-border dark:border-slate-800 flex items-center justify-between text-xs font-label text-ink-soft dark:text-slate-400">
             <span className="flex items-center gap-1.5">
-              <Award className="w-3.5 h-3.5 text-bronze-light" /> Meilleure note :
+              <Award className="w-3.5 h-3.5 text-bronze dark:text-amber-400" /> Meilleure note :
             </span>
-            <strong className="text-white text-sm">{best.toFixed(1)} / 6.0</strong>
+            <strong className="text-ink dark:text-white text-sm font-bold">{best.toFixed(1)} / 6.0</strong>
           </div>
         )}
       </div>

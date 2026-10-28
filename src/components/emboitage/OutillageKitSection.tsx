@@ -464,31 +464,31 @@ export default function OutillageKitSection() {
           </div>
 
           {/* Fiche détaillée de l'outil sélectionné avec GRAND VISUEL DE L'OUTIL */}
-          <div className="lg:col-span-5 bg-[#1a140c] text-cream rounded-3xl border border-bronze/40 p-5 space-y-4 shadow-xl lg:sticky lg:top-36">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <span className="text-[10px] uppercase font-label font-bold tracking-widest text-bronze-light bg-bronze/20 px-2.5 py-0.5 rounded border border-bronze/30">
+          <div className="lg:col-span-5 bg-cream-card dark:bg-slate-900 text-ink dark:text-slate-100 rounded-3xl border border-cream-border dark:border-slate-800 p-5 space-y-4 shadow-xl lg:sticky lg:top-36">
+            <div className="flex items-center justify-between border-b border-cream-border dark:border-slate-800 pb-3">
+              <span className="text-[10px] uppercase font-label font-bold tracking-widest text-bronze dark:text-amber-400 bg-bronze/10 dark:bg-amber-400/10 px-2.5 py-0.5 rounded border border-bronze/20 dark:border-amber-400/20">
                 Instrument N°{selectedTool.number} d'Atelier
               </span>
-              <span className="text-xs font-label text-cream/70 capitalize">
+              <span className="text-xs font-label text-ink-soft dark:text-slate-400 capitalize">
                 Catégorie : {selectedTool.category}
               </span>
             </div>
 
             <div>
-              <h4 className="font-display text-xl text-white">{selectedTool.name}</h4>
-              <p className="text-xs text-bronze-light mt-0.5 font-medium">{selectedTool.role}</p>
+              <h4 className="font-display text-xl text-ink dark:text-slate-100">{selectedTool.name}</h4>
+              <p className="text-xs text-bronze-dark dark:text-amber-400 mt-0.5 font-medium">{selectedTool.role}</p>
             </div>
 
             {/* GRAND VISUEL RÉEL DE L'OUTIL AVEC SÉLECTEUR PHOTO / EXTRAIT ORIGINAL */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-[11px] font-label">
-                <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-lg border border-white/10">
+                <div className="flex items-center gap-1 bg-cream-tile dark:bg-slate-950 p-0.5 rounded-lg border border-cream-border dark:border-slate-800">
                   <button
                     onClick={() => setToolViewMode('photo')}
                     className={`px-2 py-0.5 rounded text-[10px] font-bold transition ${
                       toolViewMode === 'photo'
-                        ? 'bg-bronze text-white'
-                        : 'text-cream/60 hover:text-white'
+                        ? 'bg-bronze text-white shadow-sm'
+                        : 'text-ink-soft dark:text-slate-400 hover:text-ink dark:hover:text-white'
                     }`}
                   >
                     Photo de l'outil
@@ -497,8 +497,8 @@ export default function OutillageKitSection() {
                     onClick={() => setToolViewMode('row')}
                     className={`px-2 py-0.5 rounded text-[10px] font-bold transition ${
                       toolViewMode === 'row'
-                        ? 'bg-bronze text-white'
-                        : 'text-cream/60 hover:text-white'
+                        ? 'bg-bronze text-white shadow-sm'
+                        : 'text-ink-soft dark:text-slate-400 hover:text-ink dark:hover:text-white'
                     }`}
                   >
                     Extrait planche
@@ -513,7 +513,7 @@ export default function OutillageKitSection() {
                       subtitle: selectedTool.role,
                     })
                   }
-                  className="flex items-center gap-1 text-amber-300 hover:text-amber-200 transition font-bold"
+                  className="flex items-center gap-1 text-bronze dark:text-amber-400 hover:text-bronze-dark dark:hover:text-amber-300 transition font-bold"
                 >
                   <ZoomIn className="w-3.5 h-3.5" /> Loupe 10x
                 </button>
@@ -528,14 +528,14 @@ export default function OutillageKitSection() {
                     subtitle: selectedTool.role,
                   })
                 }
-                className="relative w-full h-44 rounded-2xl overflow-hidden border border-white/15 bg-slate-900/90 flex items-center justify-center p-3 cursor-zoom-in group shadow-inner"
+                className="relative w-full h-44 rounded-2xl overflow-hidden border border-cream-border dark:border-slate-800 bg-cream-tile dark:bg-slate-950 flex items-center justify-center p-3 cursor-zoom-in group shadow-inner"
               >
                 <img
                   src={toolViewMode === 'photo' ? selectedTool.image : selectedTool.rowImage}
                   alt={selectedTool.name}
                   className="max-w-full max-h-full object-contain filter drop-shadow-md group-hover:scale-105 transition duration-300"
                 />
-                <div className="absolute bottom-2 right-2 px-2 py-1 rounded bg-black/75 text-[10px] font-label text-cream/80 backdrop-blur-sm flex items-center gap-1 opacity-80 group-hover:opacity-100">
+                <div className="absolute bottom-2 right-2 px-2 py-1 rounded bg-black/75 text-[10px] font-label text-white/90 backdrop-blur-sm flex items-center gap-1 opacity-80 group-hover:opacity-100">
                   <ZoomIn className="w-3 h-3 text-amber-300" /> Agrandir
                 </div>
               </div>
@@ -543,30 +543,30 @@ export default function OutillageKitSection() {
 
             {/* Spécifications & Tolérances Suisses */}
             <div className="grid grid-cols-2 gap-2 text-[11px] font-label">
-              <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/10">
-                <span className="text-[10px] uppercase text-cream/50 block font-bold">Standard Suisse</span>
-                <span className="text-cream/90 font-medium">{selectedTool.specs.standard}</span>
+              <div className="p-2.5 rounded-xl bg-cream-tile dark:bg-slate-800/80 border border-cream-border dark:border-slate-700">
+                <span className="text-[10px] uppercase text-ink-soft dark:text-slate-400 block font-bold">Standard Suisse</span>
+                <span className="text-ink dark:text-slate-200 font-semibold">{selectedTool.specs.standard}</span>
               </div>
-              <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/10">
-                <span className="text-[10px] uppercase text-cream/50 block font-bold">Matière / Corps</span>
-                <span className="text-cream/90 font-medium truncate block">{selectedTool.specs.material}</span>
+              <div className="p-2.5 rounded-xl bg-cream-tile dark:bg-slate-800/80 border border-cream-border dark:border-slate-700">
+                <span className="text-[10px] uppercase text-ink-soft dark:text-slate-400 block font-bold">Matière / Corps</span>
+                <span className="text-ink dark:text-slate-200 font-semibold truncate block">{selectedTool.specs.material}</span>
               </div>
-              <div className="col-span-2 p-2.5 rounded-xl bg-white/[0.04] border border-white/10">
-                <span className="text-[10px] uppercase text-amber-300/80 block font-bold">Tolérance & Précision</span>
-                <span className="text-cream/90 font-medium">{selectedTool.specs.tolerances}</span>
+              <div className="col-span-2 p-2.5 rounded-xl bg-cream-tile dark:bg-slate-800/80 border border-cream-border dark:border-slate-700">
+                <span className="text-[10px] uppercase text-bronze-dark dark:text-amber-400 block font-bold">Tolérance & Précision</span>
+                <span className="text-ink dark:text-slate-200 font-semibold">{selectedTool.specs.tolerances}</span>
               </div>
             </div>
 
             {/* Recommandation du Maître d'Atelier */}
-            <div className="p-3.5 rounded-xl bg-amber-950/40 border border-amber-500/30 space-y-1.5">
-              <span className="flex items-center gap-1.5 text-xs font-label font-bold text-amber-300">
+            <div className="p-3.5 rounded-xl bg-amber-500/10 dark:bg-amber-950/40 border border-amber-500/30 space-y-1.5">
+              <span className="flex items-center gap-1.5 text-xs font-label font-bold text-amber-900 dark:text-amber-300">
                 <Sparkles className="w-3.5 h-3.5" /> RECOMMANDATION DU MAÎTRE D'ATELIER :
               </span>
-              <p className="text-xs leading-relaxed text-amber-100/90">{selectedTool.benchTip}</p>
+              <p className="text-xs leading-relaxed text-amber-950/90 dark:text-amber-100/90">{selectedTool.benchTip}</p>
             </div>
 
-            <div className="text-[11px] font-label text-cream/60 flex items-center gap-2 pt-1 border-t border-white/10">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+            <div className="text-[11px] font-label text-ink-soft dark:text-slate-400 flex items-center gap-2 pt-1 border-t border-cream-border dark:border-slate-800">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
               <span>Conforme aux normes d'outillage des manufactures suisses.</span>
             </div>
           </div>
@@ -624,23 +624,23 @@ export default function OutillageKitSection() {
           </div>
 
           {/* Fiche détaillée du composant sélectionné avec GRAND VISUEL SUR TAPIS */}
-          <div className="lg:col-span-5 bg-[#1a140c] text-cream rounded-3xl border border-bronze/40 p-5 space-y-4 shadow-xl lg:sticky lg:top-36">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <span className="text-[10px] uppercase font-label font-bold tracking-widest text-bronze-light bg-bronze/20 px-2.5 py-0.5 rounded border border-bronze/30">
+          <div className="lg:col-span-5 bg-cream-card dark:bg-slate-900 text-ink dark:text-slate-100 rounded-3xl border border-cream-border dark:border-slate-800 p-5 space-y-4 shadow-xl lg:sticky lg:top-36">
+            <div className="flex items-center justify-between border-b border-cream-border dark:border-slate-800 pb-3">
+              <span className="text-[10px] uppercase font-label font-bold tracking-widest text-bronze dark:text-amber-400 bg-bronze/10 dark:bg-amber-400/10 px-2.5 py-0.5 rounded border border-bronze/20 dark:border-amber-400/20">
                 Fourniture N°0{selectedKit.number} · Contrôle Réception
               </span>
-              <span className="text-xs font-label text-cream/70">Kit Horloger</span>
+              <span className="text-xs font-label text-ink-soft dark:text-slate-400">Kit Horloger</span>
             </div>
 
             <div>
-              <h4 className="font-display text-xl text-white">{selectedKit.name}</h4>
-              <p className="text-xs text-bronze-light mt-0.5 font-medium">{selectedKit.role}</p>
+              <h4 className="font-display text-xl text-ink dark:text-slate-100">{selectedKit.name}</h4>
+              <p className="text-xs text-bronze-dark dark:text-amber-400 mt-0.5 font-medium">{selectedKit.role}</p>
             </div>
 
             {/* GRAND VISUEL DU COMPOSANT SUR TAPIS D'ÉTABLI */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-[11px] font-label">
-                <span className="text-cream/70 font-medium">Vue réelle sur tapis vert d'atelier</span>
+                <span className="text-ink-soft dark:text-slate-400 font-medium">Vue réelle sur tapis vert d'atelier</span>
                 <button
                   onClick={() =>
                     setLightboxImage({
@@ -649,7 +649,7 @@ export default function OutillageKitSection() {
                       subtitle: selectedKit.role,
                     })
                   }
-                  className="flex items-center gap-1 text-amber-300 hover:text-amber-200 transition font-bold"
+                  className="flex items-center gap-1 text-bronze dark:text-amber-400 hover:text-bronze-dark dark:hover:text-amber-300 transition font-bold"
                 >
                   <ZoomIn className="w-3.5 h-3.5" /> Loupe 10x
                 </button>
@@ -663,14 +663,14 @@ export default function OutillageKitSection() {
                     subtitle: selectedKit.role,
                   })
                 }
-                className="relative w-full h-44 rounded-2xl overflow-hidden border border-white/15 bg-[#1b3624] flex items-center justify-center p-3 cursor-zoom-in group shadow-inner"
+                className="relative w-full h-44 rounded-2xl overflow-hidden border border-cream-border dark:border-slate-800 bg-[#1b3624] flex items-center justify-center p-3 cursor-zoom-in group shadow-inner"
               >
                 <img
                   src={selectedKit.image}
                   alt={selectedKit.name}
                   className="max-w-full max-h-full object-contain filter drop-shadow-md group-hover:scale-105 transition duration-300"
                 />
-                <div className="absolute bottom-2 right-2 px-2 py-1 rounded bg-black/75 text-[10px] font-label text-cream/80 backdrop-blur-sm flex items-center gap-1 opacity-80 group-hover:opacity-100">
+                <div className="absolute bottom-2 right-2 px-2 py-1 rounded bg-black/75 text-[10px] font-label text-white/90 backdrop-blur-sm flex items-center gap-1 opacity-80 group-hover:opacity-100">
                   <ZoomIn className="w-3 h-3 text-amber-300" /> Agrandir
                 </div>
               </div>
@@ -678,22 +678,22 @@ export default function OutillageKitSection() {
 
             {/* Dimensions & Contrôles */}
             <div className="space-y-2 text-[11.5px] font-label">
-              <div className="p-3 rounded-xl bg-white/[0.04] border border-white/10 space-y-1">
-                <span className="text-[10px] uppercase text-cream/50 block font-bold">Dimensions & Cotes</span>
-                <p className="text-cream/90 font-medium">{selectedKit.details.dimensions}</p>
+              <div className="p-3 rounded-xl bg-cream-tile dark:bg-slate-800/80 border border-cream-border dark:border-slate-700 space-y-1">
+                <span className="text-[10px] uppercase text-ink-soft dark:text-slate-400 block font-bold">Dimensions & Cotes</span>
+                <p className="text-ink dark:text-slate-200 font-semibold">{selectedKit.details.dimensions}</p>
               </div>
-              <div className="p-3 rounded-xl bg-white/[0.04] border border-white/10 space-y-1">
-                <span className="text-[10px] uppercase text-amber-300/80 block font-bold">Tolérance d'Ajustement</span>
-                <p className="text-cream/90 font-medium">{selectedKit.details.tolerances}</p>
+              <div className="p-3 rounded-xl bg-cream-tile dark:bg-slate-800/80 border border-cream-border dark:border-slate-700 space-y-1">
+                <span className="text-[10px] uppercase text-bronze-dark dark:text-amber-400 block font-bold">Tolérance d'Ajustement</span>
+                <p className="text-ink dark:text-slate-200 font-semibold">{selectedKit.details.tolerances}</p>
               </div>
             </div>
 
             {/* Piège à éviter */}
-            <div className="p-3.5 rounded-xl bg-red-950/60 border border-red-500/40 space-y-1">
-              <span className="flex items-center gap-1.5 text-xs font-label font-bold text-red-300">
-                <ShieldAlert className="w-3.5 h-3.5 text-red-400" /> PIÈGE TECHNIQUE À ÉVITER :
+            <div className="p-3.5 rounded-xl bg-red-500/10 dark:bg-red-950/60 border border-red-500/30 dark:border-red-500/40 space-y-1">
+              <span className="flex items-center gap-1.5 text-xs font-label font-bold text-red-700 dark:text-red-300">
+                <ShieldAlert className="w-3.5 h-3.5 text-red-600 dark:text-red-400" /> PIÈGE TECHNIQUE À ÉVITER :
               </span>
-              <p className="text-xs leading-relaxed text-red-200">{selectedKit.alert}</p>
+              <p className="text-xs leading-relaxed text-red-950 dark:text-red-200 font-medium">{selectedKit.alert}</p>
             </div>
           </div>
         </div>
