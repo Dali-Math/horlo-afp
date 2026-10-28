@@ -2,13 +2,14 @@
 
 /**
  * HorloLearn — Académie Pratique · Posages, Emboîtages & Aiguillage d'Atelier
- * Module complet pour passionnés et artisans horlogers suisses :
- *   · Parcours guidé des 13 gestes fondamentaux (schémas à points chauds, loupe 10x, progression)
- *   · 3 simulateurs d'établi (coupe de tige, chasse poussière 45°, gardes NIHS 91-10)
- *   · Quiz de 15 questions d'atelier avec note helvétique (1.0 à 6.0)
- *   · Grille de contrôle officiel des compétences d'atelier avec critère éliminatoire
- *   · Fiches mémo réversibles + lexique des produits d'établi
- * Éthique & identité : Transmission d'artisan horloger authentique, normes suisses officielles (NIHS, ISO, ETA).
+ * Cours complet conforme aux 9 planches officielles d'atelier suisse :
+ *   · 1. Outillage nécessaire (les 10 instruments d'établi)
+ *   · 2. Kit à emboîter (les 7 composants de fourniture)
+ *   · 3. Procédure intégrale d'emboîtage & aiguillage (13 gestes avec schémas et loupe 10x)
+ *   · 4. Simulateurs virtuels (coupe de tige, poussière 45°, gardes NIHS)
+ *   · 5. Quiz d'atelier (15 questions QCM helvétiques)
+ *   · 6. Grille officielle de contrôle de maîtrise d'établi (30 points)
+ *   · 7. Fiches mémo & lexique des produits d'établi
  */
 
 import { useCallback, useEffect, useState } from 'react';
@@ -23,9 +24,11 @@ import {
   Compass,
   Ruler,
   ZoomIn,
+  Package,
 } from 'lucide-react';
 import { STEPS_DATA, type StepData } from '@/lib/emboitage/data';
 import { CaseAssemblySVG } from '@/lib/emboitage/schemas-b';
+import OutillageKitSection from './OutillageKitSection';
 import Parcours from './Parcours';
 import Simulateurs from './Simulateurs';
 import Quiz from './Quiz';
@@ -33,7 +36,7 @@ import Examen from './Examen';
 import Fiches from './Fiches';
 import LoupeModal, { type LoupeState } from './LoupeModal';
 
-type Tab = 'parcours' | 'simulateurs' | 'quiz' | 'examen' | 'fiches';
+type Tab = 'outillage' | 'parcours' | 'simulateurs' | 'quiz' | 'examen' | 'fiches';
 
 interface Progress {
   steps: number[];
@@ -42,18 +45,19 @@ interface Progress {
 }
 
 const EMPTY_PROGRESS: Progress = { steps: [], quizBest: null, examBest: null };
-const STORAGE_KEY = 'hl-emboitage-progress-v2';
+const STORAGE_KEY = 'hl-emboitage-progress-v3';
 
 const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [
-  { id: 'parcours', label: 'Parcours des 13 gestes', icon: <Compass className="w-3.5 h-3.5" /> },
-  { id: 'simulateurs', label: 'Simulateurs d\'établi', icon: <Ruler className="w-3.5 h-3.5" /> },
-  { id: 'quiz', label: 'Quiz d\'atelier', icon: <GraduationCap className="w-3.5 h-3.5" /> },
-  { id: 'examen', label: 'Grille de maîtrise', icon: <ClipboardCheck className="w-3.5 h-3.5" /> },
-  { id: 'fiches', label: 'Fiches & Produits', icon: <Layers className="w-3.5 h-3.5" /> },
+  { id: 'outillage', label: '1. Outillage & Kit', icon: <Wrench className="w-3.5 h-3.5" /> },
+  { id: 'parcours', label: '2. Procédure (13 gestes)', icon: <Compass className="w-3.5 h-3.5" /> },
+  { id: 'simulateurs', label: '3. Simulateurs', icon: <Ruler className="w-3.5 h-3.5" /> },
+  { id: 'quiz', label: '4. Quiz d\'atelier', icon: <GraduationCap className="w-3.5 h-3.5" /> },
+  { id: 'examen', label: '5. Grille de maîtrise', icon: <ClipboardCheck className="w-3.5 h-3.5" /> },
+  { id: 'fiches', label: '6. Fiches & Produits', icon: <Layers className="w-3.5 h-3.5" /> },
 ];
 
 export default function EmboitageAcademy() {
-  const [tab, setTab] = useState<Tab>('parcours');
+  const [tab, setTab] = useState<Tab>('outillage');
   const [activeStep, setActiveStep] = useState(1);
   const [progress, setProgress] = useState<Progress>(EMPTY_PROGRESS);
   const [hydrated, setHydrated] = useState(false);
@@ -148,13 +152,13 @@ export default function EmboitageAcademy() {
                   Pratique d'Atelier Horloger Suisse
                 </span>
                 <span className="hidden md:inline text-[11px] font-label text-ink-soft dark:text-slate-400">
-                  NIHS 91-10 · NIHS 92-20 · ISO 22810 · ETA 2824-2
+                  NIHS 91-10 · NIHS 92-20 · ISO 22810 · Calibre ETA 2824-2
                 </span>
               </div>
               <h1 className="font-display text-sm sm:text-base text-ink dark:text-slate-100 font-bold leading-tight truncate mt-0.5">
-                Posages, Emboîtages &amp; Aiguillage
+                Posage, Emboîtage &amp; Aiguillage
                 <span className="hidden sm:inline text-xs text-ink-soft dark:text-slate-400 font-body font-normal">
-                  {' '}· la méthode rigoureuse d'établi
+                  {' '}· du kit de pièces à la fermeture finale
                 </span>
               </h1>
             </div>
@@ -214,18 +218,41 @@ export default function EmboitageAcademy() {
               </h2>
 
               <p className="text-[15px] sm:text-base text-ink-soft dark:text-slate-300 leading-relaxed max-w-2xl">
-                L'emboîtage est l'étape sacrée où des dizaines d'heures de réglage chronométrique se
-                concrétisent. Une poussière sous la glace, un centième de trop sur la tige, un appui maladroit sur
-                un rubis ou un frottement d'aiguille anéantissent la montre. Ce cours complet d'atelier détaille
-                les 13 gestes indispensables — de la dépose du module automatique au contrôle final à la potence.
+                Ce cours d'atelier regroupe l'intégralité des savoir-faire de l'artisan horloger : les <strong>10 outils nécessaires</strong>, la disposition du <strong>kit à emboîter</strong> sur le sous-main, et la <strong>procédure chronologique des 13 gestes</strong> — du retrait du module automatique au contrôle final à la potence.
               </p>
 
-              <div className="pt-1 flex flex-wrap gap-2.5 text-xs font-label text-ink-soft dark:text-slate-400">
+              {/* Raccourcis d'action directe */}
+              <div className="pt-2 flex flex-wrap gap-3">
+                <button
+                  onClick={() => setTab('outillage')}
+                  className={`px-4 py-2.5 rounded-xl font-label text-xs font-bold transition flex items-center gap-2 shadow-sm ${
+                    tab === 'outillage'
+                      ? 'bg-bronze text-white'
+                      : 'bg-cream-card dark:bg-slate-800 border border-cream-border dark:border-slate-700 text-ink dark:text-slate-200 hover:border-bronze'
+                  }`}
+                >
+                  <Wrench className="w-4 h-4 text-amber-500" />
+                  1. Voir l'Outillage &amp; le Kit
+                </button>
+                <button
+                  onClick={() => setTab('parcours')}
+                  className={`px-4 py-2.5 rounded-xl font-label text-xs font-bold transition flex items-center gap-2 shadow-sm ${
+                    tab === 'parcours'
+                      ? 'bg-bronze text-white'
+                      : 'bg-cream-card dark:bg-slate-800 border border-cream-border dark:border-slate-700 text-ink dark:text-slate-200 hover:border-bronze'
+                  }`}
+                >
+                  <Compass className="w-4 h-4 text-sky-500" />
+                  2. Démarrer la Procédure (13 gestes)
+                </button>
+              </div>
+
+              <div className="pt-2 flex flex-wrap gap-2.5 text-xs font-label text-ink-soft dark:text-slate-400">
                 {[
-                  ['13', 'gestes d\'établi'],
-                  ['3', 'simulateurs interactifs'],
-                  ['15', 'questions d\'atelier'],
-                  ['10', 'critères suisses · 30 pts'],
+                  ['10', 'outils d\'atelier'],
+                  ['7', 'pièces du kit'],
+                  ['13', 'gestes de procédure'],
+                  ['15', 'questions d\'évaluation'],
                 ].map(([n, l]) => (
                   <span
                     key={l}
@@ -287,7 +314,8 @@ export default function EmboitageAcademy() {
       </section>
 
       {/* ==================== CONTENU DES ONGLETS ==================== */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+        {tab === 'outillage' && <OutillageKitSection />}
         {tab === 'parcours' && (
           <Parcours
             activeStep={activeStep}
