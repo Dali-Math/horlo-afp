@@ -320,7 +320,7 @@ export default function MicromecaniqueModulePage() {
   const isCurAnswered = userAnswers[currentQuestionIdx] !== undefined;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#080C15] text-slate-800 dark:text-slate-200 antialiased selection:bg-amber-500/30 selection:text-amber-800 dark:selection:text-amber-200 transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#080C15] text-slate-800 dark:text-slate-200 antialiased selection:bg-amber-500/30 selection:text-amber-800 dark:selection:text-amber-200 transition-colors duration-300 py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
       
       {/* Blueprint Grid Styles */}
       <style jsx global>{`
@@ -344,22 +344,26 @@ export default function MicromecaniqueModulePage() {
         .lathe-spin-ccw { animation: spinCounterClockwise 1.2s linear infinite; }
       `}</style>
 
-      {/* Top Banner */}
-      <div className="bg-white/95 dark:bg-[#0c1322]/90 border-b border-slate-200 dark:border-slate-800 py-3 px-4 sticky top-0 z-40 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto flex items-center justify-between text-xs font-mono">
-          <Link href="/pratique" className="text-slate-600 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 flex items-center gap-1.5 transition-colors">
-            <ArrowLeft className="w-3.5 h-3.5" />
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Navigation Retour & Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200/80 dark:border-slate-800/80">
+          <Link
+            href="/pratique"
+            className="inline-flex items-center gap-2 text-sm font-mono text-amber-600 dark:text-amber-400 hover:text-amber-500 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
             <span>Retour aux Modules Pratiques</span>
           </Link>
-          <span className="text-amber-700 dark:text-amber-400 uppercase tracking-wider font-semibold flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            Haute Horlogerie Suisse · Module 2 · Micromécanique & Tournage Schaublin 70
-          </span>
+          <div className="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-slate-400">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span className="text-amber-700 dark:text-amber-400 font-semibold uppercase tracking-wider">
+              Haute Horlogerie Suisse · Module 2 · Micromécanique &amp; Tournage Schaublin 70
+            </span>
+          </div>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
+        {/* Main Content */}
+        <main className="space-y-16">
         
         {/* Hero Section */}
         <div className="relative rounded-3xl bg-gradient-to-b from-white to-slate-50 dark:from-[#10192e] dark:to-[#080C15] p-8 sm:p-12 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-2xl overflow-hidden">
@@ -1932,7 +1936,7 @@ export default function MicromecaniqueModulePage() {
       <footer className="mt-20 border-t border-slate-200 dark:border-slate-800 py-8 px-4 text-center text-xs font-mono text-slate-500">
         HorloLearn · Haute Horlogerie Suisse · Référentiel Technique & Pratique de Micromécanique Horlogère
       </footer>
-
+      </div>
     </div>
   );
 }
