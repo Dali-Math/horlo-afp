@@ -250,15 +250,7 @@ export function buildCalibreScene(container: HTMLDivElement, xrayFactor: number)
           }
         });
 
-        // Enregistrement des composants cinématiques majeurs
-        if (i === 1) meshes.balanceWheel = n; // Balancier
-        if (i === 78) meshes.palletFork = n; // Ancre suisse
-        if (i === 74) meshes.escapeWheel = n; // Roue d'échappement
-        if (i === 65) meshes.barrel = n; // Barillet
-        if (i === 63) meshes.ratchetWheel = n; // Rochet
-        if (i === 70) meshes.crownWheel = n; // Roue de couronne
-        if (i === 61) meshes.thirdWheel = n; // Roue de moyenne
-        if (i === 82) meshes.fourthWheel = n; // Roue de seconde
+        // Composants cinematiques stabilises // Roue de seconde
 
         // Attribution aux organes pour le focus inspecteur
         if (i === 65 || i === 63 || i === 17) organMeshes.barrel = n;
@@ -284,6 +276,7 @@ export function buildCalibreScene(container: HTMLDivElement, xrayFactor: number)
       });
 
       calibrePivot.add(root);
+      console.log('ETA 6497-1 CAD loaded:', root.children.length);
     },
     undefined,
     (err) => {
@@ -298,6 +291,11 @@ export function buildCalibreScene(container: HTMLDivElement, xrayFactor: number)
   // Fonction d'explosion fluide 3D pour la vue éclatée de l'inspecteur
   const updateExplode = (factor: number) => {
     glbParts.forEach((p) => {
+      if (factor <= 0.001) {
+        p.node.position.copy(p.origPos);
+        p.node.rotation.copy(p.origRot);
+        return;
+      }
       const t = Math.max(0, Math.min(1, (factor - p.start) / (1 - p.start || 0.001)));
       const own = easeInOutCubic(t);
 

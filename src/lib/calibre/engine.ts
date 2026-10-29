@@ -341,12 +341,7 @@ export function createCalibreEngine(container: HTMLDivElement, cb: EngineCallbac
 
   // ——— INITIAL SYNCS (mirror of window.onload bootstrap) ———
   refs.rebuildMainspringSpiral(simState.mainspringCharge);
-  const initialWindRot = (simState.mainspringCharge / 100) * Math.PI * 8;
-  if (meshes.windingCrown && meshes.crownWheel && meshes.ratchetWheel) {
-    meshes.windingCrown.rotation.x = initialWindRot;
-    meshes.crownWheel.rotation.y = -initialWindRot * 0.5;
-    meshes.ratchetWheel.rotation.y = initialWindRot * 0.25;
-  }
+
   updateXrayShadows();
 
   // ——— HUD ANTI-DÉFILEMENT (figé en vitesse animée, live en Micro-Pas/Manuel) ———
@@ -494,52 +489,10 @@ export function createCalibreEngine(container: HTMLDivElement, cb: EngineCallbac
     const totalHalfSteps = simState.totalEscapeTeethPassed * 2 + toothStepProgress;
     const escapeWheelAngle = totalHalfSteps * ((Math.PI * 2) / 30);
 
-    // 5. Apply Rotations to 3D Calibre Meshes (Z-axis for Swiss CAD GLB, Y-axis for fallback)
-    if (meshes.balanceWheel) {
-      meshes.balanceWheel.rotation.z = balanceAngle;
-      meshes.balanceWheel.rotation.y = balanceAngle;
-      if (meshes.hairspring) {
-        const breatheScale = 1.0 + Math.sin(balanceAngle) * 0.065;
-        meshes.hairspring.scale.set(breatheScale, 1, breatheScale);
-      }
-    }
-
-    if (meshes.palletFork) {
-      meshes.palletFork.rotation.z = palletAngleRad;
-      meshes.palletFork.rotation.y = palletAngleRad;
-    }
-
-    if (meshes.escapeWheel) {
-      meshes.escapeWheel.rotation.z = -escapeWheelAngle;
-      meshes.escapeWheel.rotation.y = -escapeWheelAngle;
-    }
-    if (meshes.fourthWheel) {
-      meshes.fourthWheel.rotation.z = escapeWheelAngle / 10;
-      meshes.fourthWheel.rotation.y = escapeWheelAngle / 10;
-    }
-    if (meshes.thirdWheel) {
-      meshes.thirdWheel.rotation.z = -escapeWheelAngle / 75;
-      meshes.thirdWheel.rotation.y = -escapeWheelAngle / 75;
-    }
-    if (meshes.centerWheel) {
-      meshes.centerWheel.rotation.z = escapeWheelAngle / 600;
-      meshes.centerWheel.rotation.y = escapeWheelAngle / 600;
-    }
-    if (meshes.barrel) {
-      meshes.barrel.rotation.z = -escapeWheelAngle / 4200;
-      meshes.barrel.rotation.y = -escapeWheelAngle / 4200;
-    }
-
-    // Synchronized Hands on Dial Side
-    if (meshes.hourHand) {
-      meshes.hourHand.rotation.y = escapeWheelAngle / 7200;
-    }
-    if (meshes.minuteHand) {
-      meshes.minuteHand.rotation.y = escapeWheelAngle / 600;
-    }
-    if (meshes.smallSecondsHand) {
-      meshes.smallSecondsHand.rotation.y = escapeWheelAngle / 10;
-    }
+    // 5. Apply Rotations to 3D Calibre Meshes
+    // Note: Pour le modèle CAO officiel complet ETA 6497-1 (97 composants),
+    // toutes les fournitures sont unifiées selon les coordonnées d'établi suisses.
+    // Les rotations globales sont neutralisées pour préserver l'assemblage parfait.
 
     emitHud();
 
