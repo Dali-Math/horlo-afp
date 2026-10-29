@@ -439,6 +439,9 @@ export function createCalibreEngine(container: HTMLDivElement, cb: EngineCallbac
     camera.lookAt(0, 0, 0);
 
     // 2. Smooth Vertical Layer Separation (Exploded View Z-Axis)
+    if (refs.updateExplode) {
+      refs.updateExplode(simState.explodeFactor);
+    }
     layerGroups.forEach((grp, idx) => {
       const targetY = (idx - 1.5) * simState.explodeFactor * 1.65;
       grp.position.y += (targetY - grp.position.y) * 0.12;
@@ -491,30 +494,39 @@ export function createCalibreEngine(container: HTMLDivElement, cb: EngineCallbac
     const totalHalfSteps = simState.totalEscapeTeethPassed * 2 + toothStepProgress;
     const escapeWheelAngle = totalHalfSteps * ((Math.PI * 2) / 30);
 
-    // 5. Apply Rotations to 3D Calibre Meshes
-    if (meshes.balanceWheel && meshes.hairspring) {
+    // 5. Apply Rotations to 3D Calibre Meshes (Z-axis for Swiss CAD GLB, Y-axis for fallback)
+    if (meshes.balanceWheel) {
+      meshes.balanceWheel.rotation.z = balanceAngle;
       meshes.balanceWheel.rotation.y = balanceAngle;
-      const breatheScale = 1.0 + Math.sin(balanceAngle) * 0.065;
-      meshes.hairspring.scale.set(breatheScale, 1, breatheScale);
+      if (meshes.hairspring) {
+        const breatheScale = 1.0 + Math.sin(balanceAngle) * 0.065;
+        meshes.hairspring.scale.set(breatheScale, 1, breatheScale);
+      }
     }
 
     if (meshes.palletFork) {
+      meshes.palletFork.rotation.z = palletAngleRad;
       meshes.palletFork.rotation.y = palletAngleRad;
     }
 
     if (meshes.escapeWheel) {
+      meshes.escapeWheel.rotation.z = -escapeWheelAngle;
       meshes.escapeWheel.rotation.y = -escapeWheelAngle;
     }
     if (meshes.fourthWheel) {
+      meshes.fourthWheel.rotation.z = escapeWheelAngle / 10;
       meshes.fourthWheel.rotation.y = escapeWheelAngle / 10;
     }
     if (meshes.thirdWheel) {
+      meshes.thirdWheel.rotation.z = -escapeWheelAngle / 75;
       meshes.thirdWheel.rotation.y = -escapeWheelAngle / 75;
     }
     if (meshes.centerWheel) {
+      meshes.centerWheel.rotation.z = escapeWheelAngle / 600;
       meshes.centerWheel.rotation.y = escapeWheelAngle / 600;
     }
     if (meshes.barrel) {
+      meshes.barrel.rotation.z = -escapeWheelAngle / 4200;
       meshes.barrel.rotation.y = -escapeWheelAngle / 4200;
     }
 
@@ -556,7 +568,10 @@ export function createCalibreEngine(container: HTMLDivElement, cb: EngineCallbac
   function setXray(pct: number) {
     simState.xrayFactor = pct / 100;
     bridgeMaterials.forEach((m) => {
-      m.opacity = Math.max(0.06, 1 - simState.xrayFactor);
+      m.transparent = simState.xrayFactor > 0.02;
+      m.opacity = Math.max(0.10, 1 - simState.xrayFactor * 0.88);
+      m.depthWrite = simState.xrayFactor < 0.45;
+      m.needsUpdate = true;
     });
     updateXrayShadows();
     cb.onXray(pct);

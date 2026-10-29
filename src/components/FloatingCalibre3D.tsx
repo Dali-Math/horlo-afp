@@ -263,18 +263,16 @@ export default function FloatingCalibre3D() {
       </div>
 
       {/* Message d'accueil chaleureux */}
-      <div className="mt-2 text-right select-none">
-        <p className="font-serif italic text-base sm:text-lg text-amber-600 dark:text-amber-400 leading-snug drop-shadow-sm font-semibold">
+      <div className="mt-2 text-right select-none bg-stone-100/85 dark:bg-slate-900/85 backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-amber-500/25 shadow-lg">
+        <p className="font-serif italic text-sm sm:text-base text-amber-600 dark:text-amber-400 leading-snug drop-shadow-sm font-bold">
           Bienvenue dans mon atelier horloger.
         </p>
-        <p className="font-serif italic text-xs sm:text-sm text-stone-600 dark:text-stone-300 mt-0.5 leading-snug">
+        <p className="font-serif italic text-xs text-stone-700 dark:text-stone-300 mt-1 leading-snug">
           Découvrez le cœur battant du temps, pièce par pièce.
         </p>
-      </div>
-
-      {/* Indication 360° */}
-      <div className="mt-1 text-right text-[10px] font-mono text-slate-400 dark:text-slate-500 select-none">
-        ⟳ Faites glisser pour pivoter à 360°
+        <div className="mt-1.5 flex items-center justify-end gap-1 text-[10px] font-mono text-slate-500 dark:text-slate-400">
+          <span>Glisser pour pivoter à 360°</span>
+        </div>
       </div>
     </aside>
   );
