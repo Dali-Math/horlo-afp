@@ -33,7 +33,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -55,6 +55,65 @@
     .serif-title {
       font-family: 'Cormorant Garamond', Georgia, serif;
     }
+
+    /* Floating Frameless Bench Widget */
+    .bench {
+      position: fixed;
+      right: clamp(14px, 2.5vw, 42px);
+      bottom: clamp(14px, 2.5vw, 36px);
+      width: clamp(280px, 27vw, 420px);
+      z-index: 50;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(28px) scale(0.94);
+      transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .bench.in {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    .bench.away {
+      opacity: 0;
+      transform: translateY(28px) scale(0.94);
+      pointer-events: none;
+    }
+
+    /* 3D Canvas with soft drop shadow, completely borderless */
+    .bench-canvas-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+    }
+    .bench-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      touch-action: none;
+      cursor: grab;
+      filter: drop-shadow(0 24px 38px rgba(0, 0, 0, 0.45));
+    }
+    :root:not(.dark) .bench-canvas {
+      filter: drop-shadow(0 20px 30px rgba(120, 80, 20, 0.25));
+    }
+    .bench-canvas:active {
+      cursor: grabbing;
+    }
+
+    .bench-caption {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-style: italic;
+      font-size: clamp(15px, 1.25vw, 19px);
+      line-height: 1.35;
+      text-align: right;
+      color: #a8a29e;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+    :root:not(.dark) .bench-caption {
+      color: #78716c;
+      text-shadow: none;
+    }
+
     /* Custom Scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
@@ -69,290 +128,404 @@
     ::-webkit-scrollbar-thumb:hover {
       background: rgba(202, 138, 4, 0.8);
     }
-    .canvas-container {
-      touch-action: none;
-    }
-    /* Pulse glow */
-    .glow-gold {
-      box-shadow: 0 0 40px -10px rgba(234, 179, 8, 0.25);
-    }
   </style>
 </head>
-<body class="bg-stone-100 dark:bg-[#070a10] text-stone-900 dark:text-stone-100 min-h-screen transition-colors duration-300 selection:bg-amber-500 selection:text-black">
+<body class="bg-[#faf8f5] dark:bg-[#070a10] text-stone-900 dark:text-stone-100 min-h-screen transition-colors duration-300 selection:bg-amber-500 selection:text-black">
 
   <!-- ========================================================================= -->
-  <!-- HEADER NAVIGATION                                                         -->
+  <!-- NAVIGATION BAR                                                            -->
   <!-- ========================================================================= -->
-  <header class="sticky top-0 z-50 backdrop-blur-md bg-stone-100/85 dark:bg-[#070a10]/85 border-b border-stone-300 dark:border-stone-800/80 px-4 sm:px-8 py-3.5 flex items-center justify-between">
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-[#faf8f5]/85 dark:bg-[#070a10]/85 border-b border-stone-200 dark:border-stone-800/80 px-4 sm:px-8 py-3.5 flex items-center justify-between">
     <div class="flex items-center gap-3">
       <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-600 to-amber-400 flex items-center justify-center text-slate-950 shadow-md shadow-amber-500/20 font-serif font-black text-lg">
         ⚙️
       </div>
       <div>
         <div class="text-[10px] font-mono tracking-widest uppercase text-amber-700 dark:text-amber-400 font-bold">
-          PROTOTYPE HORLOLEARN · INNOVATION 3D
+          HORLOLEARN · ATELIER SUISSE
         </div>
         <h1 class="serif-title text-xl font-bold tracking-tight text-stone-900 dark:text-white leading-none">
-          Démontage Scrollytelling Calibre 6497
+          Démontage Pas-à-Pas Calibre 6497
         </h1>
       </div>
     </div>
 
-    <!-- Theme Toggle & Help -->
+    <!-- Theme & Quick Actions -->
     <div class="flex items-center gap-3">
       <button id="themeToggle" class="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 text-xs font-semibold text-stone-700 dark:text-stone-300 hover:border-amber-500 transition-all shadow-sm">
         <span id="themeIcon">☀️</span>
         <span id="themeLabel">Mode Clair</span>
       </button>
 
-      <a href="/pratique/demontage" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs shadow-md transition-all">
-        <span>Fiche Dépose 6497</span>
-        <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+      <a href="#demontage-zone" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs shadow-md shadow-amber-500/20 transition-all">
+        <span>Accéder à la Dépose</span>
+        <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
       </a>
     </div>
   </header>
 
   <!-- ========================================================================= -->
-  <!-- MAIN LAYOUT : SPLIT VIEW (STICKY 3D VIEWER + SCROLLING SECTIONS)          -->
+  <!-- 1. HERO SECTION (Scroll = 0 : Le mouvement 3D y est TOTALEMENT INVISIBLE) -->
   <!-- ========================================================================= -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-
-    <!-- Top Badge and Hero Headline -->
-    <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
-      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-400 text-xs font-mono font-bold uppercase tracking-wider mb-3">
-        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-        <span>Prévue pour la Page d'Accueil HorloLearn</span>
-      </div>
-      <h2 class="serif-title text-3xl sm:text-5xl font-bold tracking-tight text-stone-900 dark:text-white">
-        L'Art du Démontage Horloger en Trois Dimensions
-      </h2>
-      <p class="mt-3 text-sm sm:text-base text-stone-600 dark:text-stone-300 italic serif-title">
-        « Faites défiler la page pour observer le mouvement s'ouvrir couche par couche sous vos yeux. »
-      </p>
+  <section class="relative pt-16 pb-24 sm:pt-24 sm:pb-32 px-4 sm:px-6 lg:px-8 overflow-hidden border-b border-stone-200 dark:border-stone-800/80">
+    <!-- Ambient Background Glow -->
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[360px] bg-amber-500/10 dark:bg-amber-500/5 blur-[120px] rounded-full"></div>
     </div>
 
-    <!-- The 2 Columns: Sticky Canvas on the Right (or Left) + Story Chapters -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 relative items-start">
+    <div class="relative max-w-5xl mx-auto text-center space-y-6">
       
-      <!-- ===================================================================== -->
-      <!-- LEFT COLUMN : SCROLLING LESSON CHAPTERS                               -->
-      <!-- ===================================================================== -->
-      <div class="lg:col-span-6 space-y-16 lg:py-6" id="scrollChapters">
-
-        <!-- Chapter 0 : Introduction -->
-        <div class="chapter p-6 sm:p-8 rounded-3xl bg-white dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 shadow-xl transition-all duration-300" data-progress="0.0">
-          <div class="flex items-center justify-between text-xs font-mono text-amber-600 dark:text-amber-400 font-bold mb-2">
-            <span>ÉTAPE 00 · DÉPART</span>
-            <span class="px-2 py-0.5 rounded-full bg-amber-500/15">Calibre 100 % Assemblé</span>
-          </div>
-          <h3 class="serif-title text-2xl sm:text-3xl font-bold text-stone-900 dark:text-white mb-3">
-            Le Mouvement Complet à l'Établi
-          </h3>
-          <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed mb-4">
-            Voici le calibre mécanique de référence suisse (ETA 6497-1 Unitas 16 lignes et demie). Avant toute intervention, le balancier oscille à 18 000 A/h et le rouage transmet l'énergie du barillet jusqu'à la roue d'ancre.
-          </p>
-          <div class="p-3 rounded-2xl bg-stone-50 dark:bg-stone-950/60 border border-stone-200 dark:border-stone-800/80 text-xs font-mono text-stone-600 dark:text-stone-400">
-            <strong>Règle d'atelier N° 1 :</strong> Désarmement complet du ressort de barillet à l'aide de la cheville de bois avant de desserrer la moindre vis.
-          </div>
-        </div>
-
-        <!-- Chapter 1 : Dépose Vis et Rochet -->
-        <div class="chapter p-6 sm:p-8 rounded-3xl bg-white dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 shadow-xl transition-all duration-300" data-progress="0.22">
-          <div class="flex items-center justify-between text-xs font-mono text-amber-600 dark:text-amber-400 font-bold mb-2">
-            <span>ÉTAPE 01 · DÉSACOUPLEMENT</span>
-            <span class="px-2 py-0.5 rounded-full bg-amber-500/15">Vis, Rochet & Roue de Couronne</span>
-          </div>
-          <h3 class="serif-title text-2xl sm:text-3xl font-bold text-stone-900 dark:text-white mb-3">
-            Dépose du Rochet & Organes de Remontoir
-          </h3>
-          <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed mb-4">
-            Les vis supérieures à fente soignée se soulèvent. La vis de roue de couronne possède un pas à gauche (repérée par 3 traits gravés sur sa tête). Le rochet libère l'arbre de barillet sans rayer le pont.
-          </p>
-          <ul class="text-xs text-stone-600 dark:text-stone-300 space-y-1.5 list-disc list-inside">
-            <li>Tournevis rouge (1.20 mm) et tournevis noir (1.00 mm).</li>
-            <li>Préhension à la brucelle Dumont N° 3 pour ne pas marquer les dentures.</li>
-          </ul>
-        </div>
-
-        <!-- Chapter 2 : Dépose du Coq et Balancier -->
-        <div class="chapter p-6 sm:p-8 rounded-3xl bg-white dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 shadow-xl transition-all duration-300" data-progress="0.45">
-          <div class="flex items-center justify-between text-xs font-mono text-amber-600 dark:text-amber-400 font-bold mb-2">
-            <span>ÉTAPE 02 · CŒUR DU MOUVEMENT</span>
-            <span class="px-2 py-0.5 rounded-full bg-amber-500/15">Coq & Balancier-Spiral</span>
-          </div>
-          <h3 class="serif-title text-2xl sm:text-3xl font-bold text-stone-900 dark:text-white mb-3">
-            Extraction de l'Organe Régulateur
-          </h3>
-          <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed mb-4">
-            Geste maître de l'horloger : après retrait de la vis de coq, on soulève délicatement le pont verticalement. Le balancier et son spiral Nivarox suivent l'ensemble sans déformation de la spire terminale ni contact avec la platine.
-          </p>
-          <div class="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-900 dark:text-amber-200">
-            <strong>Tolérance critique :</strong> Le pivot inférieur du balancier fait seulement 0.09 mm de diamètre. Un retrait non-vertical briserait instantanément le pivot !
-          </div>
-        </div>
-
-        <!-- Chapter 3 : Dépose de l'Échappement & Rouage -->
-        <div class="chapter p-6 sm:p-8 rounded-3xl bg-white dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 shadow-xl transition-all duration-300" data-progress="0.72">
-          <div class="flex items-center justify-between text-xs font-mono text-amber-600 dark:text-amber-400 font-bold mb-2">
-            <span>ÉTAPE 03 · DISTRIBUTION</span>
-            <span class="px-2 py-0.5 rounded-full bg-amber-500/15">Ancre & Pont de Rouage</span>
-          </div>
-          <h3 class="serif-title text-2xl sm:text-3xl font-bold text-stone-900 dark:text-white mb-3">
-            Soulèvement des Ponts & Mobiles Dentés
-          </h3>
-          <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed mb-4">
-            Le pont d'ancre libère les levées en rubis synthétique. Ensuite, le grand pont de rouage s'élève pour dégager le train d'engrenages : roue de seconde, roue moyenne et roue d'échappement.
-          </p>
-          <ul class="text-xs text-stone-600 dark:text-stone-300 space-y-1.5 list-disc list-inside">
-            <li>Observation des ébats de hauteur sous la loupe 10x.</li>
-            <li>Contrôle de la concentricité des tigerons et pignons en acier poli.</li>
-          </ul>
-        </div>
-
-        <!-- Chapter 4 : Platine Nue -->
-        <div class="chapter p-6 sm:p-8 rounded-3xl bg-white dark:bg-stone-900/70 border border-stone-200 dark:border-stone-800 shadow-xl transition-all duration-300" data-progress="1.0">
-          <div class="flex items-center justify-between text-xs font-mono text-amber-600 dark:text-amber-400 font-bold mb-2">
-            <span>ÉTAPE 04 · MISE À NU COMPLÈTE</span>
-            <span class="px-2 py-0.5 rounded-full bg-amber-500/15">Platine de Base Seule</span>
-          </div>
-          <h3 class="serif-title text-2xl sm:text-3xl font-bold text-stone-900 dark:text-white mb-3">
-            La Platine Principale Perlée
-          </h3>
-          <p class="text-xs sm:text-sm text-stone-600 dark:text-stone-300 leading-relaxed mb-4">
-            Toutes les fournitures flottent désormais dans l'ordre de leur assemblage. Il ne reste plus sur l'établi que la platine en laiton nickelé, prête pour le cycle complet de lavage aux ultrasons (bains Rubisol et rinçages).
-          </p>
-          <div class="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-950 dark:text-emerald-200">
-            <strong>Cycle achevé :</strong> Prêt pour le remboîtage, le huilage contrôlé Moebius et le réglage chronométrique sur banc Witschi.
-          </div>
-        </div>
-
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-400 text-xs font-mono font-bold uppercase tracking-wider shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+        <span>Norme Horlogère Suisse · ETA 6497-1 Unitas 16½'''</span>
       </div>
 
-      <!-- ===================================================================== -->
-      <!-- RIGHT COLUMN : STICKY 3D VIEWER WITH CONTROLS                         -->
-      <!-- ===================================================================== -->
-      <div class="lg:col-span-6 lg:sticky lg:top-24 space-y-4">
-        
-        <!-- Viewer Card -->
-        <div class="relative w-full rounded-3xl bg-white dark:bg-[#0c1019] border-2 border-stone-300 dark:border-stone-800/90 shadow-2xl overflow-hidden glow-gold">
-          
-          <!-- Card Header Bar -->
-          <div class="px-5 py-3.5 border-b border-stone-200 dark:border-stone-800 flex items-center justify-between bg-stone-50/70 dark:bg-stone-950/70">
-            <div class="flex items-center gap-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span class="text-xs font-mono font-bold text-stone-700 dark:text-stone-300">
-                CALIBRE 6497-1 EN DIRECT 3D
-              </span>
-            </div>
-            <div class="text-[11px] font-mono text-amber-600 dark:text-amber-400 font-bold" id="statusBadge">
-              100 % Assemblé
-            </div>
-          </div>
+      <h1 class="serif-title text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-stone-900 dark:text-white leading-[1.08]">
+        L'Art du Démontage & Remontage <br class="hidden sm:inline" />
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-amber-500 to-amber-400">
+          Pièce par Pièce
+        </span>
+      </h1>
 
-          <!-- WebGL Canvas Container -->
-          <div class="relative w-full aspect-[4/3] sm:aspect-[16/11] canvas-container cursor-grab active:cursor-grabbing bg-stone-200/40 dark:bg-black/60 flex items-center justify-center overflow-hidden">
-            <canvas id="movementCanvas" class="w-full h-full block"></canvas>
+      <p class="max-w-2xl mx-auto text-base sm:text-lg text-stone-600 dark:text-stone-300 font-light leading-relaxed">
+        Une formation d'atelier authentique sans artifices. Faites défiler la page : le mouvement mécanique apparaît et se désolidarise couche par couche selon l'ordre strict des opérations horlogères suisses.
+      </p>
 
-            <!-- Loading overlay -->
-            <div id="loader" class="absolute inset-0 bg-stone-100/90 dark:bg-[#0c1019]/90 flex flex-col items-center justify-center gap-3 z-20 transition-opacity duration-500">
-              <div class="w-10 h-10 border-4 border-amber-500/30 border-t-amber-500 rounded-full animate-spin"></div>
-              <span class="text-xs font-mono text-stone-600 dark:text-stone-400 animate-pulse">Chargement du Calibre 3D (4.8 Mo)...</span>
-            </div>
-
-            <!-- 360° Drag hint -->
-            <div class="absolute top-4 left-4 pointer-events-none px-3 py-1 rounded-xl bg-black/60 text-white/90 backdrop-blur-sm text-[11px] font-mono flex items-center gap-1.5 border border-white/10">
-              <i data-lucide="rotate-cw" class="w-3.5 h-3.5 text-amber-400"></i>
-              <span>Glisser pour tourner à 360°</span>
-            </div>
-
-            <!-- Phrase Culte Overlay -->
-            <div class="absolute bottom-4 inset-x-4 pointer-events-none text-center">
-              <p class="serif-title italic text-base sm:text-lg text-stone-900 dark:text-amber-100/90 drop-shadow-md">
-                « Voici tout ce que vous allez démonter, puis remonter, pièce par pièce. »
-              </p>
-            </div>
-          </div>
-
-          <!-- Bottom Control Bar -->
-          <div class="p-4 sm:p-5 border-t border-stone-200 dark:border-stone-800 bg-stone-50/80 dark:bg-stone-950/80 space-y-3">
-            
-            <!-- Slider Control -->
-            <div class="space-y-1.5">
-              <div class="flex items-center justify-between text-xs font-mono">
-                <span class="text-stone-600 dark:text-stone-400 font-semibold">Niveau d'éclaté / démontage :</span>
-                <span class="text-amber-600 dark:text-amber-400 font-bold" id="sliderValue">0 % (Assemblé)</span>
-              </div>
-              <input 
-                id="explodeSlider" 
-                type="range" 
-                min="0" 
-                max="100" 
-                value="0" 
-                class="w-full h-2 bg-stone-300 dark:bg-stone-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
-              />
-            </div>
-
-            <!-- Quick Step Buttons -->
-            <div class="grid grid-cols-5 gap-1.5 text-[10px] font-mono font-bold">
-              <button class="step-btn py-1.5 px-1 rounded-lg bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-amber-500 hover:text-black transition-all" data-target="0">
-                0% Début
-              </button>
-              <button class="step-btn py-1.5 px-1 rounded-lg bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-amber-500 hover:text-black transition-all" data-target="25">
-                25% Vis
-              </button>
-              <button class="step-btn py-1.5 px-1 rounded-lg bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-amber-500 hover:text-black transition-all" data-target="50">
-                50% Coq
-              </button>
-              <button class="step-btn py-1.5 px-1 rounded-lg bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-amber-500 hover:text-black transition-all" data-target="75">
-                75% Rouage
-              </button>
-              <button class="step-btn py-1.5 px-1 rounded-lg bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-amber-500 hover:text-black transition-all" data-target="100">
-                100% Platine
-              </button>
-            </div>
-
-            <!-- Auto-rotate & Reset button -->
-            <div class="flex items-center justify-between pt-1 text-xs">
-              <label class="flex items-center gap-2 cursor-pointer text-stone-600 dark:text-stone-400">
-                <input type="checkbox" id="autoRotateToggle" checked class="rounded border-stone-400 text-amber-500 focus:ring-amber-400">
-                <span>Rotation continue</span>
-              </label>
-
-              <button id="resetCamBtn" class="text-stone-500 hover:text-amber-500 font-mono text-xs flex items-center gap-1 transition-colors">
-                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-                <span>Recentrer caméra</span>
-              </button>
-            </div>
-
-          </div>
-
+      <!-- Badges de spécifications d'établi -->
+      <div class="pt-4 flex flex-wrap justify-center items-center gap-3 text-xs font-mono">
+        <div class="px-3 py-1.5 rounded-lg bg-stone-200/80 dark:bg-stone-900 border border-stone-300 dark:border-stone-800 text-stone-700 dark:text-stone-300">
+          ⚡ Fréquence : 18 000 A/h (2.5 Hz)
         </div>
-
-        <!-- Technical specifications pill -->
-        <div class="p-4 rounded-2xl bg-white/70 dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 text-xs text-stone-600 dark:text-stone-400 flex flex-wrap items-center justify-between gap-2">
-          <span>⚙️ <strong>Modèle d'Atelier :</strong> 97 composants distincts indexés en Z</span>
-          <span class="font-mono text-amber-600 dark:text-amber-400">Format GLTF 4.8 Mo · WebGL2</span>
+        <div class="px-3 py-1.5 rounded-lg bg-stone-200/80 dark:bg-stone-900 border border-stone-300 dark:border-stone-800 text-stone-700 dark:text-stone-300">
+          💎 17 Rubis Synthétiques
         </div>
+        <div class="px-3 py-1.5 rounded-lg bg-stone-200/80 dark:bg-stone-900 border border-stone-300 dark:border-stone-800 text-stone-700 dark:text-stone-300">
+          🛡️ Antichoc Incabloc
+        </div>
+        <div class="px-3 py-1.5 rounded-lg bg-stone-200/80 dark:bg-stone-900 border border-stone-300 dark:border-stone-800 text-stone-700 dark:text-stone-300">
+          ⏱️ RDM : 46 Heures
+        </div>
+      </div>
 
+      <!-- Action Button & Scroll Prompt -->
+      <div class="pt-8 flex flex-col items-center gap-3">
+        <a href="#demontage-zone" class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-sm shadow-xl shadow-amber-500/25 transition-all transform hover:-translate-y-0.5">
+          <span>Découvrir la Dépose Pas-à-Pas</span>
+          <i data-lucide="chevron-down" class="w-4 h-4"></i>
+        </a>
+        <div class="text-xs text-stone-400 dark:text-stone-500 flex items-center gap-1.5 font-sans pt-1">
+          <i data-lucide="mouse" class="w-3.5 h-3.5 animate-bounce"></i>
+          <span>Faites défiler vers le bas pour voir apparaître le mouvement 3D</span>
+        </div>
       </div>
 
     </div>
+  </section>
 
-  </div>
-
-  <!-- Lucide icons init -->
-  <script>
-    lucide.createIcons();
-  </script>
 
   <!-- ========================================================================= -->
-  <!-- THREE.JS 3D SCENE & SCROLL DRIVER SCRIPT                                  -->
+  <!-- 2. SCROLLING DEMONTAGE ZONE (Le mouvement 3D y flotte et s'écarte)         -->
+  <!-- ========================================================================= -->
+  <section id="demontage-zone" class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+    
+    <!-- Wrapper with right padding on desktop so floating movement in bottom-right does NOT block text -->
+    <div class="max-w-2xl lg:max-w-3xl mr-auto space-y-24">
+
+      <!-- Section Title Header -->
+      <div class="space-y-3 border-l-2 border-amber-500 pl-4">
+        <span class="text-xs font-mono font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+          MÉTHODE D'ATELIER SUISSE · ORDRE CHRONOLOGIQUE
+        </span>
+        <h2 class="serif-title text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white">
+          La Dépose pas-à-pas du Calibre 6497
+        </h2>
+        <p class="text-sm text-stone-600 dark:text-stone-300 leading-relaxed">
+          En horlogerie mécanique, chaque organe est retiré dans une séquence rigoureuse. Observez le mouvement flotter à droite de votre écran : au fur et à mesure de votre lecture, les pièces s'écartent en lévitation. En remontant la page, elles reprennent fidèlement leur place.
+        </p>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- ETAPE 00 : Mouvement Assemblé sur l'Établi                            -->
+      <!-- ===================================================================== -->
+      <article class="scroll-step p-6 sm:p-8 rounded-3xl bg-white dark:bg-stone-900/80 border border-stone-200 dark:border-stone-800/90 shadow-xl space-y-5" data-step="0" data-range="0.0,0.18">
+        <div class="flex items-center justify-between">
+          <span class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 text-xs font-mono font-bold">
+            ÉTAPE 00 · DÉPART
+          </span>
+          <span class="text-xs font-mono text-stone-400">Progression : 0 %</span>
+        </div>
+
+        <h3 class="serif-title text-2xl sm:text-3xl font-bold text-stone-900 dark:text-white">
+          Le Mouvement Complet & Contrôle Préalable
+        </h3>
+
+        <p class="text-stone-600 dark:text-stone-300 text-sm sm:text-base leading-relaxed">
+          Le calibre ETA 6497-1 (Unitas) repose sur son porte-pièce synthétique. Avant d'engager le moindre outil, l'artisan horloger effectue le diagnostic visuel de la marche, l'amplitude du balancier et l'intégrité des aciers polis.
+        </p>
+
+        <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-900 dark:text-amber-200 space-y-1">
+          <div class="font-bold flex items-center gap-1.5">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500"></i>
+            <span>Règle d'or absolue : Désarmement impératif</span>
+          </div>
+          <p>
+            Ne jamais desserrer la moindre vis avant d'avoir entièrement libéré l'énergie du ressort de barillet à l'aide de la cheville de bois maintenant le cliquet dégagé.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 pt-2 text-xs font-mono">
+          <div class="p-3 rounded-xl bg-stone-50 dark:bg-stone-950/50 border border-stone-200 dark:border-stone-800">
+            <span class="text-stone-400 block text-[10px] uppercase">Outil requis</span>
+            <span class="font-bold text-stone-700 dark:text-stone-200">Cheville de sureau taillée</span>
+          </div>
+          <div class="p-3 rounded-xl bg-stone-50 dark:bg-stone-950/50 border border-stone-200 dark:border-stone-800">
+            <span class="text-stone-400 block text-[10px] uppercase">Contrôle</span>
+            <span class="font-bold text-stone-700 dark:text-stone-200">Détente douce de couronne</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ===================================================================== -->
+      <!-- ETAPE 01 : Vis & Rochet                                               -->
+      <!-- ===================================================================== -->
+      <article class="scroll-step p-6 sm:p-8 rounded-3xl bg-white dark:bg-stone-900/80 border border-stone-200 dark:border-stone-800/90 shadow-xl space-y-5" data-step="1" data-range="0.18,0.40">
+        <div class="flex items-center justify-between">
+          <span class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 text-xs font-mono font-bold">
+            ÉTAPE 01 · REMONTOIR
+          </span>
+          <span class="text-xs font-mono text-stone-400">Progression : 25 %</span>
+        </div>
+
+        <h3 class="serif-title text-2xl sm:text-3xl font-bold text-stone-900 dark:text-white">
+          Dépose de la Roue de Couronne & Rochet
+        </h3>
+
+        <p class="text-stone-600 dark:text-stone-300 text-sm sm:text-base leading-relaxed">
+          Les vis supérieures à tête polie miroir et fentes soignées se soulèvent. Observez à droite les vis s'élever en premier, suivies par la roue de couronne et le grand rochet denté qui libère l'arbre de barillet.
+        </p>
+
+        <div class="p-4 rounded-2xl bg-stone-100 dark:bg-stone-950/60 border border-stone-200 dark:border-stone-800 text-xs font-mono space-y-2">
+          <div class="font-bold text-amber-600 dark:text-amber-400">Particularité technique suisse :</div>
+          <p class="text-stone-600 dark:text-stone-300">
+            La vis de roue de couronne possède un <strong>filetage inversé (pas à gauche)</strong>. Elle se dévisse dans le sens horaire et se reconnaît à ses 3 traits fins gravés en étoile sur la calotte de tête.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 pt-2 text-xs font-mono">
+          <div class="p-3 rounded-xl bg-stone-50 dark:bg-stone-950/50 border border-stone-200 dark:border-stone-800">
+            <span class="text-stone-400 block text-[10px] uppercase">Tournevis</span>
+            <span class="font-bold text-stone-700 dark:text-stone-200">Rouge Ø 1.20 mm (Lame affûtée)</span>
+          </div>
+          <div class="p-3 rounded-xl bg-stone-50 dark:bg-stone-950/50 border border-stone-200 dark:border-stone-800">
+            <span class="text-stone-400 block text-[10px] uppercase">Brucelles</span>
+            <span class="font-bold text-stone-700 dark:text-stone-200">Dumont N° 3 Inox</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ===================================================================== -->
+      <!-- ETAPE 02 : Coq & Balancier-Spiral                                     -->
+      <!-- ===================================================================== -->
+      <article class="scroll-step p-6 sm:p-8 rounded-3xl bg-white dark:bg-stone-900/80 border border-stone-200 dark:border-stone-800/90 shadow-xl space-y-5" data-step="2" data-range="0.40,0.65">
+        <div class="flex items-center justify-between">
+          <span class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 text-xs font-mono font-bold">
+            ÉTAPE 02 · CŒUR RÉGULATEUR
+          </span>
+          <span class="text-xs font-mono text-stone-400">Progression : 50 %</span>
+        </div>
+
+        <h3 class="serif-title text-2xl sm:text-3xl font-bold text-stone-900 dark:text-white">
+          Extraction du Coq & Balancier-Spiral
+        </h3>
+
+        <p class="text-stone-600 dark:text-stone-300 text-sm sm:text-base leading-relaxed">
+          L'organe réglant est le cœur battant de la montre. Après avoir retiré la vis de coq, on soulève délicatement le pont dans un axe strictement vertical. Le balancier et son spiral thermocompensé Nivarox suivent l'ensemble sans subir la moindre torsion.
+        </p>
+
+        <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-900 dark:text-amber-200 space-y-1">
+          <div class="font-bold flex items-center gap-1.5">
+            <i data-lucide="shield-alert" class="w-4 h-4 text-amber-500"></i>
+            <span>Tolérance micro-mécanique critique</span>
+          </div>
+          <p>
+            Le pivot inférieur de l'axe de balancier ne mesure que <strong>0.09 mm</strong> de diamètre. Un retrait oblique briserait immédiatement le pivot contre la creusure de l'Incabloc.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 pt-2 text-xs font-mono">
+          <div class="p-3 rounded-xl bg-stone-50 dark:bg-stone-950/50 border border-stone-200 dark:border-stone-800">
+            <span class="text-stone-400 block text-[10px] uppercase">Rangement d'atelier</span>
+            <span class="font-bold text-stone-700 dark:text-stone-200">Placé immédiatement sous cloche</span>
+          </div>
+          <div class="p-3 rounded-xl bg-stone-50 dark:bg-stone-950/50 border border-stone-200 dark:border-stone-800">
+            <span class="text-stone-400 block text-[10px] uppercase">Contrôle visuel</span>
+            <span class="font-bold text-stone-700 dark:text-stone-200">Spire libre, centrage au piton</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ===================================================================== -->
+      <!-- ETAPE 03 : Échappement & Rouage                                       -->
+      <!-- ===================================================================== -->
+      <article class="scroll-step p-6 sm:p-8 rounded-3xl bg-white dark:bg-stone-900/80 border border-stone-200 dark:border-stone-800/90 shadow-xl space-y-5" data-step="3" data-range="0.65,0.85">
+        <div class="flex items-center justify-between">
+          <span class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-400 text-xs font-mono font-bold">
+            ÉTAPE 03 · DISTRIBUTION
+          </span>
+          <span class="text-xs font-mono text-stone-400">Progression : 75 %</span>
+        </div>
+
+        <h3 class="serif-title text-2xl sm:text-3xl font-bold text-stone-900 dark:text-white">
+          Dépose de l'Ancre Suisse & Pont de Rouage
+        </h3>
+
+        <p class="text-stone-600 dark:text-stone-300 text-sm sm:text-base leading-relaxed">
+          Le pont d'ancre est retiré, libérant l'ancre suisse et ses levées en rubis synthétique. Ensuite, le grand pont de rouage à décor Côtes de Genève s'élève pour mettre à nu le train d'engrenages : roue d'échappement, roue de seconde et roue moyenne.
+        </p>
+
+        <div class="p-4 rounded-2xl bg-stone-100 dark:bg-stone-950/60 border border-stone-200 dark:border-stone-800 text-xs font-mono space-y-2">
+          <div class="font-bold text-amber-600 dark:text-amber-400">Précaution de levée des ponts :</div>
+          <p class="text-stone-600 dark:text-stone-300">
+            Glisser la lame d'un levier aux encoches prévues par le fabricant sur la platine. Ne jamais faire levier avec un tournevis sous les dents d'un mobile au risque de fausser les axes.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 pt-2 text-xs font-mono">
+          <div class="p-3 rounded-xl bg-stone-50 dark:bg-stone-950/50 border border-stone-200 dark:border-stone-800">
+            <span class="text-stone-400 block text-[10px] uppercase">Mobiles</span>
+            <span class="font-bold text-stone-700 dark:text-stone-200">Acier trempé, pignons roulés</span>
+          </div>
+          <div class="p-3 rounded-xl bg-stone-50 dark:bg-stone-950/50 border border-stone-200 dark:border-stone-800">
+            <span class="text-stone-400 block text-[10px] uppercase">Inspection</span>
+            <span class="font-bold text-stone-700 dark:text-stone-200">Ébats de hauteur sous loupe 10x</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ===================================================================== -->
+      <!-- ETAPE 04 : Platine Nue (Décorché Complet)                             -->
+      <!-- ===================================================================== -->
+      <article class="scroll-step p-6 sm:p-8 rounded-3xl bg-white dark:bg-stone-900/80 border border-stone-200 dark:border-stone-800/90 shadow-xl space-y-5" data-step="4" data-range="0.85,1.0">
+        <div class="flex items-center justify-between">
+          <span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-xs font-mono font-bold">
+            ÉTAPE 04 · PLATINE NUE
+          </span>
+          <span class="text-xs font-mono text-stone-400">Progression : 100 %</span>
+        </div>
+
+        <h3 class="serif-title text-2xl sm:text-3xl font-bold text-stone-900 dark:text-white">
+          La Platine Principale Perlée & Vue Éclatée Totale
+        </h3>
+
+        <p class="text-stone-600 dark:text-stone-300 text-sm sm:text-base leading-relaxed">
+          Toutes les pièces du calibre flottent désormais dans leur hiérarchie mécanique parfaite. Sur l'établi, il ne reste que la platine perlée en laiton nickelé, prête à rejoindre le panier de lavage aux ultrasons (bains Rubisol et rinçages sans résidu).
+        </p>
+
+        <div class="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-950 dark:text-emerald-200 space-y-1">
+          <div class="font-bold flex items-center gap-1.5">
+            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i>
+            <span>Démontage complet accompli selon les règles de l'art</span>
+          </div>
+          <p>
+            Toutes les fournitures sont prêtes pour le contrôle au microscope, le graissage certifié Moebius (9010, HP-1300, 9415, 8217) et le réglage chronométrique Witschi.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-stone-100 dark:bg-stone-950/60 border border-stone-200 dark:border-stone-800 text-xs font-mono flex items-center justify-between">
+          <span class="text-stone-500 dark:text-stone-400">Pour réassembler le mouvement :</span>
+          <a href="#demontage-zone" class="font-bold text-amber-600 dark:text-amber-400 hover:underline">
+            Remonter vers le haut ↑
+          </a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+
+  <!-- ========================================================================= -->
+  <!-- 3. FOOTER SECTION (Le mouvement 3D s'y estompe pour ne pas gêner)        -->
+  <!-- ========================================================================= -->
+  <footer id="footer-section" class="border-t border-stone-200 dark:border-stone-800/80 bg-white/50 dark:bg-[#05070c] py-16 px-4 sm:px-8">
+    <div class="max-w-7xl mx-auto space-y-8">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <div class="serif-title text-2xl font-bold text-stone-900 dark:text-white">
+            HorloLearn · Transmission de Savoir Horloger
+          </div>
+          <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">
+            Geste d'artisan d'établi authentique. Normes suisses officielles NIHS & Contrôle Chronométrique COSC.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-4 text-xs font-mono text-stone-600 dark:text-stone-400">
+          <span>Couples en cNm</span>
+          <span>·</span>
+          <span>5 Huiles Moebius</span>
+          <span>·</span>
+          <span>Tolérance &lt; 0.01 mm</span>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-stone-200 dark:border-stone-900 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-stone-400">
+        <div>
+          Prototype interactif scrollytelling développé pour HorloLearn.
+        </div>
+        <div class="flex items-center gap-4">
+          <a href="#" class="hover:text-amber-500 transition-colors">Haut de page ↑</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ========================================================================= -->
+  <!-- 4. LE WIDGET 3D FLOTTANT SANS CADRE (Copie fidèle de tl-watchmaking.com)   -->
+  <!-- ========================================================================= -->
+  <aside id="bench" class="bench" aria-label="Visualiseur 3D dynamique du mouvement">
+    
+    <!-- Mini badge d'état interactif -->
+    <div class="mb-2 flex items-center justify-end gap-2 pr-1">
+      <div id="benchStateBadge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-stone-900/80 dark:bg-black/75 backdrop-blur-md border border-amber-500/30 text-[10px] font-mono text-amber-400 font-bold shadow-lg">
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+        <span id="benchStateText">ETA 6497-1 · 0 %</span>
+      </div>
+    </div>
+
+    <!-- 3D Canvas Container sans cadre, pur fond transparent -->
+    <div class="bench-canvas-wrap">
+      
+      <!-- Loader initial -->
+      <div id="benchLoader" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none transition-opacity duration-300 z-10">
+        <div class="w-8 h-8 border-2 border-amber-500/20 border-t-amber-500 rounded-full animate-spin mb-2"></div>
+        <span class="text-[10px] font-mono text-amber-500/80">Chargement 3D...</span>
+      </div>
+
+      <!-- WebGL Canvas -->
+      <canvas id="benchCanvas" class="bench-canvas"></canvas>
+    </div>
+
+    <!-- Citation élégante exactement comme tl-watchmaking -->
+    <p class="bench-caption mt-2" id="benchCaption">
+      Voici tout ce que vous allez démonter,<br>
+      puis remonter, pièce par pièce.
+    </p>
+
+    <!-- Indication de rotation tactile/souris -->
+    <div class="mt-1 text-right text-[10px] font-mono text-stone-400 dark:text-stone-500 select-none">
+      ⟳ Faites glisser pour pivoter à 360°
+    </div>
+  </aside>
+
+
+  <!-- ========================================================================= -->
+  <!-- 5. THREE.JS ENGINE & SCROLL LOGIC                                         -->
   <!-- ========================================================================= -->
   <script type="module">
     import * as THREE from 'three';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-    // Theme state
+    // Theme Switch
     const htmlEl = document.documentElement;
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = document.getElementById('themeIcon');
@@ -370,90 +543,89 @@
     });
     updateThemeUI();
 
-    // DOM Elements
-    const canvas = document.getElementById('movementCanvas');
-    const loader = document.getElementById('loader');
-    const slider = document.getElementById('explodeSlider');
-    const sliderValue = document.getElementById('sliderValue');
-    const statusBadge = document.getElementById('statusBadge');
-    const autoRotateToggle = document.getElementById('autoRotateToggle');
-    const resetCamBtn = document.getElementById('resetCamBtn');
-    const stepBtns = document.querySelectorAll('.step-btn');
-    const chapters = document.querySelectorAll('.chapter');
+    // Elements
+    const bench = document.getElementById('bench');
+    const benchCanvas = document.getElementById('benchCanvas');
+    const benchLoader = document.getElementById('benchLoader');
+    const benchStateText = document.getElementById('benchStateText');
+    const demontageZone = document.getElementById('demontage-zone');
+    const footerSection = document.getElementById('footer-section');
 
-    // Scene Setup
+    // Scene & Perspective Camera
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
-    const renderer = new THREE.WebGLRenderer({ 
-      canvas, 
-      antialias: true, 
-      alpha: true, 
-      powerPreference: 'high-performance' 
+    
+    // Renderer transparent (alpha: true)
+    const renderer = new THREE.WebGLRenderer({
+      canvas: benchCanvas,
+      antialias: true,
+      alpha: true,
+      powerPreference: 'high-performance'
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.toneMapping = THREE.NeutralToneMapping;
-    renderer.toneMappingExposure = 1.25;
+    renderer.toneMappingExposure = 1.35;
 
-    // Turntable and Tilt groups (Z-up coordinate conversion)
+    // Turntable and Tilt groups
     const turntable = new THREE.Group();
     const tilt = new THREE.Group();
-    tilt.rotation.x = -Math.PI / 2.3; // Elegant angled viewpoint
+    tilt.rotation.x = -Math.PI / 2.3; // Vue d'établi plongeante
     tilt.rotation.z = Math.PI / 12;
     turntable.add(tilt);
     scene.add(turntable);
 
-    // Studio Lighting
+    // Studio Horloger Eclairage
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
     scene.add(ambientLight);
 
-    const mainLight = new THREE.DirectionalLight(0xfff5e6, 3.2);
-    mainLight.position.set(3, 5, 4);
+    const mainLight = new THREE.DirectionalLight(0xfffaed, 3.4);
+    mainLight.position.set(3.5, 6, 4.5);
     scene.add(mainLight);
 
-    const rimLight = new THREE.DirectionalLight(0xa5c4f2, 2.0);
-    rimLight.position.set(-3, -2, -3);
+    const rimLight = new THREE.DirectionalLight(0xa5c4f2, 2.2);
+    rimLight.position.set(-3.5, -3, -3);
     scene.add(rimLight);
 
-    const goldBounce = new THREE.DirectionalLight(0xf59e0b, 1.2);
+    const goldBounce = new THREE.DirectionalLight(0xf59e0b, 1.3);
     goldBounce.position.set(0, -4, 2);
     scene.add(goldBounce);
 
-    // Movement Parts array
+    // Parts storage
     const parts = [];
     let isLoaded = false;
     let targetProgress = 0;
     let currentShown = 0;
     let turn = 0.45;
     let isDragging = false;
-    let previousMouseX = 0;
-    let previousMouseY = 0;
-    let userInteractedSlider = false;
+    let prevX = 0;
+    let prevY = 0;
 
-    // Resize Handler
-    function onResize() {
-      const parent = canvas.parentElement;
+    // Responsive Canvas Resizing
+    function resizeCanvas() {
+      const parent = benchCanvas.parentElement;
       const w = parent.clientWidth;
       const h = parent.clientHeight;
+      if (w === 0 || h === 0) return;
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
     }
-    window.addEventListener('resize', onResize);
-    onResize();
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
-    // Ease in out function
+    // Cubic Easing
     function easeInOutCubic(t) {
       return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
     }
 
-    // Load Model
+    // Load Calibre GLB Model
     const gltfLoader = new GLTFLoader();
     gltfLoader.load(
       '/models/calibre-6497-demontage.glb',
       (gltf) => {
         const root = gltf.scene;
 
-        // Dress parts: enhance reflections
+        // Enhance metallic reflections and micro-bevels
         root.traverse((m) => {
           if (m.isMesh && m.material) {
             m.material.roughness = Math.max(0.18, m.material.roughness || 0.25);
@@ -462,7 +634,6 @@
           }
         });
 
-        // Compute Z level bounds
         const zmins = root.children.map((n) => n.userData?.zmin ?? 0);
         const lo = Math.min(...zmins);
         const hi = Math.max(...zmins) || 1;
@@ -471,164 +642,159 @@
 
         root.children.forEach((n, i) => {
           const c = n.userData?.centre || [0, 0, 0];
-          // 0 = plate (bottom), 1 = screws and balance (top)
+          // 0 = platine de base (fond), 1 = vis et balancier (sommet)
           const level = (zmins[i] - lo) / ((hi - lo) || 1);
 
           parts.push({
             node: n,
             level,
-            lift: 0.25 + level * 1.6, // Vertical displacement
-            push: new THREE.Vector3(c[0] * 0.4, c[1] * 0.4, 0), // Radial push
-            twist: (i % 2 === 0 ? 1 : -1) * (0.15 + level * 0.4), // Gentle rotation
-            start: (1 - level) * 0.65 // Top parts leave first!
+            lift: 0.26 + level * 1.65, // Hauteur de lévitation verticale
+            push: new THREE.Vector3(c[0] * 0.42, c[1] * 0.42, 0), // Écartement radial
+            twist: (i % 2 === 0 ? 1 : -1) * (0.16 + level * 0.42), // Rotation douce
+            start: (1 - level) * 0.65 // Les pièces du dessus partent en premier
           });
         });
 
         isLoaded = true;
-        loader.style.opacity = '0';
-        setTimeout(() => loader.style.display = 'none', 500);
-        onResize();
+        benchLoader.style.opacity = '0';
+        setTimeout(() => benchLoader.style.display = 'none', 400);
+        resizeCanvas();
       },
       undefined,
       (err) => {
-        console.error('Error loading GLB:', err);
-        loader.innerHTML = '<div class="text-rose-500 font-mono text-xs text-center p-4">Modèle GLB non trouvé dans /models/</div>';
+        console.error('Erreur chargement GLB:', err);
+        benchLoader.innerHTML = '<span class="text-rose-500 font-mono text-xs">Modèle GLB introuvable</span>';
       }
     );
 
-    // Mouse / Touch Interaction for 360° Drag
-    canvas.addEventListener('pointerdown', (e) => {
+    // 360° Mouse / Touch Rotation Drag
+    benchCanvas.addEventListener('pointerdown', (e) => {
       isDragging = true;
-      previousMouseX = e.clientX;
-      previousMouseY = e.clientY;
-      canvas.setPointerCapture(e.pointerId);
+      prevX = e.clientX;
+      prevY = e.clientY;
+      benchCanvas.setPointerCapture(e.pointerId);
     });
 
-    canvas.addEventListener('pointermove', (e) => {
+    benchCanvas.addEventListener('pointermove', (e) => {
       if (isDragging) {
-        const deltaX = e.clientX - previousMouseX;
-        const deltaY = e.clientY - previousMouseY;
-        turn += deltaX * 0.009;
-        tilt.rotation.x = Math.max(-Math.PI / 1.5, Math.min(-Math.PI / 4, tilt.rotation.x - deltaY * 0.006));
-        previousMouseX = e.clientX;
-        previousMouseY = e.clientY;
+        const dx = e.clientX - prevX;
+        const dy = e.clientY - prevY;
+        turn += dx * 0.009;
+        tilt.rotation.x = Math.max(-Math.PI / 1.45, Math.min(-Math.PI / 4.2, tilt.rotation.x - dy * 0.006));
+        prevX = e.clientX;
+        prevY = e.clientY;
       }
     });
 
     ['pointerup', 'pointercancel'].forEach((evt) => {
-      canvas.addEventListener(evt, () => {
+      benchCanvas.addEventListener(evt, () => {
         isDragging = false;
       });
     });
 
-    // Reset Camera
-    resetCamBtn.addEventListener('click', () => {
-      turn = 0.45;
-      tilt.rotation.x = -Math.PI / 2.3;
-      tilt.rotation.z = Math.PI / 12;
-    });
+    // =========================================================================
+    // SCROLL ENGINE : VISIBILITY & PROGRESS CALCULATION
+    // =========================================================================
+    function onScroll() {
+      const scrollY = window.scrollY || window.pageYOffset;
+      const windowHeight = window.innerHeight;
 
-    // Manual Slider Input
-    slider.addEventListener('input', (e) => {
-      userInteractedSlider = true;
-      targetProgress = parseFloat(e.target.value) / 100;
-      updateLabels(targetProgress);
-    });
+      const zoneRect = demontageZone.getBoundingClientRect();
+      const zoneTop = zoneRect.top + scrollY;
+      const zoneHeight = zoneRect.height;
+      const zoneBottom = zoneTop + zoneHeight;
 
-    // Step Buttons
-    stepBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        userInteractedSlider = true;
-        const target = parseFloat(btn.dataset.target) / 100;
-        targetProgress = target;
-        slider.value = Math.round(target * 100);
-        updateLabels(targetProgress);
-      });
-    });
+      const footerRect = footerSection.getBoundingClientRect();
+      const footerTop = footerRect.top + scrollY;
 
-    // Update Text Labels
-    function updateLabels(prog) {
-      const pct = Math.round(prog * 100);
-      sliderValue.textContent = `${pct} %`;
+      // 1. Visibilité du bench :
+      // - Si au-dessus de la section de démontage (scroll < zoneTop - 200px) : DISPARAÎT !
+      // - Si dans la section de démontage : APPARAÎT !
+      // - Si arrivé au footer : DISPARAÎT pour ne pas masquer le footer.
+      const isAbove = (scrollY + windowHeight * 0.35) < zoneTop;
+      const isAtFooter = (scrollY + windowHeight) > (footerTop + 100);
 
-      if (pct < 15) {
-        statusBadge.textContent = '100 % Assemblé';
-      } else if (pct < 40) {
-        statusBadge.textContent = 'Vis & Rochet déposés';
-      } else if (pct < 65) {
-        statusBadge.textContent = 'Coq & Balancier extraits';
-      } else if (pct < 90) {
-        statusBadge.textContent = 'Rouage & Ancre libérés';
+      if (isAbove) {
+        // En haut de la page : TOTALEMENT CACHÉ
+        bench.classList.remove('in');
+        bench.classList.remove('away');
+      } else if (isAtFooter) {
+        // Au niveau du footer : S'ESTOMPE
+        bench.classList.remove('in');
+        bench.classList.add('away');
       } else {
-        statusBadge.textContent = 'Platine nue (Décorché total)';
+        // Dans la section active : APPARAÎT ET FLOTTE
+        bench.classList.add('in');
+        bench.classList.remove('away');
+      }
+
+      // 2. Calcul du pourcentage de démontage selon le scroll
+      // Le démontage commence dès qu'on entre dans la zone et atteint 100% à la fin
+      const scrollStart = zoneTop - windowHeight * 0.2;
+      const scrollEnd = zoneBottom - windowHeight * 0.7;
+      const totalDistance = Math.max(1, scrollEnd - scrollStart);
+
+      const progress = Math.max(0, Math.min(1, (scrollY - scrollStart) / totalDistance));
+      targetProgress = progress;
+
+      // Mise à jour du badge d'état
+      const pct = Math.round(progress * 100);
+      if (pct < 10) {
+        benchStateText.textContent = `ETA 6497-1 · 100 % Assemblé`;
+      } else if (pct < 40) {
+        benchStateText.textContent = `ETA 6497-1 · Vis & Rochet (${pct} %)`;
+      } else if (pct < 70) {
+        benchStateText.textContent = `ETA 6497-1 · Coq & Balancier (${pct} %)`;
+      } else if (pct < 95) {
+        benchStateText.textContent = `ETA 6497-1 · Rouage & Ancre (${pct} %)`;
+      } else {
+        benchStateText.textContent = `ETA 6497-1 · Platine Nue (100 %)`;
       }
     }
 
-    // Scroll Observer: calculate reading progress along scroll chapters
-    window.addEventListener('scroll', () => {
-      if (userInteractedSlider) return; // Prioritize manual test if user touched slider
+    window.addEventListener('scroll', onScroll, { passive: true });
+    // Appel initial au chargement
+    onScroll();
 
-      const chaptersContainer = document.getElementById('scrollChapters');
-      const rect = chaptersContainer.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
+    // =========================================================================
+    // ANIMATION RENDER LOOP (Fluid 60 FPS Interpolation)
+    // =========================================================================
+    let lastTime = performance.now();
 
-      // Calculate fraction of container scrolled through
-      const totalDist = rect.height - windowHeight * 0.5;
-      const scrolled = -rect.top + windowHeight * 0.25;
-      const progress = Math.max(0, Math.min(1, scrolled / totalDist));
-
-      targetProgress = progress;
-      slider.value = Math.round(progress * 100);
-      updateLabels(progress);
-
-      // Highlight active chapter
-      chapters.forEach((chap) => {
-        const chapRect = chap.getBoundingClientRect();
-        if (chapRect.top <= windowHeight * 0.5 && chapRect.bottom >= windowHeight * 0.25) {
-          chap.classList.add('ring-2', 'ring-amber-500', 'bg-amber-500/5');
-        } else {
-          chap.classList.remove('ring-2', 'ring-amber-500', 'bg-amber-500/5');
-        }
-      });
-    });
-
-    // Animation Loop
-    const clock = new THREE.Clock();
-
-    function animate() {
+    function animate(time) {
       requestAnimationFrame(animate);
 
-      if (!isLoaded) return;
-      const dt = Math.min(0.05, clock.getDelta());
+      const dt = Math.min((time - lastTime) / 1000, 0.1);
+      lastTime = time;
 
-      // Auto rotation if enabled and not dragging
-      if (autoRotateToggle.checked && !isDragging) {
-        turn += dt * 0.35;
+      // Interpolation très fluide de targetProgress vers currentShown
+      currentShown += (targetProgress - currentShown) * Math.min(1, dt * 7.5);
+
+      if (isLoaded) {
+        // 1. Déplacement de chaque pièce du mouvement
+        parts.forEach((p) => {
+          const t = Math.max(0, Math.min(1, (currentShown - p.start) / (1 - p.start || 0.001)));
+          const own = easeInOutCubic(t);
+
+          p.node.position.set(p.push.x * own, p.push.y * own, p.lift * own);
+          p.node.rotation.z = p.twist * own;
+        });
+
+        // 2. Déplacement cinématique de la caméra en recul
+        camera.position.set(0, 1.45 + currentShown * 1.05, 2.95 + currentShown * 1.95);
+        camera.lookAt(0, 0.22 + currentShown * 0.68, 0);
+
+        // 3. Rotation de la tourelle
+        turntable.rotation.y = turn;
       }
-      turntable.rotation.y = turn;
-
-      // Smooth dampening towards target progress
-      currentShown += (targetProgress - currentShown) * Math.min(1, dt * 5.5);
-
-      // Camera steps back dynamically as movement expands so nothing gets clipped
-      camera.position.set(0, 1.45 + currentShown * 1.1, 2.95 + currentShown * 1.85);
-      camera.lookAt(0, 0.2 + currentShown * 0.65, 0);
-
-      // Displace each part according to its level and start timing
-      parts.forEach((p) => {
-        const ownProgress = easeInOutCubic(Math.max(0, Math.min(1, (currentShown - p.start) / 0.45)));
-        p.node.position.set(
-          p.push.x * ownProgress,
-          p.push.y * ownProgress,
-          p.lift * ownProgress
-        );
-        p.node.rotation.z = p.twist * ownProgress;
-      });
 
       renderer.render(scene, camera);
     }
 
-    animate();
+    requestAnimationFrame(animate);
+
+    // Initialisation icônes Lucide
+    lucide.createIcons();
   </script>
 
 </body>
