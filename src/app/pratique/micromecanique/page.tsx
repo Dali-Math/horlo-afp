@@ -21,12 +21,13 @@ import {
   RotateCcw,
   Sliders,
   Layers,
-  Sparkles,
   Zap,
   Activity,
   Check,
   Play,
-  Pause
+  Pause,
+  ZoomIn,
+  X
 } from 'lucide-react';
 
 export default function MicromecaniqueModulePage() {
@@ -35,6 +36,18 @@ export default function MicromecaniqueModulePage() {
   const [latheRpm, setLatheRpm] = useState(0);
   const [targetRpm, setTargetRpm] = useState(800);
   const [direction, setDirection] = useState<'ccw' | 'cw'>('ccw');
+  const [isLoupeOpen, setIsLoupeOpen] = useState(false);
+  const [loupeZoom, setLoupeZoom] = useState<1 | 2 | 5 | 10>(1);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsLoupeOpen(false);
+    };
+    if (isLoupeOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [isLoupeOpen]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -924,128 +937,62 @@ export default function MicromecaniqueModulePage() {
           <span className="px-3.5 py-1.5 rounded-xl bg-cyan-500/10 text-cyan-400 font-extrabold text-sm border border-cyan-500/30">02</span>
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold text-xs uppercase tracking-wider border border-cyan-500/30">PLANCHE 01 · PROJECTION OPTIQUE 20:1</span>
-              <span className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs border border-slate-200 dark:border-slate-700">Norme ISO 128</span>
+              <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-400 font-bold text-xs uppercase tracking-wider border border-cyan-500/30">
+                PLANCHE 01 · TOURNAGE MANUEL
+              </span>
+              <span className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold text-xs border border-slate-200 dark:border-slate-700">
+                Norme ISO 128
+              </span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Géométrie d'Attaque du Burin Carré 80° sur Éventail</h2>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              Géométrie d'Attaque du Burin Carré 80° sur Éventail
+            </h2>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">Projecteur Marcel Aubert</span>
-          <span className="px-3 py-1.5 rounded-full bg-amber-500/10 text-amber-300 text-xs font-bold border border-amber-500/30">Tournage Manuel</span>
+          <button
+            onClick={() => { setIsLoupeOpen(true); setLoupeZoom(1); }}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 text-xs font-bold border border-amber-500/30 transition-all shadow-sm"
+          >
+            <ZoomIn className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+            <span>Loupe 10x d'Atelier</span>
+          </button>
+          <span className="hidden sm:inline-flex px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+            Tour Schaublin 70
+          </span>
+          <span className="px-3 py-1.5 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-300 text-xs font-bold border border-amber-500/30">
+            Tournage Manuel
+          </span>
         </div>
       </div>
 
-      {/* Grand écran CAD avec lignes de repère fines et cotations techniques */}
-      <div className="rounded-2xl border border-slate-300 dark:border-slate-800 bg-[#040813] p-4 sm:p-6 shadow-md dark:shadow-2xl cad-grid overflow-hidden">
-        <svg viewBox="0 0 920 480" className="w-full h-auto select-none" style={{ fontFamily: 'Plus Jakarta Sans, system-ui, sans-serif' }}>
-          <defs>
-            <linearGradient id="p1SteelPiece" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#1E293B"/>
-              <stop offset="30%" stopColor="#475569"/>
-              <stop offset="50%" stopColor="#94A3B8"/>
-              <stop offset="70%" stopColor="#E2E8F0"/>
-              <stop offset="100%" stopColor="#334155"/>
-            </linearGradient>
-
-            <linearGradient id="p1BrassRest" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#FBBF24"/>
-              <stop offset="50%" stopColor="#D97706"/>
-              <stop offset="100%" stopColor="#78350F"/>
-            </linearGradient>
-
-            <linearGradient id="p1GraverSteel" x1="0" y1="0" x2="1" y2="0.3">
-              <stop offset="0%" stopColor="#334155"/>
-              <stop offset="40%" stopColor="#475569"/>
-              <stop offset="80%" stopColor="#64748B"/>
-              <stop offset="100%" stopColor="#1E293B"/>
-            </linearGradient>
-
-            <marker id="cadArrowGold" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-              <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#F59E0B"/>
-            </marker>
-            <marker id="cadArrowCyan" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-              <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#38BDF8"/>
-            </marker>
-            <marker id="cadDotCyan" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="5" markerHeight="5">
-              <circle cx="4" cy="4" r="3" fill="#38BDF8"/>
-            </marker>
-            <marker id="cadDotGold" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="5" markerHeight="5">
-              <circle cx="4" cy="4" r="3" fill="#F59E0B"/>
-            </marker>
-            <marker id="cadDotWhite" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="5" markerHeight="5">
-              <circle cx="4" cy="4" r="3" fill="#FFFFFF"/>
-            </marker>
-          </defs>
-
-          {/* RÉTICULE OPTIQUE CENTRAL (Projecteur de profil) */}
-          <g transform="translate(240, 240)">
-            <circle cx="0" cy="0" r="210" fill="none" stroke="#1E293B" strokeWidth="1.8"/>
-            <circle cx="0" cy="0" r="160" fill="none" stroke="#1E293B" strokeDasharray="6,6" strokeWidth="1.2"/>
-            <circle cx="0" cy="0" r="110" fill="none" stroke="#334155" strokeWidth="1.2"/>
-            <circle cx="0" cy="0" r="60" fill="none" stroke="#1E293B" strokeDasharray="4,4" strokeWidth="1.2"/>
-          </g>
-
-          {/* AXES TRAIT-POINT NORMALISÉS ISO */}
-          <line x1="20" y1="240" x2="900" y2="240" stroke="#F59E0B" strokeDasharray="16, 4, 3, 4" strokeWidth="1.5"/>
-          <line x1="240" y1="15" x2="240" y2="465" stroke="#38BDF8" strokeDasharray="6,4" strokeWidth="1.2"/>
-
-          {/* PIÈCE EN ACIER TOURNÉE (Barre Ø 4.50 mm grossie à 20x) */}
-          <circle cx="170" cy="240" r="140" fill="url(#p1SteelPiece)" stroke="#F8FAFC" strokeWidth="2.5"/>
-          <circle cx="170" cy="240" r="105" fill="none" stroke="#FFFFFF" strokeOpacity="0.15" strokeWidth="1.5"/>
-          <circle cx="170" cy="240" r="65" fill="none" stroke="#FFFFFF" strokeOpacity="0.15" strokeWidth="1.5"/>
-
-          {/* SENS DE ROTATION CCW (Flèche courbée en haut à gauche) */}
-          <path d="M 170 85 A 155 155 0 0 1 270 155" fill="none" stroke="#F59E0B" strokeWidth="3" markerEnd="url(#cadArrowGold)"/>
-          <text x="175" y="70" fill="#FDE047" fontSize="12" fontWeight="800">Sens de rotation CCW (Anti-horaire)</text>
-
-          {/* ÉVENTAIL D'APPUI EN LAITON (BRASS T-REST) */}
-          <path d="M 285 280 L 360 280 L 360 420 L 305 420 L 295 330 Z" fill="url(#p1BrassRest)" stroke="#FEF08A" strokeWidth="1.8"/>
-          <rect x="285" y="277" width="75" height="4" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="0.8"/>
-
-          {/* BURIN CARRÉ 80° (CORPS EN ACIER & TAILLANT AFFÛTÉ) */}
-          <polygon points="310,240 540,295 535,350 295,295" fill="url(#p1GraverSteel)" stroke="#CBD5E1" strokeWidth="2"/>
-          <polygon points="310,240 350,200 395,255 352,295" fill="#0284C7" stroke="#38BDF8" strokeWidth="2.5"/>
-          <polygon points="310,240 350,200 365,225 325,265" fill="#38BDF8" fill-opacity="0.5"/>
-          <polygon points="310,240 316,234 322,246 316,252" fill="#FFFFFF" stroke="#38BDF8" strokeWidth="1.5"/>
-
-          {/* POINT DE CONTACT & TANGENTE (Arête rigoureusement à l'axe) */}
-          <circle cx="310" cy="240" r="6" fill="#EF4444" stroke="#FFFFFF" strokeWidth="2.5"/>
-          <line x1="310" y1="130" x2="310" y2="350" stroke="#38BDF8" strokeDasharray="6,4" strokeWidth="1.8"/>
-
-          {/* ARC DE COTATION D'ANGLE 90° à 95° */}
-          <path d="M 310 305 A 65 65 0 0 0 368 290" fill="none" stroke="#F59E0B" strokeWidth="2" markerEnd="url(#cadArrowGold)"/>
-
-          {/* COPEAU DE SOIE CONTINU */}
-          <path d="M 312 237 Q 295 190, 335 165 T 375 170 T 365 135 T 405 130" fill="none" stroke="#FDE047" strokeWidth="3.5" strokeLinecap="round"/>
-
-          {/* LIGNES DE RAPPEL TECHNIQUES ISO (ZERO COLLISION) */}
-          <g transform="translate(20, 228)">
-            <rect x="0" y="-14" width="165" height="26" rx="5" fill="#060C18" fill-opacity="0.95" stroke="#F59E0B" strokeWidth="1.2"/>
-            <text x="82" y="3" fill="#FBBF24" fontSize="11" fontWeight="700" textAnchor="middle">Axe de broche (70.00 mm)</text>
-          </g>
-
-          <polyline points="380,140 440,75 780,75" fill="none" stroke="#FDE047" strokeWidth="1.5" markerStart="url(#cadDotGold)"/>
-          <text x="450" y="67" fill="#FDE047" fontSize="13" fontWeight="800">COPEAU DE SOIE CONTINU</text>
-          <text x="450" y="90" fill="#E2E8F0" fontSize="11" fontWeight="500">Signe d'une coupe fluide sans frottement ni arrachement</text>
-
-          <polyline points="310,240 410,145 820,145" fill="none" stroke="#38BDF8" strokeWidth="1.5" markerStart="url(#cadDotCyan)"/>
-          <text x="420" y="137" fill="#38BDF8" fontSize="13" fontWeight="800">ARÊTE AU CENTRE (H = 70.00 mm)</text>
-          <text x="420" y="160" fill="#E2E8F0" fontSize="11" fontWeight="500">Tangente verticale rigoureuse · Dépouille active α = 6°</text>
-
-          <polyline points="430,275 500,215 860,215" fill="none" stroke="#FFFFFF" strokeWidth="1.5" markerStart="url(#cadDotWhite)"/>
-          <text x="510" y="207" fill="#FFFFFF" fontSize="13" fontWeight="800">BURIN CARRÉ 80° (Acier Böhler K720)</text>
-          <text x="510" y="230" fill="#38BDF8" fontSize="11" fontWeight="600">Méplat d'abattage de 0.30 mm poli à la pierre d'Arkansas</text>
-
-          <polyline points="340,300 440,335 800,335" fill="none" stroke="#F59E0B" strokeWidth="1.5" markerStart="url(#cadDotGold)"/>
-          <text x="450" y="327" fill="#FBBF24" fontSize="13" fontWeight="800">ANGLE D'ATTAQUE 90° à 95°</text>
-          <text x="450" y="350" fill="#E2E8F0" fontSize="11" fontWeight="500">Face losange inclinée pour guider l'évacuation du copeau</text>
-
-          <polyline points="305,270 230,425 20,425" fill="none" stroke="#38BDF8" strokeWidth="1.5" markerStart="url(#cadDotCyan)"/>
-          <text x="25" y="417" fill="#38BDF8" fontSize="13" fontWeight="800">ÉVENTAIL LAITON · JEU d &lt; 1.0 mm</text>
-          <text x="25" y="440" fill="#E2E8F0" fontSize="11" fontWeight="500">Appui rigide au plus près de la pièce pour interdire tout basculement</text>
-        </svg>
+      {/* Planche Technique Réelle Haute Définition avec Loupe */}
+      <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-900 group shadow-lg">
+        <div 
+          onClick={() => { setIsLoupeOpen(true); setLoupeZoom(1); }}
+          className="cursor-pointer relative overflow-hidden bg-slate-950 flex items-center justify-center min-h-[340px] sm:min-h-[460px]"
+        >
+          <img 
+            src="/images/micromecanique/burin_carre_80_eventail_tour_schaublin.jpg"
+            alt="Planche 01 - Géométrie d'Attaque du Burin Carré 80° sur Éventail - Tour d'horloger Schaublin 70"
+            className="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-[1.008]"
+          />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors pointer-events-none" />
+          <div className="absolute bottom-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-900 text-amber-300 text-xs font-bold shadow-lg border border-amber-500/30 backdrop-blur-sm transition-transform group-hover:scale-105">
+            <ZoomIn className="w-3.5 h-3.5 text-amber-400" />
+            <span>Agrandir Loupe 10x</span>
+          </div>
+        </div>
+        <div className="p-3.5 sm:p-4 bg-slate-50 dark:bg-slate-900/90 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-600 dark:text-slate-300">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span className="font-semibold text-slate-800 dark:text-slate-200">Vue réelle d'atelier :</span>
+            <span>Tour Schaublin 70, tourelle Tripan, burin carré 80° acier K720 & éventail laiton.</span>
+          </div>
+          <span className="font-mono text-[11px] text-slate-500 dark:text-slate-400">Norme ISO 128 · Tolérance &lt; 0.01 mm</span>
+        </div>
       </div>
+
 
       {/* 4 Règles d'Or d'Atelier ultra claires et lisibles */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -1937,6 +1884,95 @@ export default function MicromecaniqueModulePage() {
         HorloLearn · Haute Horlogerie Suisse · Référentiel Technique & Pratique de Micromécanique Horlogère
       </footer>
       </div>
+
+      {/* Modal Loupe 10x d'Atelier */}
+      {isLoupeOpen && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
+          onClick={() => setIsLoupeOpen(false)}
+        >
+          <div 
+            className="relative w-full max-w-6xl max-h-[92vh] flex flex-col bg-white dark:bg-slate-900 rounded-3xl border border-slate-300 dark:border-slate-800 shadow-2xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header Modal */}
+            <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400">
+                  <ZoomIn className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30">
+                      LOUPE D'INSPECTION 10X
+                    </span>
+                    <span className="text-xs text-slate-600 dark:text-slate-400">Norme ISO 128 · Tour Schaublin 70</span>
+                  </div>
+                  <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-tight">
+                    Géométrie d'Attaque du Burin Carré 80° sur Éventail
+                  </h3>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 sm:gap-4">
+                {/* Zoom controls */}
+                <div className="flex items-center gap-1 bg-slate-200/80 dark:bg-slate-800 p-1 rounded-xl border border-slate-300 dark:border-slate-700 text-xs">
+                  <span className="hidden sm:inline px-2 font-medium text-slate-600 dark:text-slate-400">Zoom :</span>
+                  {([1, 2, 5, 10] as const).map((z) => (
+                    <button
+                      key={z}
+                      onClick={() => setLoupeZoom(z)}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        loupeZoom === z
+                          ? 'bg-amber-500 text-slate-950 shadow-sm'
+                          : 'text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700'
+                      }`}
+                    >
+                      {z}x
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setIsLoupeOpen(false)}
+                  aria-label="Fermer"
+                  className="p-2 rounded-xl text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Body with zoomable image */}
+            <div className="relative flex-1 overflow-auto p-4 bg-slate-950 flex items-center justify-center min-h-[380px] sm:min-h-[500px]">
+              <div 
+                className="transition-transform duration-200 origin-center cursor-zoom-in"
+                style={{ transform: `scale(${loupeZoom})` }}
+                onClick={() => setLoupeZoom(prev => prev === 1 ? 2 : prev === 2 ? 5 : prev === 5 ? 10 : 1)}
+              >
+                <img 
+                  src="/images/micromecanique/burin_carre_80_eventail_tour_schaublin.jpg"
+                  alt="Planche 01 - Géométrie d'Attaque du Burin Carré 80° sur Éventail"
+                  className="max-w-none w-auto max-h-[75vh] object-contain rounded-lg shadow-2xl"
+                />
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="px-5 py-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+              <div className="text-slate-600 dark:text-slate-300">
+                <strong className="text-slate-900 dark:text-white">Règles d'usinage :</strong> Arête au centre exact (H = 70.00 mm), face de coupe polie miroir à la pierre d'Arkansas, appui rigide à moins de 1 mm.
+              </div>
+              <button
+                onClick={() => setIsLoupeOpen(false)}
+                className="px-4 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold transition-colors self-end sm:self-auto shadow-sm"
+              >
+                Retour à l'établi
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
