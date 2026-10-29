@@ -254,8 +254,6 @@ export default function HeritagePage() {
                   fill
                   className="object-cover rounded-lg shadow-2xl transition-transform duration-700 group-hover:scale-105"
                   loading="lazy"
-                  placeholder="blur"
-                  blurDataURL="/images/atelier-patek-blur.jpg"
                   sizes="(max-width:768px) 100vw, 400px"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>

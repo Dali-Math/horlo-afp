@@ -57,7 +57,7 @@ export default function Chronologie() {
         {/* Image illustrative */}
         <div className="overflow-hidden rounded-2xl shadow-2xl">
           <img
-            src="/images/materiaux/evolution.jpg"
+            src="/assets/images/chronologie_historique.png"
             alt="Évolution horlogerie suisse"
             className="w-full h-full object-cover"
           />

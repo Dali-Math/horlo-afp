@@ -325,7 +325,7 @@ export default function RemontagePage() {
 
               <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-xs text-emerald-950 dark:text-emerald-200">
                 <div className="font-bold flex items-center gap-1.5 mb-1 text-emerald-700 dark:text-emerald-400">
-                  <Sparkles className="w-3.5 h-3.5" /> Conseil d&apos;Établi :
+                  <Wrench className="w-3.5 h-3.5" /> Conseil d&apos;Établi :
                 </div>
                 {currentStep.tip}
               </div>

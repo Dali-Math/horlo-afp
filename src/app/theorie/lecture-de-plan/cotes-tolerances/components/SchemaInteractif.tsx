@@ -15,7 +15,7 @@ export default function SchemaInteractif() {
         onClick={() => setShowInfo(!showInfo)}
       >
         <Image
-          src="/images/schema-tolerances.png"
+          src="/images/schema-cotes-tolerances.png"
           alt="Schéma des tolérances horlogères"
           width={500}
           height={300}

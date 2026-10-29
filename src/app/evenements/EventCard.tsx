@@ -1,6 +1,6 @@
 'use client';
 import { motion } from 'framer-motion';
-import { Calendar, MapPin, Sparkles } from 'lucide-react';
+import { Calendar, MapPin, Clock } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -68,10 +68,7 @@ export default function EventCard({ event, index }: EventCardProps) {
           />
         ) : (
           <div className="flex items-center justify-center h-full">
-            <Sparkles
-              className="w-16 h-16 text-yellow-500/50 animate-pulse" 
-              strokeWidth={1.5}
-            />
+            <Clock className="w-16 h-16 text-yellow-500/50" strokeWidth={1.5} />
           </div>
         )}
         

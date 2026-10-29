@@ -273,7 +273,7 @@ export default function PratiqueOutilsPage() {
           <div className="p-6 sm:p-8 border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/50 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="space-y-1.5">
               <div className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-widest text-amber-600 dark:text-amber-400">
-                <Sparkles className="w-4 h-4" />
+                <Eye className="w-4 h-4" />
                 <span>Banc d’Inspection Binoculaire • Pierre d’Arkansas</span>
               </div>
               <h2 className="font-serif text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
