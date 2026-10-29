@@ -52,8 +52,8 @@
     }
     .drawer_container {
       position: relative;
-      width: 100%;
-      max-width: min(440px, 42vh);
+      width: min(390px, 100%);
+      height: min(390px, 42vh);
       margin: 0 auto;
       cursor: grab;
       touch-action: none;
@@ -62,7 +62,7 @@
       cursor: grabbing;
     }
     .ratio_100 {
-      padding-bottom: 100% !important;
+      padding-bottom: 0 !important;
     }
     .canvas_container {
       position: absolute;
@@ -189,7 +189,7 @@
         </div>
 
         <!-- 3D WebGL Containers Box (Ciechanowski Engine Mounts) -->
-        <div class="w-full relative bg-gradient-to-b from-[#0b1020] via-[#070b14] to-[#04060c] overflow-hidden flex items-center justify-center p-2 min-h-[300px] sm:min-h-[360px]">
+        <div class="w-full relative bg-gradient-to-b from-[#0b1020] via-[#070b14] to-[#04060c] overflow-hidden flex items-center justify-center p-2 h-[340px] sm:h-[390px] max-h-[44vh]">
           
           <!-- View 1: Complete Assembly (Hero) -->
           <div id="view-hero" class="tab-view active-view flex flex-col justify-center">
