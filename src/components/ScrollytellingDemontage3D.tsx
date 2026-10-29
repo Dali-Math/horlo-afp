@@ -9,9 +9,7 @@ import {
   ShieldAlert, 
   CheckCircle2, 
   AlertTriangle, 
-  ChevronDown, 
   RotateCcw,
-  Sparkles,
   Maximize2
 } from 'lucide-react';
 
@@ -32,8 +30,6 @@ export default function ScrollytellingDemontage3D() {
   // States
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [benchVisibility, setBenchVisibility] = useState<'hidden' | 'visible' | 'away'>('hidden');
-  const [progressPct, setProgressPct] = useState<number>(0);
-  const [activeStepTitle, setActiveStepTitle] = useState<string>('Calibre 100 % Assemblé');
 
   // Animation & Three.js refs
   const targetProgressRef = useRef<number>(0);
@@ -214,21 +210,6 @@ export default function ScrollytellingDemontage3D() {
 
       const progress = Math.max(0, Math.min(1, (scrollY - scrollStart) / totalDistance));
       targetProgressRef.current = progress;
-
-      const pct = Math.round(progress * 100);
-      setProgressPct(pct);
-
-      if (pct < 10) {
-        setActiveStepTitle('100 % Assemblé');
-      } else if (pct < 40) {
-        setActiveStepTitle('Vis & Rochet');
-      } else if (pct < 70) {
-        setActiveStepTitle('Coq & Balancier');
-      } else if (pct < 95) {
-        setActiveStepTitle('Rouage & Ancre');
-      } else {
-        setActiveStepTitle('Platine Nue');
-      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -545,15 +526,7 @@ export default function ScrollytellingDemontage3D() {
             : 'opacity-0 translate-y-8 pointer-events-none'
         }`}
       >
-        {/* Badge d'état horloger */}
-        <div className="mb-2 flex items-center justify-end pr-1">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-950/80 backdrop-blur-md border border-amber-500/30 text-[10px] font-mono text-amber-400 font-bold shadow-lg">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-            <span>ETA 6497-1 · {activeStepTitle} ({progressPct} %)</span>
-          </div>
-        </div>
-
-        {/* Canvas 3D sans cadre avec ombre douce */}
+        {/* Canvas 3D sans cadre avec ombre douce (Badge supprimé comme demandé) */}
         <div className="relative w-full aspect-square">
           
           {/* Loader */}
@@ -571,11 +544,15 @@ export default function ScrollytellingDemontage3D() {
           />
         </div>
 
-        {/* Citation exacte de tl-watchmaking */}
-        <p className="mt-2 font-serif italic text-sm sm:text-base text-right leading-tight text-slate-600 dark:text-slate-300 drop-shadow-sm select-none">
-          Voici tout ce que vous allez démonter,<br />
-          puis remonter, pièce par pièce.
-        </p>
+        {/* Message d'accueil chaleureux pour les visiteurs */}
+        <div className="mt-2 text-right select-none">
+          <p className="font-serif italic text-base sm:text-lg text-amber-600 dark:text-amber-400 leading-snug drop-shadow-sm font-semibold">
+            Bienvenue dans mon atelier horloger.
+          </p>
+          <p className="font-serif italic text-xs sm:text-sm text-stone-600 dark:text-stone-300 mt-0.5 leading-snug">
+            Découvrez le cœur battant du temps, pièce par pièce.
+          </p>
+        </div>
 
         {/* Indication interactive 360° */}
         <div className="mt-1 text-right text-[10px] font-mono text-slate-400 dark:text-slate-500 select-none">

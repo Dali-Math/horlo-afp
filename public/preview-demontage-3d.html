@@ -484,13 +484,7 @@
   <!-- ========================================================================= -->
   <aside id="bench" class="bench" aria-label="Visualiseur 3D dynamique du mouvement">
     
-    <!-- Mini badge d'état interactif -->
-    <div class="mb-2 flex items-center justify-end gap-2 pr-1">
-      <div id="benchStateBadge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-stone-900/80 dark:bg-black/75 backdrop-blur-md border border-amber-500/30 text-[10px] font-mono text-amber-400 font-bold shadow-lg">
-        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
-        <span id="benchStateText">ETA 6497-1 · 0 %</span>
-      </div>
-    </div>
+
 
     <!-- 3D Canvas Container sans cadre, pur fond transparent -->
     <div class="bench-canvas-wrap">
@@ -505,11 +499,15 @@
       <canvas id="benchCanvas" class="bench-canvas"></canvas>
     </div>
 
-    <!-- Citation élégante exactement comme tl-watchmaking -->
-    <p class="bench-caption mt-2" id="benchCaption">
-      Voici tout ce que vous allez démonter,<br>
-      puis remonter, pièce par pièce.
-    </p>
+    <!-- Message d'accueil chaleureux pour les visiteurs -->
+    <div class="mt-2 text-right select-none">
+      <p class="font-serif italic text-base sm:text-lg text-amber-600 dark:text-amber-400 leading-snug drop-shadow-sm font-semibold">
+        Bienvenue dans mon atelier horloger.
+      </p>
+      <p class="font-serif italic text-xs sm:text-sm text-stone-600 dark:text-stone-300 mt-0.5 leading-snug">
+        Découvrez le cœur battant du temps, pièce par pièce.
+      </p>
+    </div>
 
     <!-- Indication de rotation tactile/souris -->
     <div class="mt-1 text-right text-[10px] font-mono text-stone-400 dark:text-stone-500 select-none">
@@ -547,7 +545,7 @@
     const bench = document.getElementById('bench');
     const benchCanvas = document.getElementById('benchCanvas');
     const benchLoader = document.getElementById('benchLoader');
-    const benchStateText = document.getElementById('benchStateText');
+    // benchStateText removed
     const demontageZone = document.getElementById('demontage-zone');
     const footerSection = document.getElementById('footer-section');
 
@@ -737,19 +735,7 @@
       const progress = Math.max(0, Math.min(1, (scrollY - scrollStart) / totalDistance));
       targetProgress = progress;
 
-      // Mise à jour du badge d'état
-      const pct = Math.round(progress * 100);
-      if (pct < 10) {
-        benchStateText.textContent = `ETA 6497-1 · 100 % Assemblé`;
-      } else if (pct < 40) {
-        benchStateText.textContent = `ETA 6497-1 · Vis & Rochet (${pct} %)`;
-      } else if (pct < 70) {
-        benchStateText.textContent = `ETA 6497-1 · Coq & Balancier (${pct} %)`;
-      } else if (pct < 95) {
-        benchStateText.textContent = `ETA 6497-1 · Rouage & Ancre (${pct} %)`;
-      } else {
-        benchStateText.textContent = `ETA 6497-1 · Platine Nue (100 %)`;
-      }
+// Badge removed
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
