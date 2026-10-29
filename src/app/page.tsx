@@ -120,7 +120,7 @@ function Carousel() {
     { name: "Technologies & Quartz", href: "/theorie/technologies" },
     { name: "Fuseaux Horaires Cottier", href: "/fuseaux-horaires" },
     { name: "Manufactures Suisses", href: "/theorie/manufactures" },
-    { name: "Écorchés Calibres 3D", href: "/theorie/galerie-3d" },
+    { name: "Écorchés Calibres 3D", href: "/pratique/calibre-3d" },
     { name: "Quiz & Certifications", href: "/quiz" },
     { name: "Outils & Calculateurs", href: "/outils" },
     { name: "Histoire de l'Horlogerie", href: "/theorie/histoire-horlogerie-suisse" }
@@ -202,7 +202,7 @@ function GuidedPathwaysSection() {
 
           <div className="md:col-span-5 flex flex-col sm:flex-row md:flex-col gap-3 font-mono text-xs">
             <Link
-              href="/theorie/galerie-3d"
+              href="/pratique/calibre-3d"
               className="p-3.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 hover:border-amber-500/50 transition flex items-center justify-between group/link"
             >
               <span className="font-semibold text-slate-100">Écorché 3D des Calibres</span>

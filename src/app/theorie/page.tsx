@@ -56,7 +56,7 @@ const ELITE_LABORATORIES = [
     title: 'Écorché Éclaté 3D des Calibres Suisses',
     badge: 'Laboratoire 3D & Cinématique',
     description: 'Désossez les calibres ETA 6497-1 et 2824-2 en vue éclatée interactive. Fiches techniques complètes, tolérances d\'ébats, Côtes de Genève, perlage et protocoles Moebius.',
-    href: '/theorie/galerie-3d',
+    href: '/pratique/calibre-3d',
     icon: <Layers className="w-6 h-6 text-amber-500" />,
     color: 'border-amber-500/40 hover:border-amber-500 bg-white dark:bg-gradient-to-br dark:from-amber-500/10 dark:via-slate-900 dark:to-slate-950',
     badgeColor: 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30'
@@ -246,7 +246,7 @@ const PILLARS: PillarSection[] = [
         readTime: '50 min de lecture'
       },
       {
-        id: 'galerie-3d-card', slug: '/theorie/galerie-3d', moduleNumber: 'Module 12',
+        id: 'galerie-3d-card', slug: '/pratique/calibre-3d', moduleNumber: 'Module 12',
         titre: 'Écorché Éclaté 3D & Cinématique des Calibres',
         description: 'Désossez les calibres ETA 6497-1 et 2824-2 en 3D interactive. Fiches techniques, tolérances d\'ébats et protocoles Moebius.',
         icon: <Layers className="w-6 h-6 text-amber-500" />,

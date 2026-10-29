@@ -111,7 +111,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${domain}/theorie/entretien`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
     { url: `${domain}/theorie/entretien/diagnostic-pannes`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
     { url: `${domain}/theorie/entretien/revision-complete`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
-    { url: `${domain}/theorie/galerie-3d`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
     { url: `${domain}/theorie/histoire`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
     { url: `${domain}/theorie/histoire-horlogerie-suisse`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
     { url: `${domain}/theorie/introduction-montre-mecanique`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
