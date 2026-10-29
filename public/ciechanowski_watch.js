@@ -24,13 +24,19 @@ let gear_train5_explainers;
     const white_color = rgba255_color(250, 250, 250, 1);
     const dial_color = rgba255_color(235, 235, 235, 1);
 
-    const red_color = rgba255_color(231, 91, 85, 1);
-    const orange_color = rgba255_color(228, 136, 80, 1);
-    const yellow_color = rgba255_color(233, 193, 79, 1);
-    const green_color = rgba255_color(136, 192, 73, 1);
-    const cyan_color = rgba255_color(90, 203, 193, 1);
-    const blue_color = rgba255_color(79, 162, 230, 1);
-    const violet_color = rgba255_color(212, 148, 224, 1);
+    /* AUTHENTIC SWISS HOROLOGY PALETTE (ETA 2824-2 SUISSE) */
+    const gold_color = rgba255_color(232, 185, 68, 1);    // Or jaune doré horloger suisse 2N/3N
+    const steel_color = rgba255_color(210, 216, 224, 1);  // Acier trempé poli miroir suisse
+    const blued_color = rgba255_color(32, 72, 175, 1);    // Acier bleui horloger
+
+    // Redéfinition intégrale des couleurs didactiques vers les vrais matériaux d'établi :
+    const red_color = steel_color;      // Ressorts et sautoirs en acier poli miroir
+    const orange_color = gold_color;    // Rouages en laiton doré 2N
+    const yellow_color = gold_color;    // Rouages et masse en or jaune doré
+    const green_color = gold_color;     // Engrenages et dateur en laiton doré
+    const cyan_color = steel_color;     // Leviers et tirettes en acier poli miroir
+    const blue_color = gold_color;      // Masse oscillante (Rotor) et mobiles en jaune doré
+    const violet_color = gold_color;    // Balancier Glucydur en or doré 2N
 
     let crown_turn_arrow_color = rgba255_color(216, 112, 112, 1);
     let crown_pull_arrow_color = rgba255_color(115, 141, 194, 1);
@@ -3344,10 +3350,14 @@ let gear_train5_explainers;
                     colors["Cannon_pinion"] = green_color;
                     colors["Intermediate_wheel"] = red_color;
                     colors["Click"] = blue_color;
-                    colors["Crown_wheel"] = yellow_color;
-                    colors["Click_spring"] = red_color;
-                    colors["Ratchet_wheel"] = green_color;
-                    colors["Stop_lever"] = cyan_color;
+                    colors["Crown_wheel"] = steel_color;
+                    colors["Click_spring"] = steel_color;
+                    colors["Ratchet_wheel"] = steel_color;
+                    colors["Stop_lever"] = steel_color;
+                    colors["Weight"] = gold_color; // MASSE OSCILLANTE EN JAUNE DORÉ
+                    colors["Weight_gear"] = gold_color;
+                    colors["Automatic_device_framework"] = bridge_color;
+                    colors["Automatic_device_bridge"] = bridge_color;
                 }
 
                 gl.begin(width, height);
