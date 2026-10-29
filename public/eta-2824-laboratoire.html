@@ -32,7 +32,7 @@
     .font-serif-luxury { font-family: 'Cinzel', serif; }
     .font-mono-tech { font-family: 'JetBrains Mono', monospace; }
 
-    /* Ciechanowski Engine Responsive Containers */
+    /* Ciechanowski Engine Containers */
     .tab-view {
       width: 100%;
       height: 100%;
@@ -53,9 +53,13 @@
     .drawer_container {
       position: relative;
       width: 100%;
-      max-width: 580px;
+      max-width: min(440px, 42vh);
       margin: 0 auto;
       cursor: grab;
+      touch-action: none;
+    }
+    .drawer_container:active {
+      cursor: grabbing;
     }
     .ratio_100 {
       padding-bottom: 100% !important;
@@ -95,34 +99,29 @@
       border: 1px solid rgba(51, 65, 85, 0.6);
     }
 
-    /* Ciechanowski Sliders Stylings */
-    .slider_assembly, .slider_blue, .slider_green, [id$="_sl0"], [id$="_sl1"] {
-      position: relative;
-      width: 100%;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      margin-top: 8px;
-    }
-    .slider_track {
-      position: absolute;
-      left: 0; right: 0;
-      height: 6px;
-      border-radius: 9999px;
+    /* Custom range slider styling */
+    input[type=range].gold-slider {
+      -webkit-appearance: none;
       background: rgba(148, 163, 184, 0.25);
+      border-radius: 9999px;
+      height: 8px;
     }
-    .dark .slider_track {
+    .dark input[type=range].gold-slider {
       background: rgba(51, 65, 85, 0.8);
     }
-    .slider_thumb {
-      position: absolute;
-      width: 18px;
-      height: 18px;
-      border-radius: 9999px;
+    input[type=range].gold-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 22px;
+      width: 22px;
+      border-radius: 50%;
       background: #e5a93c;
-      box-shadow: 0 0 10px rgba(229, 169, 60, 0.5);
+      box-shadow: 0 0 12px rgba(229, 169, 60, 0.6);
       cursor: pointer;
-      transform: translate(-50%, 0);
+      border: 2px solid #ffffff;
+      transition: transform 0.1s ease;
+    }
+    input[type=range].gold-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
     }
   </style>
 </head>
@@ -151,7 +150,7 @@
     <div class="flex items-center gap-2">
       <!-- Calibre Selector Switcher -->
       <div class="flex items-center bg-slate-200/80 dark:bg-slate-800/80 p-1 rounded-xl text-xs font-mono-tech border border-slate-300 dark:border-slate-700">
-        <a href="/pratique/calibre-3d" class="px-2.5 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition">ETA 6497-1</a>
+        <a href="/pratique/calibre-3d" class="px-2.5 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition">ETA 6497-1 (Manuel)</a>
         <span class="px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 font-bold shadow-sm">ETA 2824-2 (Auto)</span>
       </div>
 
@@ -170,41 +169,44 @@
     <div class="lg:col-span-8 flex flex-col gap-3">
       
       <!-- 3D Canvas Box -->
-      <div class="relative w-full h-[540px] sm:h-[620px] rounded-3xl overflow-hidden glass-panel border shadow-2xl flex flex-col">
+      <div class="relative w-full rounded-3xl overflow-hidden glass-panel border shadow-2xl flex flex-col">
         
         <!-- Viewer HUD Toolbar -->
-        <div class="absolute top-3 left-3 right-3 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
-          <div class="pointer-events-auto flex items-center gap-1.5 bg-slate-900/85 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-slate-700/60 text-xs font-mono-tech text-white shadow-lg">
+        <div class="px-4 py-3 border-b border-slate-200 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-2 z-20">
+          <div class="flex items-center gap-2 font-mono-tech text-xs">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span id="activeAngleName" class="font-bold text-amber-400">Calibre ETA Complet 3D</span>
-            <span class="text-slate-400 text-[11px]">• Glisser pour pivoter à 360°</span>
+            <span id="activeAngleName" class="font-bold text-amber-600 dark:text-amber-400">Calibre ETA Complet 3D</span>
+            <span class="text-slate-500 text-[11px] hidden sm:inline">• Glisser pour pivoter à 360°</span>
           </div>
 
           <!-- Scene View Switcher (Mouvement, Rotor, Échappement, Dateur) -->
-          <div class="pointer-events-auto flex items-center gap-1 bg-slate-900/85 backdrop-blur-md p-1 rounded-2xl border border-slate-700/60 text-xs font-mono-tech text-white shadow-lg">
-            <button onclick="switchView('hero')" id="btnView-hero" class="px-2.5 py-1 rounded-xl bg-amber-500 text-slate-950 font-bold transition">Mouvement Entier</button>
-            <button onclick="switchView('auto')" id="btnView-auto" class="px-2.5 py-1 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white transition">Rotor & Inverseurs</button>
-            <button onclick="switchView('date')" id="btnView-date" class="px-2.5 py-1 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white transition">Dateur Instantané</button>
-            <button onclick="switchView('escapement')" id="btnView-escapement" class="px-2.5 py-1 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white transition">Échappement 4 Hz</button>
+          <div class="flex items-center gap-1 bg-slate-200/80 dark:bg-slate-900/85 backdrop-blur-md p-1 rounded-2xl border border-slate-300 dark:border-slate-700/60 text-xs font-mono-tech shadow-sm">
+            <button onclick="switchView('hero')" id="btnView-hero" class="px-3 py-1 rounded-xl bg-amber-500 text-slate-950 font-bold transition">Mouvement Entier</button>
+            <button onclick="switchView('auto')" id="btnView-auto" class="px-3 py-1 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white transition">Rotor & Inverseurs</button>
+            <button onclick="switchView('date')" id="btnView-date" class="px-3 py-1 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white transition">Dateur Instantané</button>
+            <button onclick="switchView('escapement')" id="btnView-escapement" class="px-3 py-1 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white transition">Échappement 4 Hz</button>
           </div>
         </div>
 
         <!-- 3D WebGL Containers Box (Ciechanowski Engine Mounts) -->
-        <div class="w-full flex-1 relative bg-gradient-to-b from-[#0b1020] via-[#070b14] to-[#04060c] overflow-hidden flex items-center justify-center p-2">
+        <div class="w-full relative bg-gradient-to-b from-[#0b1020] via-[#070b14] to-[#04060c] overflow-hidden flex items-center justify-center p-2 min-h-[300px] sm:min-h-[360px]">
           
           <!-- View 1: Complete Assembly (Hero) -->
           <div id="view-hero" class="tab-view active-view flex flex-col justify-center">
             <div class="drawer_container ratio_100" id="hero"></div>
+            <div id="hero_sl0" class="hidden"></div>
           </div>
 
           <!-- View 2: Automatic Module (Exploded & Inverseurs) -->
           <div id="view-auto" class="tab-view hidden-view flex-col justify-center">
             <div class="drawer_container ratio_100" id="automatic_assembly"></div>
+            <div id="automatic_assembly_sl0" class="hidden"></div>
           </div>
 
           <!-- View 3: Date Mechanism (Quantième & Sautoir) -->
           <div id="view-date" class="tab-view hidden-view flex-col justify-center">
             <div class="drawer_container ratio_100" id="date_assembly"></div>
+            <div id="date_assembly_sl0" class="hidden"></div>
           </div>
 
           <!-- View 4: Swiss Lever Escapement (Échappement) -->
@@ -214,36 +216,46 @@
 
         </div>
 
-        <!-- 3D Viewer Bottom Bar & Controls -->
-        <div class="glass-panel p-3 border-t flex flex-wrap items-center justify-between gap-3 text-xs font-mono-tech z-10">
+        <!-- 3D Camera Angles Quick Buttons -->
+        <div class="px-4 py-2 bg-slate-50 dark:bg-slate-900/60 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs font-mono-tech">
+          <div class="flex items-center gap-1.5 text-slate-500">
+            <span>Orientation 3D :</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-1.5">
+            <button id="btnCam-dial" onclick="setCameraOrientation('dial')" class="px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 font-bold transition">Face Cadran</button>
+            <button id="btnCam-bridges" onclick="setCameraOrientation('bridges')" class="px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-amber-500 hover:text-slate-950 transition font-semibold">Dos Ponts & Rotor</button>
+            <button id="btnCam-profile" onclick="setCameraOrientation('profile')" class="px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-amber-500 hover:text-slate-950 transition font-semibold">Tranche Profil</button>
+            <button id="btnCam-default" onclick="setCameraOrientation('default')" class="px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-amber-500 hover:text-slate-950 transition font-semibold">Recentrer</button>
+            <button onclick="toggleAutoRotate()" id="btnAutoRot" class="px-2.5 py-1 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-200 dark:bg-slate-800 hover:text-amber-400 transition font-semibold">Rotation Auto : OFF</button>
+          </div>
+        </div>
+
+        <!-- Exploded View Slider Bar (Interactive Z-dismantling) -->
+        <div class="glass-panel p-4 border-t flex flex-wrap items-center justify-between gap-4 text-xs font-mono-tech z-10">
           
-          <!-- Sliders or Explode -->
-          <div class="flex items-center gap-3 flex-1 min-w-[260px]">
+          <div class="flex items-center gap-3 flex-1 min-w-[280px]">
             <span class="font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap flex items-center gap-1.5">
               <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
-              Démontage & Écorché :
+              Démontage & Vue Éclatée Z :
             </span>
-            <div id="sliderMount" class="w-full">
-              <!-- Ciechanowski slider will mount here -->
-              <div id="hero_sl0"></div>
-              <div id="automatic_assembly_sl0" class="hidden"></div>
-              <div id="date_assembly_sl0" class="hidden"></div>
-            </div>
+            <input type="range" id="explodeRange" min="0" max="100" value="0" class="gold-slider w-full cursor-pointer">
+            <span id="explodePercent" class="w-16 font-bold text-amber-600 dark:text-amber-400 text-right">0%</span>
           </div>
 
           <!-- Action Buttons -->
           <div class="flex items-center gap-2">
-            <button onclick="toggleDial()" id="btnDialToggle" class="px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold transition flex items-center gap-1.5 hover:text-amber-500 shadow-sm">
-              <span id="dialStateText">Retirer le Cadran</span>
+            <button onclick="toggleDialVisibility()" id="btnDialToggle" class="px-3.5 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-amber-500 hover:text-slate-950 font-bold transition flex items-center gap-1.5 shadow-sm border border-slate-300 dark:border-slate-700">
+              <span id="dialStateText">Masquer le Cadran</span>
             </button>
-            <button onclick="global_animate(true)" class="p-1.5 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-amber-500 transition border border-slate-300 dark:border-slate-700" title="Relancer Animation">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <button onclick="toggleMotion()" id="btnPlayPause" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold transition flex items-center gap-1.5 shadow-sm">
+              <span id="motionIcon">⏸</span>
+              <span id="motionText">Pause Battement</span>
             </button>
           </div>
         </div>
       </div>
 
-      <!-- INTERACTIVE ATELIER CONTROLS (TIRETTE & QUANTIÈME) -->
+      <!-- INTERACTIVE ATELIER CONTROLS (TIRETTE, QUANTIÈME & REMONTAGE) -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         
         <!-- MODULE 1 : COMMANDE DE LA TIGE & TIRETTE (3 POSITIONS) -->
@@ -254,7 +266,7 @@
               Tige & Tirette • 3 Positions d'Atelier
             </h3>
             <span id="stemStateBadge" class="text-[11px] font-mono-tech font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-300 border border-amber-500/30">
-              Pos. 0 : Remontage Manuel
+              Pos. 0 : Remontage
             </span>
           </div>
 
@@ -270,6 +282,13 @@
             <button onclick="setAtelierStem(2)" id="stemPos2" class="p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-amber-400 text-center transition">
               <div class="text-[10px] text-slate-500 dark:text-slate-400">Position 2</div>
               Mise à l'Heure
+            </button>
+          </div>
+
+          <!-- Dynamic Action Button based on stem position -->
+          <div id="stemActionArea" class="pt-1">
+            <button onclick="actionRemontageManuel()" class="w-full py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs font-mono-tech transition flex items-center justify-center gap-2 shadow-sm">
+              <span>↻ Armer le Barillet (Remontage Manuel)</span>
             </button>
           </div>
 
@@ -291,10 +310,12 @@
             </div>
           </div>
 
-          <div class="flex gap-2">
-            <button onclick="switchView('date')" class="flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white font-bold text-xs font-mono-tech transition shadow-md flex items-center justify-center gap-2">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-              Examiner le Doigt & Sautoir
+          <div class="grid grid-cols-2 gap-2 text-xs font-mono-tech">
+            <button onclick="advanceTime(24 * 3600)" class="py-2.5 px-3 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white font-bold transition shadow-md flex items-center justify-center gap-1.5">
+              <span>⚡ Saut de Minuit (+24h)</span>
+            </button>
+            <button onclick="advanceTime(3600)" class="py-2.5 px-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-200 dark:bg-slate-800 hover:border-amber-400 font-bold transition flex items-center justify-center gap-1">
+              <span>Avancer d'1 Heure (+1h)</span>
             </button>
           </div>
 
@@ -399,11 +420,11 @@
 
   </main>
 
-  <!-- LOAD CIECHANOWSKI PRE-BAKED VERTICES & INDICES -->
-  <script src="../public/models/watch_data.js"></script>
-  <script src="../scratch/ciechanowski_base.js"></script>
+  <!-- LOAD PRE-BAKED GEOMETRIES & ENGINE -->
+  <script src="watch_data.js"></script>
+  <script src="ciechanowski_base.js"></script>
 
-  <!-- OFFLINE LOADER OVERRIDE (ZERO NETWORK DEPENDENCY) -->
+  <!-- OFFLINE LOADER (ZERO NETWORK LATENCY) -->
   <script>
     function b64ToArrayBuffer(base64) {
       const binaryString = window.atob(base64);
@@ -434,10 +455,9 @@
     }
   </script>
 
-  <!-- AUTHENTIC WATCHMAKING 3D ENGINE -->
-  <script src="../scratch/ciechanowski_watch.js"></script>
+  <script src="ciechanowski_watch.js"></script>
 
-  <!-- WORKBENCH LOGIC & INTERACTIVE TABS -->
+  <!-- WORKBENCH CONTROLS LOGIC -->
   <script>
     const ORGANS = {
       rotor: {
@@ -446,7 +466,8 @@
         desc: "La masse oscillante demi-circulaire en métal lourd pivote sur un roulement miniaturisé à 5 billes en acier trempé. Elle remonte le barillet quel que soit le sens de rotation du poignet grâce au couple de roues inverseuses.",
         oil: "Moebius HP-1300 (pivot d'arbre) • Roulement sec ou lubrifié d'usine",
         ebat: "Ébat axial de rotor : 0.04 à 0.08 mm",
-        nihs: "NIHS 91-10"
+        nihs: "NIHS 91-10",
+        view: "auto"
       },
       inverseurs: {
         title: "02. Roues Inverseuses (Réchappage)",
@@ -454,7 +475,8 @@
         desc: "Composant le plus délicat de l'automatisme ETA. Chaque roue inverseuse possède un rochet libre et des cliquets d'armage. L'une embraye en rotation horaire, l'autre en anti-horaire, transmettant une rotation toujours unidirectionnelle au pignon d'armage.",
         oil: "Moebius Lubeta V105 exclusivement (trempage 15 min, séchage). HUILE INTERDITE.",
         ebat: "Ébat d'engrènement libre sans gommage",
-        nihs: "NIHS 27-01"
+        nihs: "NIHS 27-01",
+        view: "auto"
       },
       barillet: {
         title: "03. Barillet Automatique à Bride Glissante",
@@ -462,7 +484,8 @@
         desc: "Contrairement au calibre manuel 6497 qui possède un crochet rigide, l'ETA 2824-2 possède une bride glissante élastique. Dès que le ressort atteint sa pleine charge, la bride dérape contre la paroi huilée du tambour pour empêcher la rupture du ressort.",
         oil: "Moebius 8217 ou Klüber P125 sur 3 points équidistants de la paroi",
         ebat: "Ébat de hauteur de barillet : 0.03 à 0.06 mm",
-        nihs: "NIHS 12-01"
+        nihs: "NIHS 12-01",
+        view: "hero"
       },
       rouage: {
         title: "04. Rouage de Finissage & Seconde Directe",
@@ -470,7 +493,8 @@
         desc: "Train d'engrenages à haut rendement. La roue de seconde est située au centre direct de la platine pour entraîner directement la trotteuse des secondes sans sautillement ni ressort de friction.",
         oil: "Pivots lourds : Moebius HP-1300 • Pivots rapides : Moebius 9010",
         ebat: "Ébat axial des mobiles : 0.02 à 0.04 mm",
-        nihs: "NIHS 15-02"
+        nihs: "NIHS 15-02",
+        view: "hero"
       },
       echappement: {
         title: "05. Échappement Suisse 28’800 A/h (4 Hz)",
@@ -478,7 +502,8 @@
         desc: "L'échappement cadence 8 alternances par seconde (4 Hz). À cette fréquence élevée, la durée de contact de l'impulsion n'est que de 5 millisecondes, assurant une résistance supérieure aux chocs et perturbations de marche.",
         oil: "Moebius 9415 (1/3 de goutte sur 5 levées consécutives)",
         ebat: "Ébat de dard & cornes d'ancre : 0.015 à 0.03 mm",
-        nihs: "NIHS 18-05"
+        nihs: "NIHS 18-05",
+        view: "escapement"
       },
       balancier: {
         title: "06. Balancier Glucydur & Raquetterie Etachron",
@@ -486,7 +511,8 @@
         desc: "L'organe réglant intègre le système breveté ETACHRON. Le porte-piton mobile et la raquette à goupilles permettent un ajustement micrométrique immédiat du repère (battement égal) et de l'isochronisme sans plier le spiral.",
         oil: "Contre-pivots Incabloc : Moebius 9010 (bulle occupant 2/3 de la table)",
         ebat: "Jeu de spiral entre goupilles : < 0.005 mm",
-        nihs: "NIHS 20-03"
+        nihs: "NIHS 20-03",
+        view: "hero"
       },
       dateur: {
         title: "07. Quantième & Sautoir de Date Instantané",
@@ -494,13 +520,222 @@
         desc: "Le mécanisme de calendrier comporte une roue entraîneuse munie d'un doigt monté sur ressort hélicoïdal. Pendant 2 heures, le ressort emmagasine l'énergie, puis libère instantanément la tension sur l'étoile du disque de date à minuit.",
         oil: "Graisse Moebius 9504 sur le bec du sautoir de date",
         ebat: "Planéité de disque de date < 0.05 mm sur 360°",
-        nihs: "NIHS 32-02"
+        nihs: "NIHS 32-02",
+        view: "date"
       }
     };
 
-    let showDialState = false;
+    let currentActiveView = 'hero';
+    let isAutoRotating = false;
+    let autoRotInterval = null;
+    let isMotionPaused = false;
+    window.SHOW_DIAL = false; // Expose authentic movement by default
 
-    function selectOrgan(id) {
+    function getActiveDrawer() {
+      if (currentActiveView === 'hero' && window.heroDrawer) return window.heroDrawer[0];
+      if (currentActiveView === 'auto' && window.autoDrawer) return window.autoDrawer[0];
+      if (currentActiveView === 'date' && window.dateDrawer) return window.dateDrawer[0];
+      if (currentActiveView === 'escapement' && window.escapementDrawer) return window.escapementDrawer[0];
+      return window.heroDrawer ? window.heroDrawer[0] : null;
+    }
+
+    /* --- EXPLODED VIEW SLIDER Z (0% to 100%) --- */
+    const explodeRange = document.getElementById('explodeRange');
+    const explodePercent = document.getElementById('explodePercent');
+
+    explodeRange.addEventListener('input', (e) => {
+      const val = parseFloat(e.target.value) / 100;
+      explodePercent.innerText = `${Math.round(val * 100)}%`;
+
+      const drawer = getActiveDrawer();
+      if (drawer && drawer.set_arg0) {
+        drawer.set_arg0(val);
+        drawer.request_repaint();
+      }
+    });
+
+    /* --- SWITCH SCENE VIEWS --- */
+    function switchView(view) {
+      currentActiveView = view;
+
+      document.querySelectorAll('[id^="btnView-"]').forEach(btn => {
+        btn.className = "px-3 py-1 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white transition";
+      });
+      const activeBtn = document.getElementById(`btnView-${view}`);
+      if (activeBtn) activeBtn.className = "px-3 py-1 rounded-xl bg-amber-500 text-slate-950 font-bold transition";
+
+      // Hide all views, activate target
+      ['hero', 'auto', 'date', 'escapement'].forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        if (el) {
+          if (v === view) {
+            el.className = "tab-view active-view flex flex-col justify-center";
+          } else {
+            el.className = "tab-view hidden-view flex-col justify-center";
+          }
+        }
+      });
+
+      const titleMap = {
+        'hero': 'Calibre ETA Complet 3D',
+        'auto': 'Rotor & Roues Inverseuses (Automatisme)',
+        'date': 'Mécanisme de Dateur & Sautoir',
+        'escapement': 'Échappement Suisse 28’800 A/h'
+      };
+      document.getElementById('activeAngleName').innerText = titleMap[view] || 'Vue 3D';
+
+      // Reset explode slider for new view
+      explodeRange.value = 0;
+      explodePercent.innerText = '0%';
+
+      const drawer = getActiveDrawer();
+      if (drawer) {
+        drawer.set_visible(true);
+        drawer.request_repaint();
+      }
+    }
+
+    /* --- 3D CAMERA ORIENTATIONS --- */
+    function setCameraOrientation(preset) {
+      const drawer = getActiveDrawer();
+      if (!drawer) return;
+
+      document.querySelectorAll('[id^="btnCam-"]').forEach(btn => {
+        btn.className = "px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-amber-500 hover:text-slate-950 transition font-semibold";
+      });
+      const activeBtn = document.getElementById(`btnCam-${preset}`);
+      if (activeBtn) activeBtn.className = "px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 font-bold transition";
+
+      const pi = Math.PI;
+      if (preset === 'dial') {
+        // Face cadran à plat
+        drawer.set_rot(mat3_mul(rot_z_mat3(-0.2), mat3_mul(rot_x_mat3(-0.3), mat3_mul(rot_y_mat3(-0.7), rot_z_mat3(-pi * 0.5)))));
+      } else if (preset === 'bridges') {
+        // Côté ponts et masse oscillante (180° flip)
+        const baseRot = mat3_mul(rot_z_mat3(-0.2), mat3_mul(rot_x_mat3(-0.3), mat3_mul(rot_y_mat3(-0.7), rot_z_mat3(-pi * 0.5))));
+        drawer.set_rot(mat3_mul(baseRot, rot_y_mat3(pi)));
+      } else if (preset === 'profile') {
+        // Vue tranche & profil
+        const baseRot = mat3_mul(rot_z_mat3(-0.2), mat3_mul(rot_x_mat3(-0.3), mat3_mul(rot_y_mat3(-0.7), rot_z_mat3(-pi * 0.5))));
+        drawer.set_rot(mat3_mul(baseRot, rot_x_mat3(pi * 0.45)));
+      } else if (preset === 'default') {
+        drawer.reset();
+      }
+      drawer.request_repaint();
+    }
+
+    function toggleAutoRotate() {
+      isAutoRotating = !isAutoRotating;
+      const btn = document.getElementById('btnAutoRot');
+      if (isAutoRotating) {
+        btn.innerText = "Rotation Auto : ON";
+        btn.classList.add('text-amber-500', 'border-amber-500');
+        autoRotInterval = setInterval(() => {
+          const drawer = getActiveDrawer();
+          if (drawer && drawer.get_rot) {
+            const curRot = drawer.get_rot();
+            drawer.set_rot(mat3_mul(curRot, rot_z_mat3(0.012)));
+          }
+        }, 30);
+      } else {
+        btn.innerText = "Rotation Auto : OFF";
+        btn.classList.remove('text-amber-500', 'border-amber-500');
+        if (autoRotInterval) clearInterval(autoRotInterval);
+      }
+    }
+
+    /* --- TOGGLE DIAL VISIBILITY --- */
+    function toggleDialVisibility() {
+      window.SHOW_DIAL = !window.SHOW_DIAL;
+      document.getElementById('dialStateText').innerText = window.SHOW_DIAL ? "Masquer le Cadran" : "Afficher le Cadran";
+      const drawer = getActiveDrawer();
+      if (drawer) drawer.request_repaint();
+    }
+
+    /* --- PLAY / PAUSE OSCILLATION --- */
+    function toggleMotion() {
+      isMotionPaused = !isMotionPaused;
+      document.getElementById('motionIcon').innerText = isMotionPaused ? "▶" : "⏸";
+      document.getElementById('motionText').innerText = isMotionPaused ? "Reprendre Battement" : "Pause Battement";
+      if (window.animated_drawers) {
+        window.animated_drawers.forEach(d => d.set_paused(isMotionPaused));
+      }
+    }
+
+    /* --- ADVANCE TIME / DATE JUMP --- */
+    function advanceTime(secondsToAdd) {
+      if (window.heroDrawer && window.heroDrawer[0]) {
+        const sim = window.heroDrawer[0].get_sim();
+        if (sim) {
+          sim[0] += secondsToAdd;
+          window.heroDrawer[0].request_repaint();
+
+          // Update date display
+          const display = document.getElementById('currentDateDisplay');
+          let cur = parseInt(display.innerText);
+          cur = (cur % 31) + 1;
+          display.innerText = cur < 10 ? `0${cur}` : cur;
+          display.classList.add('scale-125', 'text-rose-500');
+          setTimeout(() => display.classList.remove('scale-125', 'text-rose-500'), 300);
+        }
+      }
+    }
+
+    /* --- TIRETTE / STEM POSITIONS --- */
+    function setAtelierStem(pos) {
+      document.querySelectorAll('[id^="stemPos"]').forEach(b => {
+        b.className = "p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-amber-400 text-center transition font-mono-tech text-xs";
+      });
+      const badge = document.getElementById('stemStateBadge');
+      const desc = document.getElementById('stemDescription');
+      const actionArea = document.getElementById('stemActionArea');
+      const activeBtn = document.getElementById(`stemPos${pos}`);
+      activeBtn.className = "p-2.5 rounded-xl border-2 border-amber-500 bg-amber-500/10 text-amber-700 dark:text-amber-300 font-bold text-center transition font-mono-tech text-xs";
+
+      if (pos === 0) {
+        badge.innerText = "Pos. 0 : Remontage";
+        badge.className = "text-[11px] font-mono-tech font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-300 border border-amber-500/30";
+        desc.innerHTML = "Le pignon coulant est plaqué contre le <strong>pignon de remontoir</strong>. Tourner la tige arme directement le ressort de barillet sans agir sur les aiguilles.";
+        actionArea.innerHTML = `
+          <button onclick="actionRemontageManuel()" class="w-full py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs font-mono-tech transition flex items-center justify-center gap-2 shadow-sm">
+            <span>↻ Armer le Barillet (Remontage Manuel)</span>
+          </button>
+        `;
+      } else if (pos === 1) {
+        badge.innerText = "Pos. 1 : Date Rapide";
+        badge.className = "text-[11px] font-mono-tech font-bold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-300 border border-rose-500/30";
+        desc.innerHTML = "La tirette déplace le pignon coulant au cran intermédiaire. La rotation de la couronne entraîne le <strong>correcteur de date</strong> qui fait avancer le quantième d'un cran par tour.";
+        actionArea.innerHTML = `
+          <button onclick="advanceTime(24 * 3600)" class="w-full py-2 px-3 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs font-mono-tech transition flex items-center justify-center gap-2 shadow-sm">
+            <span>⚡ Correction Rapide de Date (+1J)</span>
+          </button>
+        `;
+      } else if (pos === 2) {
+        badge.innerText = "Pos. 2 : Mise à l'Heure & Stop";
+        badge.className = "text-[11px] font-mono-tech font-bold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-300 border border-blue-500/30";
+        desc.innerHTML = "Le levier de stop-seconde vient bloquer le balancier. Le pignon coulant engrène avec le <strong>rouage de minuterie</strong> (chaussée et roue de minuterie) pour régler précisément l'heure.";
+        actionArea.innerHTML = `
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="advanceTime(900)" class="py-2 px-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs font-mono-tech transition text-center shadow-sm">
+              <span>+15 min</span>
+            </button>
+            <button onclick="advanceTime(3600)" class="py-2 px-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs font-mono-tech transition text-center shadow-sm">
+              <span>+1 Heure</span>
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    function actionRemontageManuel() {
+      advanceTime(60);
+      alert("Le rochet de barillet tourne : le ressort Nivaflex est armé.");
+    }
+
+    function renderOrganCard(id) {
+      const organ = ORGANS[id];
+      if (!organ) return;
+
       document.querySelectorAll('[id^="tab-"]').forEach(btn => {
         btn.className = "p-2 rounded-xl text-left border border-slate-200 dark:border-slate-800 hover:border-amber-400 transition text-xs font-mono-tech";
       });
@@ -508,9 +743,6 @@
       if (activeBtn) {
         activeBtn.className = "p-2 rounded-xl text-left border-2 border-amber-500 bg-amber-500/10 text-amber-700 dark:text-amber-300 font-bold transition text-xs font-mono-tech";
       }
-
-      const organ = ORGANS[id];
-      if (!organ) return;
 
       const card = document.getElementById('organCard');
       card.innerHTML = `
@@ -539,72 +771,11 @@
       `;
     }
 
-    function switchView(view) {
-      document.querySelectorAll('[id^="btnView-"]').forEach(btn => {
-        btn.className = "px-2.5 py-1 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white transition";
-      });
-      document.getElementById(`btnView-${view}`).className = "px-2.5 py-1 rounded-xl bg-amber-500 text-slate-950 font-bold transition";
-
-      // Hide and activate views
-      ['hero', 'auto', 'date', 'escapement'].forEach(v => {
-        const el = document.getElementById(`view-${v}`);
-        if (el) {
-          if (v === view) {
-            el.className = "tab-view active-view flex flex-col justify-center";
-          } else {
-            el.className = "tab-view hidden-view flex-col justify-center";
-          }
-        }
-      });
-
-      // Update angle title
-      const titleMap = {
-        'hero': 'Calibre ETA Complet 3D',
-        'auto': 'Rotor & Roues Inverseuses (Automatisme)',
-        'date': 'Mécanisme de Dateur & Sautoir',
-        'escapement': 'Échappement Suisse 28’800 A/h'
-      };
-      document.getElementById('activeAngleName').innerText = titleMap[view] || 'Vue 3D';
-
-      // Repaint active drawers
-      if (window.all_drawers) {
-        window.all_drawers.forEach(d => {
-          d.set_visible(true);
-          d.request_repaint();
-        });
-      }
-    }
-
-    function toggleDial() {
-      showDialState = !showDialState;
-      document.getElementById('dialStateText').innerText = showDialState ? "Remettre le Cadran" : "Retirer le Cadran";
-      // Repaint hero
-      if (window.heroDrawer && window.heroDrawer[0]) {
-        window.heroDrawer[0].request_repaint();
-      }
-    }
-
-    function setAtelierStem(pos) {
-      document.querySelectorAll('[id^="stemPos"]').forEach(b => {
-        b.className = "p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-amber-400 text-center transition font-mono-tech text-xs";
-      });
-      const badge = document.getElementById('stemStateBadge');
-      const desc = document.getElementById('stemDescription');
-      const activeBtn = document.getElementById(`stemPos${pos}`);
-      activeBtn.className = "p-2.5 rounded-xl border-2 border-amber-500 bg-amber-500/10 text-amber-700 dark:text-amber-300 font-bold text-center transition font-mono-tech text-xs";
-
-      if (pos === 0) {
-        badge.innerText = "Pos. 0 : Remontage Manuel";
-        badge.className = "text-[11px] font-mono-tech font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-300 border border-amber-500/30";
-        desc.innerHTML = "Le pignon coulant est plaqué contre le <strong>pignon de remontoir</strong>. La rotation de la tige arme directement le ressort de barillet.";
-      } else if (pos === 1) {
-        badge.innerText = "Pos. 1 : Correction Rapide de Date";
-        badge.className = "text-[11px] font-mono-tech font-bold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-300 border border-rose-500/30";
-        desc.innerHTML = "La tirette déplace le pignon coulant au cran intermédiaire. La rotation de la couronne entraîne le <strong>correcteur de date</strong> qui fait avancer le quantième d'un cran par tour.";
-      } else if (pos === 2) {
-        badge.innerText = "Pos. 2 : Mise à l'Heure & Stop-Seconde";
-        badge.className = "text-[11px] font-mono-tech font-bold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-300 border border-blue-500/30";
-        desc.innerHTML = "Le levier de stop-seconde vient bloquer le balancier. Le pignon coulant engrène avec le <strong>rouage de minuterie</strong> (chaussée et roue de minuterie) pour régler précisément l'heure.";
+    function selectOrgan(id) {
+      renderOrganCard(id);
+      const organ = ORGANS[id];
+      if (organ && organ.view && organ.view !== currentActiveView) {
+        switchView(organ.view);
       }
     }
 
@@ -613,9 +784,10 @@
       document.documentElement.classList.toggle('dark');
     });
 
-    // Default init
+    // Default initialization
     window.addEventListener('load', () => {
-      selectOrgan('rotor');
+      renderOrganCard('rotor');
+      switchView('hero');
       setAtelierStem(0);
     });
   </script>

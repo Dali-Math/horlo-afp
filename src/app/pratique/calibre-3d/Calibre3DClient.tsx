@@ -155,13 +155,18 @@ export default function CalibreEcorchePage() {
 
             <span className="w-px h-5 bg-[#D7D0C4] dark:bg-[#2a2f36] hidden sm:inline" />
 
-            <div className="flex items-center gap-2">
-              <span className="font-serif font-bold text-base sm:text-lg text-[#171717] dark:text-[#f1ede5] tracking-wide">
-                Master Calibre 3D
+            {/* Commutateur de Calibres Suisses */}
+            <div className="flex items-center bg-[#F3EFE7] dark:bg-[#171b21] p-1 rounded-xl text-xs font-mono border border-[#D7D0C4] dark:border-[#2a2f36]">
+              <span className="px-2.5 py-1 rounded-lg bg-[#9C7A43] text-white font-bold shadow-sm">
+                ETA 6497-1 (Manuel)
               </span>
-              <span className="text-[10px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-[#9C7A43]/15 text-[#9C7A43] border border-[#9C7A43]/30">
-                ETA 6497-1
-              </span>
+              <Link
+                href="/pratique/calibre-2824"
+                className="px-2.5 py-1 rounded-lg text-[#57534E] dark:text-[#aaa49a] hover:text-[#9C7A43] dark:hover:text-white transition flex items-center gap-1 font-semibold"
+              >
+                <span>ETA 2824-2 (Auto)</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              </Link>
             </div>
           </div>
 

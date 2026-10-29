@@ -200,20 +200,41 @@ function GuidedPathwaysSection() {
             </p>
           </div>
 
-          <div className="md:col-span-5 flex flex-col sm:flex-row md:flex-col gap-3 font-mono text-xs">
+          <div className="md:col-span-5 flex flex-col gap-2.5 font-mono text-xs">
             <Link
               href="/pratique/calibre-3d"
-              className="p-3.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 hover:border-amber-500/50 transition flex items-center justify-between group/link"
+              className="p-3 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 hover:border-amber-500/50 transition flex items-center justify-between group/link"
             >
-              <span className="font-semibold text-slate-100">Écorché 3D des Calibres</span>
+              <div className="flex items-center gap-2.5">
+                <span className="w-2 h-2 rounded-full bg-amber-400" />
+                <div>
+                  <div className="font-bold text-slate-100">Écorché 3D • ETA 6497-1</div>
+                  <div className="text-[10px] text-slate-400">Calibre École • Remontage Manuel 18’000 A/h</div>
+                </div>
+              </div>
               <ChevronRight className="w-4 h-4 text-amber-400 group-hover/link:translate-x-1 transition-transform" />
             </Link>
+
+            <Link
+              href="/pratique/calibre-2824"
+              className="p-3 rounded-xl bg-gradient-to-r from-amber-500/10 via-slate-800 to-slate-800 hover:bg-slate-700 border border-amber-500/40 hover:border-amber-400 transition flex items-center justify-between group/link shadow-sm"
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <div>
+                  <div className="font-bold text-amber-300">Écorché 3D • ETA 2824-2</div>
+                  <div className="text-[10px] text-slate-300">Automatique • Rotor, Quantième 28’800 A/h</div>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-amber-400 group-hover/link:translate-x-1 transition-transform" />
+            </Link>
+
             <Link
               href="/theorie/complications"
-              className="p-3.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 hover:border-amber-500/50 transition flex items-center justify-between group/link"
+              className="p-2.5 rounded-xl bg-slate-800/60 hover:bg-slate-700 border border-slate-700/80 hover:border-slate-600 transition flex items-center justify-between group/link"
             >
-              <span className="font-semibold text-slate-100">Grandes Complications</span>
-              <ChevronRight className="w-4 h-4 text-amber-400 group-hover/link:translate-x-1 transition-transform" />
+              <span className="text-slate-300 text-[11px]">Grandes Complications Suisses</span>
+              <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover/link:translate-x-1 transition-transform" />
             </Link>
           </div>
         </div>
