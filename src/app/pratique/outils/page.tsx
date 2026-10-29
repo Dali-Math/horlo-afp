@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import BenchPressSimulator from '../laboratoire/BenchPressSimulator';
@@ -109,23 +108,6 @@ export default function PratiqueOutilsPage() {
   const [bladeProfileValue, setBladeProfileValue] = useState<number>(55);
   const [tweezerProfileValue, setTweezerProfileValue] = useState<number>(85);
   const [loupe10x, setLoupe10x] = useState<boolean>(false);
-  const [mounted, setMounted] = useState<boolean>(false);
-  const [isEtabliModalOpen, setIsEtabliModalOpen] = useState<boolean>(false);
-  const [etabliZoom, setEtabliZoom] = useState<1 | 2 | 5 | 10>(1);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsEtabliModalOpen(false);
-    };
-    if (isEtabliModalOpen) {
-      window.addEventListener('keydown', handleKeyDown);
-      return () => window.removeEventListener('keydown', handleKeyDown);
-    }
-  }, [isEtabliModalOpen]);
 
   const [quizAnswers, setQuizAnswers] = useState<{ [key: number]: number | null }>({
     0: null,
@@ -311,43 +293,20 @@ export default function PratiqueOutilsPage() {
               </p>
             </div>
 
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                onClick={() => {
-                  setEtabliZoom(1);
-                  setIsEtabliModalOpen(true);
-                }}
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs sm:text-sm font-bold shadow-lg shadow-amber-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
-              >
-                <ZoomIn className="w-4 h-4" />
-                <span>Loupe 10x d&apos;Atelier</span>
-              </button>
-            </div>
+
           </div>
 
           {/* Image Canvas Container */}
           <div className="p-4 sm:p-6 lg:p-8 bg-slate-100/50 dark:bg-slate-950/60">
-            <div 
-              onClick={() => {
-                setEtabliZoom(1);
-                setIsEtabliModalOpen(true);
-              }}
-              className="group relative w-full rounded-2xl overflow-hidden border border-slate-300 dark:border-slate-800 bg-white dark:bg-black/40 shadow-inner cursor-pointer"
-            >
-              <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] max-h-[620px]">
+            <div className="relative w-full rounded-2xl overflow-hidden border border-slate-300 dark:border-slate-800 bg-white dark:bg-black/40 shadow-inner">
+              <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] max-h-[680px]">
                 <Image
                   src="/images/outils/etabli_horloger_ergonomie_suisse.jpg"
                   alt="Établi d'horloger suisse - Organisation anatomique et outillage de précision"
                   fill
-                  className="object-contain p-2 sm:p-4 transition-transform duration-500 group-hover:scale-[1.01]"
+                  className="object-contain p-2 sm:p-4"
                   priority
                 />
-              </div>
-
-              {/* Hover pill */}
-              <div className="absolute bottom-4 right-4 z-10 px-3.5 py-1.5 rounded-xl bg-black/75 hover:bg-black text-amber-300 border border-amber-500/40 text-xs font-bold backdrop-blur-md flex items-center gap-2 transition-all">
-                <ZoomIn className="w-3.5 h-3.5" />
-                <span>Agrandir Loupe 10x</span>
               </div>
             </div>
 
@@ -1152,94 +1111,6 @@ export default function PratiqueOutilsPage() {
           </div>
         </section>
       </main>
-      {/* Modal Loupe 10x d'Atelier Établi */}
-      {mounted && isEtabliModalOpen && createPortal(
-        <div 
-          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
-          onClick={() => setIsEtabliModalOpen(false)}
-        >
-          <div 
-            className="relative w-full max-w-6xl max-h-[92vh] flex flex-col bg-white dark:bg-slate-900 rounded-3xl border border-slate-300 dark:border-slate-800 shadow-2xl overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header Modal */}
-            <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-400">
-                  <ZoomIn className="w-4 h-4" />
-                </div>
-                <div>
-                  <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
-                    Loupe d&apos;Inspection 10x · Poste & Ergonomie d&apos;Atelier
-                  </div>
-                  <div className="font-serif text-sm sm:text-base font-bold text-slate-900 dark:text-white">
-                    Organisation Anatomique de l&apos;Établi d&apos;Horloger
-                  </div>
-                </div>
-              </div>
-
-              {/* Zoom Buttons & Close */}
-              <div className="flex items-center gap-2">
-                <div className="flex items-center bg-slate-200/70 dark:bg-slate-800 rounded-lg p-0.5 text-xs font-mono font-bold">
-                  <span className="px-2 text-slate-500 dark:text-slate-400 text-[10px] hidden sm:inline">Zoom :</span>
-                  {([1, 2, 5, 10] as const).map((z) => (
-                    <button
-                      key={z}
-                      onClick={() => setEtabliZoom(z)}
-                      className={`px-2.5 py-1 rounded-md transition-all ${
-                        etabliZoom === z
-                          ? 'bg-amber-500 text-slate-950 shadow-sm font-black'
-                          : 'text-slate-700 dark:text-slate-300 hover:text-amber-500'
-                      }`}
-                    >
-                      {z}x
-                    </button>
-                  ))}
-                </div>
-
-                <button
-                  onClick={() => setIsEtabliModalOpen(false)}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ml-2"
-                  aria-label="Fermer"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Scrollable / Zoomable Image Canvas */}
-            <div className="relative flex-1 overflow-auto bg-[#070b12] p-4 flex items-center justify-center min-h-[360px]">
-              <div 
-                className="transition-transform duration-300 ease-out origin-center cursor-grab active:cursor-grabbing max-w-full"
-                style={{ transform: `scale(${etabliZoom})` }}
-              >
-                <Image
-                  src="/images/outils/etabli_horloger_ergonomie_suisse.jpg"
-                  alt="Détails haute définition de l'établi d'horloger"
-                  width={1400}
-                  height={900}
-                  className="max-h-[75vh] w-auto object-contain rounded-xl shadow-2xl"
-                  priority
-                />
-              </div>
-            </div>
-
-            {/* Footer Modal */}
-            <div className="px-5 py-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-600 dark:text-slate-400 gap-2">
-              <div>
-                <strong>Disposition d&apos;établi suisse :</strong> Accoudoirs ergonomiques, poste central non-glissant, séparation nette des zones sèches et lubrification.
-              </div>
-              <button
-                onClick={() => setIsEtabliModalOpen(false)}
-                className="px-4 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold hover:bg-amber-400 transition-colors shrink-0"
-              >
-                Retour à l&apos;établi
-              </button>
-            </div>
-          </div>
-        </div>,
-        document.body
-      )}
     </div>
   );
 }
