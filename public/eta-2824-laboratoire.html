@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laboratoire 3D & Cinématique — Calibre ETA 2824-2 Automatique | HorloLearn</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            gold: { 400: '#f5c35b', 500: '#e5a93c', 600: '#c68a26' },
+            rhodium: { 300: '#dbe2ea', 500: '#94a3b8', 700: '#475569' },
+            steel: { 500: '#64748b', 600: '#334155', 800: '#1e293b' },
+            blued: { 500: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a' },
+            ruby: { 500: '#f43f5e', 600: '#e11d48', 700: '#be123c' }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .font-serif-luxury { font-family: 'Cinzel', serif; }
+    .font-mono-tech { font-family: 'JetBrains Mono', monospace; }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
+    .dark ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+    ::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.4); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(212,175,55,0.7); }
+
+    /* Precision Glass Panel */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+    .dark .glass-panel {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(51, 65, 85, 0.6);
+    }
+
+    .pulse-ruby {
+      box-shadow: 0 0 15px rgba(244, 63, 94, 0.6);
+    }
+  </style>
+</head>
+<body class="bg-slate-100 dark:bg-[#070b14] text-slate-800 dark:text-slate-100 transition-colors duration-300 min-h-screen flex flex-col overflow-x-hidden">
+
+  <!-- TOP HEADER WORKBENCH -->
+  <header class="glass-panel sticky top-0 z-50 px-4 py-3 border-b flex flex-wrap items-center justify-between gap-3 shadow-sm">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center shadow-lg shadow-amber-500/20 text-slate-950 font-bold font-serif-luxury text-lg">
+        Ω
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-mono-tech px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-semibold uppercase tracking-wider">
+            Norme NIHS 91-10 • Laboratoire d'Atelier
+          </span>
+          <span class="text-[11px] font-mono-tech text-slate-500 dark:text-slate-400 hidden sm:inline">28’800 A/h (4 Hz) • 25 Rubis</span>
+        </div>
+        <h1 class="text-base sm:text-lg font-bold font-serif-luxury tracking-wide text-slate-900 dark:text-white">
+          ETA 2824-2 Automatique & Dateur Instantané
+        </h1>
+      </div>
+    </div>
+
+    <!-- Right Quick Controls -->
+    <div class="flex items-center gap-2">
+      <!-- Calibre Selector Switcher -->
+      <div class="flex items-center bg-slate-200/80 dark:bg-slate-800/80 p-1 rounded-xl text-xs font-mono-tech border border-slate-300 dark:border-slate-700">
+        <span class="px-2.5 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition cursor-pointer" onclick="alert('Le 6497-1 est consultable sur /pratique/calibre-3d')">ETA 6497-1</span>
+        <span class="px-2.5 py-1 rounded-lg bg-amber-500 text-slate-950 font-bold shadow-sm">ETA 2824-2</span>
+      </div>
+
+      <!-- Theme Switcher -->
+      <button id="themeToggle" class="p-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-amber-500 transition border border-slate-300 dark:border-slate-700" title="Basculer Thème Clair/Sombre">
+        <svg id="sunIcon" class="w-4 h-4 hidden dark:block text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        <svg id="moonIcon" class="w-4 h-4 block dark:hidden text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN WORKBENCH GRID -->
+  <main class="flex-1 max-w-[1700px] w-full mx-auto p-3 sm:p-5 grid grid-cols-1 lg:grid-cols-12 gap-4">
+
+    <!-- LEFT COLUMN: 3D INTERACTIVE VIEWER (8 cols) -->
+    <div class="lg:col-span-8 flex flex-col gap-3">
+      
+      <!-- 3D Canvas Box -->
+      <div class="relative w-full h-[540px] sm:h-[620px] rounded-3xl overflow-hidden glass-panel border shadow-2xl flex flex-col">
+        
+        <!-- Viewer HUD Toolbar -->
+        <div class="absolute top-3 left-3 right-3 z-10 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+          <div class="pointer-events-auto flex items-center gap-1.5 bg-slate-900/80 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-slate-700/60 text-xs font-mono-tech text-white shadow-lg">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="activeAngleName" class="font-bold text-amber-400">Vue Globale 3D</span>
+            <span class="text-slate-400 text-[11px]">• Clic/Glisser pour pivoter</span>
+          </div>
+
+          <!-- Quick Camera Angles -->
+          <div class="pointer-events-auto flex items-center gap-1 bg-slate-900/80 backdrop-blur-md p-1 rounded-2xl border border-slate-700/60 text-xs font-mono-tech text-white shadow-lg">
+            <button onclick="setCameraView('iso')" class="px-2.5 py-1 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white transition">Iso 3D</button>
+            <button onclick="setCameraView('top')" class="px-2.5 py-1 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white transition">Ponts</button>
+            <button onclick="setCameraView('dial')" class="px-2.5 py-1 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white transition">Cadran & Date</button>
+            <button onclick="setCameraView('escapement')" class="px-2.5 py-1 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white transition">Échappement</button>
+            <button onclick="setCameraView('rotor')" class="px-2.5 py-1 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 transition">Rotor</button>
+          </div>
+        </div>
+
+        <!-- Canvas Container -->
+        <div id="canvasContainer" class="w-full flex-1 cursor-grab active:cursor-grabbing bg-gradient-to-b from-slate-900 via-[#0a0f1d] to-[#050811]"></div>
+
+        <!-- 3D Viewer Bottom Bar & Explosion Slider -->
+        <div class="glass-panel p-3 border-t flex flex-wrap items-center justify-between gap-3 text-xs font-mono-tech z-10">
+          
+          <!-- Exploded View Slider -->
+          <div class="flex items-center gap-3 flex-1 min-w-[260px]">
+            <span class="font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+              Vue Éclatée Z :
+            </span>
+            <input type="range" id="explodeSlider" min="0" max="100" value="0" class="w-full accent-amber-500 cursor-pointer h-2 bg-slate-300 dark:bg-slate-700 rounded-lg">
+            <span id="explodeVal" class="w-10 font-bold text-amber-600 dark:text-amber-400">0%</span>
+          </div>
+
+          <!-- Animation Play / Speed Controls -->
+          <div class="flex items-center gap-2">
+            <button id="toggleMotionBtn" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold transition flex items-center gap-1.5 shadow-sm">
+              <span id="motionIcon">⏸</span>
+              <span id="motionText">Pause Battement</span>
+            </button>
+            <button onclick="resetCamera()" class="p-1.5 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-amber-500 transition border border-slate-300 dark:border-slate-700" title="Recentrer">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE ATELIER CONTROLS (TIRETTE & DATEUR) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        
+        <!-- MODULE 1 : COMMANDE DE LA TIGE & TIRETTE (3 POSITIONS) -->
+        <div class="glass-panel p-4 rounded-3xl border shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-bold font-mono-tech uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+              Tige & Tirette • 3 Positions
+            </h3>
+            <span id="stemStateBadge" class="text-[11px] font-mono-tech font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-300 border border-amber-500/30">
+              Pos. 0 : Remontage Manuel
+            </span>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 text-xs font-mono-tech">
+            <button onclick="setStemPosition(0)" id="stemPos0" class="p-2.5 rounded-xl border-2 border-amber-500 bg-amber-500/10 text-amber-700 dark:text-amber-300 font-bold text-center transition">
+              <div class="text-[10px] text-slate-500 dark:text-slate-400">Position 0</div>
+              Remontage
+            </button>
+            <button onclick="setStemPosition(1)" id="stemPos1" class="p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-amber-400 text-center transition">
+              <div class="text-[10px] text-slate-500 dark:text-slate-400">Position 1</div>
+              Date Rapide
+            </button>
+            <button onclick="setStemPosition(2)" id="stemPos2" class="p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-amber-400 text-center transition">
+              <div class="text-[10px] text-slate-500 dark:text-slate-400">Position 2</div>
+              Mise à l'Heure
+            </button>
+          </div>
+
+          <p id="stemDescription" class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-light">
+            Le pignon coulant est engrené avec le pignon de remontoir. Tourner la couronne arme directement le ressort de barillet.
+          </p>
+        </div>
+
+        <!-- MODULE 2 : DISQUE DE DATE & SAUT INSTANTANÉ -->
+        <div class="glass-panel p-4 rounded-3xl border shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-bold font-mono-tech uppercase tracking-wider text-rose-600 dark:text-rose-400 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+              Quantième Instantané (24h)
+            </h3>
+            <div class="flex items-center gap-1 font-mono-tech text-xs bg-slate-900 text-white px-2.5 py-0.5 rounded-full border border-slate-700">
+              <span>Date au guichet :</span>
+              <span id="currentDateDisplay" class="font-bold text-amber-400 text-sm">29</span>
+            </div>
+          </div>
+
+          <div class="flex gap-2">
+            <button onclick="triggerDateJump()" class="flex-1 py-2.5 px-3 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white font-bold text-xs font-mono-tech transition shadow-md flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              Déclencher le Saut de Minuit
+            </button>
+            <button onclick="stepDate(1)" class="px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-800 text-xs font-mono-tech transition" title="Avancer d'un jour">+1J</button>
+          </div>
+
+          <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-light">
+            Le doigt élastique de la roue entraîneuse arme le sautoir de quantième. À minuit pile, le sautoir libère l'énergie en moins de <strong>1/1000e de seconde</strong>.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: FICHE TECHNIQUE & PROTOCOLE MOEBIUS D'ATELIER (4 cols) -->
+    <div class="lg:col-span-4 flex flex-col gap-3">
+      
+      <!-- Organ Selector Tabs -->
+      <div class="glass-panel p-4 rounded-3xl border shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+          <span class="text-xs font-mono-tech font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+            Organes Horlogers Suisses
+          </span>
+          <span class="text-[11px] font-mono-tech text-slate-500">Sélectionnez une pièce</span>
+        </div>
+
+        <!-- Buttons list -->
+        <div class="grid grid-cols-2 gap-1.5 font-mono-tech text-xs">
+          <button onclick="selectOrgan('rotor')" id="tab-rotor" class="p-2 rounded-xl text-left border-2 border-amber-500 bg-amber-500/10 text-amber-700 dark:text-amber-300 font-bold transition">
+            01. Rotor Automatique
+          </button>
+          <button onclick="selectOrgan('inverseurs')" id="tab-inverseurs" class="p-2 rounded-xl text-left border border-slate-200 dark:border-slate-800 hover:border-amber-400 transition">
+            02. Roues Inverseuses
+          </button>
+          <button onclick="selectOrgan('barillet')" id="tab-barillet" class="p-2 rounded-xl text-left border border-slate-200 dark:border-slate-800 hover:border-amber-400 transition">
+            03. Barillet & Bride
+          </button>
+          <button onclick="selectOrgan('rouage')" id="tab-rouage" class="p-2 rounded-xl text-left border border-slate-200 dark:border-slate-800 hover:border-amber-400 transition">
+            04. Rouage de Seconde
+          </button>
+          <button onclick="selectOrgan('echappement')" id="tab-echappement" class="p-2 rounded-xl text-left border border-slate-200 dark:border-slate-800 hover:border-amber-400 transition">
+            05. Échappement 4 Hz
+          </button>
+          <button onclick="selectOrgan('balancier')" id="tab-balancier" class="p-2 rounded-xl text-left border border-slate-200 dark:border-slate-800 hover:border-amber-400 transition">
+            06. Balancier & Etachron
+          </button>
+          <button onclick="selectOrgan('dateur')" id="tab-dateur" class="p-2 rounded-xl text-left border border-slate-200 dark:border-slate-800 hover:border-amber-400 transition col-span-2">
+            07. Disque de Quantième & Sautoir
+          </button>
+        </div>
+
+        <!-- Active Organ Detail Card -->
+        <div id="organCard" class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+
+      <!-- PROTOCOLE DE HUILAGE MOEBIUS CERTIFIÉ (CRITIQUE 2824-2) -->
+      <div class="glass-panel p-4 rounded-3xl border shadow-sm space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+          <h3 class="text-xs font-mono-tech font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/></svg>
+            Huilage Officiel Moebius ETA 2824-2
+          </h3>
+          <span class="text-[10px] font-mono-tech px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-500 border border-rose-500/20 font-bold">Zéro improvisation</span>
+        </div>
+
+        <!-- Lubrication Grid Rules -->
+        <div class="space-y-2 text-xs">
+          <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-start gap-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-500 mt-1 shrink-0"></span>
+            <div>
+              <strong class="text-blue-600 dark:text-blue-400 font-mono-tech">Roues Inverseuses : Lubeta V105</strong>
+              <p class="text-[11px] text-slate-600 dark:text-slate-400 font-light mt-0.5">
+                <span class="text-red-500 font-bold">INTERDICTION STRICTE</span> d'appliquer de l'huile liquide sur les cliquets. Traitement par trempage complet au solvant lubrifiant Lubeta V105 puis séchage sous cloche.
+              </p>
+            </div>
+          </div>
+
+          <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-start gap-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mt-1 shrink-0"></span>
+            <div>
+              <strong class="text-emerald-600 dark:text-emerald-400 font-mono-tech">Levées d'Ancre 4 Hz : Moebius 9415</strong>
+              <p class="text-[11px] text-slate-600 dark:text-slate-400 font-light mt-0.5">
+                Huile thixotrope spéciale 28’800 A/h. Déposer 1/3 de goutte sur le plan d'impulsion de 5 dents consécutives de la roue d'échappement.
+              </p>
+            </div>
+          </div>
+
+          <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex items-start gap-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-500 mt-1 shrink-0"></span>
+            <div>
+              <strong class="text-amber-600 dark:text-amber-400 font-mono-tech">Bride de Barillet : Moebius 8217 / P125</strong>
+              <p class="text-[11px] text-slate-600 dark:text-slate-400 font-light mt-0.5">
+                Graisse de freinage sur la paroi interne du tambour. Permet le glissement de la bride sans surtension ni rupture du ressort automatique.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- JAVASCRIPT THREE.JS ENGINE & INTERACTIVITY -->
+  <script>
+    /* --- DATA OF CALIBRE ETA 2824-2 --- */
+    const ORGANS = {
+      rotor: {
+        title: "01. Rotor & Masse Oscillante Tungstène",
+        specs: "Automatique Bidirectionnel • Roulement 5 billes",
+        desc: "La masse oscillante demi-circulaire en métal lourd pivote sur un roulement miniaturisé à 5 billes en acier trempé. Elle remonte le barillet quel que soit le sens de rotation du poignet grâce au couple de roues inverseuses.",
+        oil: "Moebius HP-1300 (pivot d'arbre) • Roulement sec ou lubrifié d'usine",
+        ebat: "Ébat axial de rotor : 0.04 à 0.08 mm",
+        nihs: "NIHS 91-10",
+        color: "#d4af37"
+      },
+      inverseurs: {
+        title: "02. Roues Inverseuses (Réchappage)",
+        specs: "Cliquets internes à rubis / acier • Débrayage libre",
+        desc: "Composant le plus délicat de l'automatisme ETA. Chaque roue inverseuse possède un rochet libre et des cliquets d'armage. L'une embraye en rotation horaire, l'autre en anti-horaire, transmettant une rotation toujours unidirectionnelle au pignon d'armage.",
+        oil: "Moebius Lubeta V105 exclusivement (trempage 15 min, séchage). HUILE INTERDITE.",
+        ebat: "Ébat d'engrènement libre sans gommage",
+        nihs: "NIHS 27-01",
+        color: "#e11d48"
+      },
+      barillet: {
+        title: "03. Barillet Automatique à Bride Glissante",
+        specs: "Ressort Nivaflex sans ergot fixe • Réserve : 38h",
+        desc: "Contrairement au calibre manuel 6497 qui possède un crochet rigide, l'ETA 2824-2 possède une bride glissante élastique. Dès que le ressort atteint sa pleine charge, la bride dérape contre la paroi huilée du tambour pour empêcher la rupture du ressort.",
+        oil: "Moebius 8217 ou Klüber P125 sur 3 points équidistants de la paroi",
+        ebat: "Ébat de hauteur de barillet : 0.03 à 0.06 mm",
+        nihs: "NIHS 12-01",
+        color: "#f59e0b"
+      },
+      rouage: {
+        title: "04. Rouage de Finissage & Seconde Directe",
+        specs: "Centre (1 tr/h) • Moyenne • Seconde au centre directe",
+        desc: "Train d'engrenages à haut rendement. La roue de seconde est située au centre direct de la platine pour entraîner directement la trotteuse des secondes sans sautillement ni ressort de friction.",
+        oil: "Pivots lourds : Moebius HP-1300 • Pivots rapides : Moebius 9010",
+        ebat: "Ébat axial des mobiles : 0.02 à 0.04 mm",
+        nihs: "NIHS 15-02",
+        color: "#cbd5e1"
+      },
+      echappement: {
+        title: "05. Échappement Suisse 28’800 A/h (4 Hz)",
+        specs: "Roue d'échappement 20 dents • Ancre suisse 2 rubis",
+        desc: "L'échappement cadence 8 alternances par seconde (4 Hz). À cette fréquence élevée, la durée de contact de l'impulsion n'est que de 5 millisecondes, assurant une résistance supérieure aux chocs et perturbations de marche.",
+        oil: "Moebius 9415 (1/3 de goutte sur 5 levées consécutives)",
+        ebat: "Ébat de dard & cornes d'ancre : 0.015 à 0.03 mm",
+        nihs: "NIHS 18-05",
+        color: "#3b82f6"
+      },
+      balancier: {
+        title: "06. Balancier Glucydur & Raquetterie Etachron",
+        specs: "Spiral Nivarox 1 • Correcteur micrométrique excentrique",
+        desc: "L'organe réglant intègre le système breveté ETACHRON. Le porte-piton mobile et la raquette à goupilles permettent un ajustement micrométrique immédiat du repère (battement égal) et de l'isochronisme sans plier le spiral.",
+        oil: "Contre-pivots Incabloc : Moebius 9010 (bulle occupant 2/3 de la table)",
+        ebat: "Jeu de spiral entre goupilles : < 0.005 mm",
+        nihs: "NIHS 20-03",
+        color: "#f43f5e"
+      },
+      dateur: {
+        title: "07. Quantième & Sautoir de Date Instantané",
+        specs: "Disque 31 jours • Saut instantané à 24h00m00s",
+        desc: "Le mécanisme de calendrier comporte une roue entraîneuse munie d'un doigt monté sur ressort hélicoïdal. Pendant 2 heures, le ressort emmagasine l'énergie, puis libère instantanément la tension sur l'étoile du disque de date à minuit.",
+        oil: "Graisse Moebius 9504 sur le bec du sautoir de date",
+        ebat: "Planéité de disque de date < 0.05 mm sur 360°",
+        nihs: "NIHS 32-02",
+        color: "#8b5cf6"
+      }
+    };
+
+    /* --- THREE.JS SCENE SETUP --- */
+    let scene, camera, renderer, controls;
+    let calibreGroup;
+    let partsMeshes = {};
+    let isAnimating = true;
+    let animSpeed = 1.0;
+    let explodeFactor = 0;
+    let balanceAngle = 0;
+    let escapeAngle = 0;
+    let rotorAngle = 0;
+    let secondsAngle = 0;
+    let currentDate = 29;
+
+    function initThree() {
+      const container = document.getElementById('canvasContainer');
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+
+      scene = new THREE.Scene();
+
+      // Camera
+      camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 1000);
+      camera.position.set(0, 75, 95);
+
+      // Renderer
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.15;
+      container.appendChild(renderer.domElement);
+
+      // Controls
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.maxDistance = 250;
+      controls.minDistance = 30;
+      controls.target.set(0, 0, 0);
+
+      // Lighting - Atelier Horloger Studio
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+      scene.add(ambientLight);
+
+      const dirLight1 = new THREE.DirectionalLight(0xfff5e6, 1.4);
+      dirLight1.position.set(40, 80, 50);
+      scene.add(dirLight1);
+
+      const dirLight2 = new THREE.DirectionalLight(0xd9ecff, 0.8);
+      dirLight2.position.set(-50, 40, -40);
+      scene.add(dirLight2);
+
+      const rimLight = new THREE.DirectionalLight(0xd4af37, 0.6);
+      rimLight.position.set(0, -50, 20);
+      scene.add(rimLight);
+
+      // Build Calibre 2824-2 3D Geometry
+      buildCalibre2824();
+
+      // Window resize
+      window.addEventListener('resize', onWindowResize);
+
+      // Render loop
+      animate();
+    }
+
+    /* --- PROCEDURAL CAD-PRECISION 2824-2 BUILDER --- */
+    function buildCalibre2824() {
+      calibreGroup = new THREE.Group();
+      scene.add(calibreGroup);
+
+      // Materials Swiss Watchmaking Standards
+      const matRhodium = new THREE.MeshStandardMaterial({
+        color: 0xdde4ec,
+        metalness: 0.88,
+        roughness: 0.22,
+      });
+
+      const matBrassGold = new THREE.MeshStandardMaterial({
+        color: 0xdeb342,
+        metalness: 0.82,
+        roughness: 0.28,
+      });
+
+      const matSteel = new THREE.MeshStandardMaterial({
+        color: 0x94a3b8,
+        metalness: 0.92,
+        roughness: 0.15,
+      });
+
+      const matBluedSteel = new THREE.MeshStandardMaterial({
+        color: 0x1d4ed8,
+        metalness: 0.85,
+        roughness: 0.2,
+      });
+
+      const matRuby = new THREE.MeshPhysicalMaterial({
+        color: 0xe11d48,
+        transmission: 0.75,
+        opacity: 1,
+        transparent: true,
+        roughness: 0.1,
+        ior: 1.77, // Real synthetic corundum refractive index
+        thickness: 0.6
+      });
+
+      // 1. Platine Principale Perlée (Ø 25.60 mm standard 11½ lignes)
+      const platineGeo = new THREE.CylinderGeometry(25.6, 25.6, 2.2, 64);
+      const platineMesh = new THREE.Mesh(platineGeo, matRhodium);
+      platineMesh.position.y = 0;
+      calibreGroup.add(platineMesh);
+      partsMeshes.platine = { mesh: platineMesh, baseZ: 0, multZ: 0 };
+
+      // Rubis chassés dans la platine
+      for (let i = 0; i < 8; i++) {
+        const rad = 7 + (i % 3) * 5;
+        const ang = (i * Math.PI) / 4;
+        const rubyGeo = new THREE.CylinderGeometry(0.9, 0.9, 0.6, 16);
+        const rubyMesh = new THREE.Mesh(rubyGeo, matRuby);
+        rubyMesh.position.set(Math.cos(ang) * rad, 1.1, Math.sin(ang) * rad);
+        platineMesh.add(rubyMesh);
+      }
+
+      // 2. Disque de Quantième / Dateur (Périphérie côté cadran)
+      const dateDiscGroup = new THREE.Group();
+      const dateRingGeo = new THREE.RingGeometry(18.5, 25.2, 48);
+      dateRingGeo.rotateX(-Math.PI / 2);
+      const matDateDisc = new THREE.MeshStandardMaterial({
+        color: 0xf8fafc,
+        metalness: 0.1,
+        roughness: 0.4
+      });
+      const dateRingMesh = new THREE.Mesh(dateRingGeo, matDateDisc);
+      dateDiscGroup.add(dateRingMesh);
+      dateDiscGroup.position.y = -1.2;
+      calibreGroup.add(dateDiscGroup);
+      partsMeshes.dateur = { mesh: dateDiscGroup, baseZ: -1.2, multZ: -25 };
+
+      // 3. Barillet Automatique avec Bride Glissante & Rochet
+      const barilletGroup = new THREE.Group();
+      const drumGeo = new THREE.CylinderGeometry(6.5, 6.5, 2.0, 32);
+      const drumMesh = new THREE.Mesh(drumGeo, matBrassGold);
+      barilletGroup.add(drumMesh);
+
+      // Rochet de barillet denté
+      const rochetGeo = new THREE.CylinderGeometry(6.8, 6.8, 0.4, 40);
+      const rochetMesh = new THREE.Mesh(rochetGeo, matSteel);
+      rochetMesh.position.y = 1.2;
+      barilletGroup.add(rochetMesh);
+
+      // Vis de rochet en acier bleui
+      const screwGeo = new THREE.CylinderGeometry(1.2, 1.2, 0.5, 16);
+      const screwMesh = new THREE.Mesh(screwGeo, matBluedSteel);
+      screwMesh.position.y = 1.45;
+      barilletGroup.add(screwMesh);
+
+      barilletGroup.position.set(7.5, 1.8, -5);
+      calibreGroup.add(barilletGroup);
+      partsMeshes.barillet = { mesh: barilletGroup, baseZ: 1.8, multZ: 15 };
+
+      // 4. Rouage de Seconde au Centre Directe & Roue Moyenne
+      const rouageGroup = new THREE.Group();
+      
+      // Roue de centre
+      const centreGeo = new THREE.CylinderGeometry(4.5, 4.5, 0.3, 32);
+      const centreMesh = new THREE.Mesh(centreGeo, matBrassGold);
+      centreMesh.position.set(0, 1.5, 0);
+      rouageGroup.add(centreMesh);
+
+      // Roue moyenne
+      const moyenneGeo = new THREE.CylinderGeometry(3.6, 3.6, 0.3, 30);
+      const moyenneMesh = new THREE.Mesh(moyenneGeo, matBrassGold);
+      moyenneMesh.position.set(-6, 2.0, 3);
+      rouageGroup.add(moyenneMesh);
+
+      // Roue de seconde au centre (trotteuse directe)
+      const secGeo = new THREE.CylinderGeometry(3.2, 3.2, 0.25, 28);
+      const secMesh = new THREE.Mesh(secGeo, matBrassGold);
+      secMesh.position.set(0, 2.4, 0);
+      rouageGroup.add(secMesh);
+
+      // Axe de seconde traversant
+      const secShaftGeo = new THREE.CylinderGeometry(0.2, 0.2, 7.5, 16);
+      const secShaftMesh = new THREE.Mesh(secShaftGeo, matSteel);
+      secShaftMesh.position.set(0, 1.5, 0);
+      rouageGroup.add(secShaftMesh);
+
+      calibreGroup.add(rouageGroup);
+      partsMeshes.rouage = { mesh: rouageGroup, baseZ: 0, multZ: 25 };
+
+      // 5. Échappement Suisse 28’800 A/h (Roue & Ancre)
+      const escapeGroup = new THREE.Group();
+      const escWheelGeo = new THREE.CylinderGeometry(2.4, 2.4, 0.25, 20);
+      const escWheelMesh = new THREE.Mesh(escWheelGeo, matSteel);
+      escapeGroup.add(escWheelMesh);
+
+      // Ancre suisse
+      const palletGeo = new THREE.BoxGeometry(0.8, 0.4, 3.5);
+      const palletMesh = new THREE.Mesh(palletGeo, matSteel);
+      palletMesh.position.set(-2.5, 0, 1.8);
+      escapeGroup.add(palletMesh);
+
+      // 2 Rubis de palettes d'ancre (Entrée / Sortie)
+      const rubyPallet1 = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.3, 0.6), matRuby);
+      rubyPallet1.position.set(-2.5, 0.2, 0.2);
+      escapeGroup.add(rubyPallet1);
+
+      const rubyPallet2 = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.3, 0.6), matRuby);
+      rubyPallet2.position.set(-2.5, 0.2, 3.4);
+      escapeGroup.add(rubyPallet2);
+
+      escapeGroup.position.set(-9, 2.6, 7.5);
+      calibreGroup.add(escapeGroup);
+      partsMeshes.echappement = { mesh: escapeGroup, baseZ: 2.6, multZ: 35 };
+
+      // 6. Balancier Glucydur, Spiral & Incabloc
+      const balanceGroup = new THREE.Group();
+      
+      // Serre / Anneau de balancier Glucydur
+      const balRingGeo = new THREE.TorusGeometry(6.2, 0.5, 16, 48);
+      balRingGeo.rotateX(Math.PI / 2);
+      const balRingMesh = new THREE.Mesh(balRingGeo, matBrassGold);
+      balanceGroup.add(balRingMesh);
+
+      // 3 Bras de balancier
+      for (let b = 0; b < 3; b++) {
+        const armGeo = new THREE.BoxGeometry(0.5, 0.3, 6.0);
+        const armMesh = new THREE.Mesh(armGeo, matBrassGold);
+        armMesh.rotation.y = (b * Math.PI) / 3;
+        balanceGroup.add(armMesh);
+      }
+
+      // Spiral hélicoïdal Nivarox
+      const spiralGeo = new THREE.TorusGeometry(2.5, 0.15, 8, 32);
+      spiralGeo.rotateX(Math.PI / 2);
+      const spiralMesh = new THREE.Mesh(spiralGeo, matSteel);
+      spiralMesh.position.y = 0.6;
+      balanceGroup.add(spiralMesh);
+
+      // Coq & Antichoc Incabloc
+      const coqGeo = new THREE.CylinderGeometry(7, 7, 0.8, 32, 1, false, 0, Math.PI * 0.7);
+      const coqMesh = new THREE.Mesh(coqGeo, matRhodium);
+      coqMesh.position.set(0, 1.8, 0);
+      balanceGroup.add(coqMesh);
+
+      // Ressort Lyre Incabloc doré
+      const incablocGeo = new THREE.TorusGeometry(1.2, 0.2, 8, 16);
+      incablocGeo.rotateX(Math.PI / 2);
+      const incablocMesh = new THREE.Mesh(incablocGeo, matBrassGold);
+      incablocMesh.position.set(0, 2.3, 0);
+      balanceGroup.add(incablocMesh);
+
+      // Rubis contre-pivot Incabloc
+      const incaRuby = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 0.4, 16), matRuby);
+      incaRuby.position.set(0, 2.2, 0);
+      balanceGroup.add(incaRuby);
+
+      balanceGroup.position.set(-11, 3.8, -4.5);
+      calibreGroup.add(balanceGroup);
+      partsMeshes.balancier = { mesh: balanceGroup, baseZ: 3.8, multZ: 48 };
+
+      // 7. Roues Inverseuses de l'Automatisme (2 roues jumelées)
+      const inverseursGroup = new THREE.Group();
+      
+      const inv1Geo = new THREE.CylinderGeometry(3.0, 3.0, 0.7, 30);
+      const inv1Mesh = new THREE.Mesh(inv1Geo, matSteel);
+      inv1Mesh.position.set(2, 5.0, 6);
+      inverseursGroup.add(inv1Mesh);
+
+      const inv2Geo = new THREE.CylinderGeometry(3.0, 3.0, 0.7, 30);
+      const inv2Mesh = new THREE.Mesh(inv2Geo, matSteel);
+      inv2Mesh.position.set(7.5, 5.0, 6.5);
+      inverseursGroup.add(inv2Mesh);
+
+      // Décliquetage interne rubis
+      const invRuby1 = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.3, 12), matRuby);
+      invRuby1.position.set(2, 5.4, 6);
+      inverseursGroup.add(invRuby1);
+
+      const invRuby2 = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.3, 12), matRuby);
+      invRuby2.position.set(7.5, 5.4, 6.5);
+      inverseursGroup.add(invRuby2);
+
+      calibreGroup.add(inverseursGroup);
+      partsMeshes.inverseurs = { mesh: inverseursGroup, baseZ: 0, multZ: 62 };
+
+      // 8. Masse Oscillante / Rotor Automatique avec Côtes de Genève
+      const rotorGroup = new THREE.Group();
+      
+      // Roulement à billes central (5 billes en acier)
+      const bearingRing = new THREE.Mesh(new THREE.TorusGeometry(3.0, 0.6, 16, 32), matSteel);
+      bearingRing.rotateX(Math.PI / 2);
+      bearingRing.position.y = 6.2;
+      rotorGroup.add(bearingRing);
+
+      for (let k = 0; k < 5; k++) {
+        const bAngle = (k * 2 * Math.PI) / 5;
+        const ball = new THREE.Mesh(new THREE.SphereGeometry(0.5, 16, 16), matSteel);
+        ball.position.set(Math.cos(bAngle) * 3.0, 6.2, Math.sin(bAngle) * 3.0);
+        rotorGroup.add(ball);
+      }
+
+      // Segment lourd demi-cercle (Tungstène / Laiton lourd)
+      const rotorSegmentGeo = new THREE.CylinderGeometry(24.5, 24.5, 1.4, 48, 1, false, 0, Math.PI * 0.95);
+      const rotorSegmentMesh = new THREE.Mesh(rotorSegmentGeo, matRhodium);
+      rotorSegmentMesh.position.y = 7.0;
+      rotorGroup.add(rotorSegmentMesh);
+
+      // Biseau doré gravé
+      const rotorRimGeo = new THREE.CylinderGeometry(25.2, 25.2, 1.2, 48, 1, true, 0, Math.PI * 0.95);
+      const rotorRimMesh = new THREE.Mesh(rotorRimGeo, matBrassGold);
+      rotorRimMesh.position.y = 7.0;
+      rotorGroup.add(rotorRimMesh);
+
+      calibreGroup.add(rotorGroup);
+      partsMeshes.rotor = { mesh: rotorGroup, baseZ: 0, multZ: 85 };
+
+      // 9. Tige de Remontoir & Couronne Horlogère
+      const stemGroup = new THREE.Group();
+      const stemRod = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 26, 16), matSteel);
+      stemRod.rotateZ(Math.PI / 2);
+      stemRod.position.set(24, 0, 0);
+      stemGroup.add(stemRod);
+
+      const crownMesh = new THREE.Mesh(new THREE.CylinderGeometry(4.2, 4.2, 4.5, 32), matSteel);
+      crownMesh.rotateZ(Math.PI / 2);
+      crownMesh.position.set(37, 0, 0);
+      stemGroup.add(crownMesh);
+
+      calibreGroup.add(stemGroup);
+      partsMeshes.stem = { mesh: stemGroup, baseZ: 0, multZ: 0 };
+    }
+
+    /* --- ANIMATION LOOP --- */
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (isAnimating) {
+        // High-frequency escapement 28'800 A/h (4 Hz = 8 ticks per second)
+        balanceAngle += 0.28 * animSpeed;
+        const balanceOscillation = Math.sin(balanceAngle) * 1.25;
+        
+        if (partsMeshes.balancier) {
+          partsMeshes.balancier.mesh.rotation.y = balanceOscillation;
+        }
+
+        // Ticking escapement wheel
+        escapeAngle += 0.05 * animSpeed;
+        if (partsMeshes.echappement) {
+          partsMeshes.echappement.mesh.rotation.y = escapeAngle;
+        }
+
+        // Sweeping seconds hand (Direct center drive)
+        secondsAngle += 0.015 * animSpeed;
+        if (partsMeshes.rouage) {
+          partsMeshes.rouage.mesh.children[2].rotation.y = secondsAngle; // sec wheel
+        }
+
+        // Gentle automatic rotor swing (natural wrist simulation)
+        rotorAngle = Math.sin(balanceAngle * 0.15) * 1.1;
+        if (partsMeshes.rotor) {
+          partsMeshes.rotor.mesh.rotation.y = rotorAngle;
+        }
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    function onWindowResize() {
+      const container = document.getElementById('canvasContainer');
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+
+    /* --- EXPLODED VIEW SLIDER Z --- */
+    const explodeSlider = document.getElementById('explodeSlider');
+    const explodeVal = document.getElementById('explodeVal');
+
+    function setExplode(val) {
+      explodeVal.innerText = `${Math.round(val * 100)}%`;
+      explodeFactor = val;
+      explodeSlider.value = Math.round(val * 100);
+
+      // Move each organ cleanly along its vertical Z axis
+      for (let key in partsMeshes) {
+        const item = partsMeshes[key];
+        item.mesh.position.y = item.baseZ + item.multZ * (val * 0.45);
+      }
+    }
+
+    explodeSlider.addEventListener('input', (e) => {
+      setExplode(parseFloat(e.target.value) / 100);
+    });
+
+    /* --- CAMERA PRESET VIEWS --- */
+    function setCameraView(preset) {
+      document.querySelectorAll('#canvasContainer button');
+      switch (preset) {
+        case 'iso':
+          camera.position.set(0, 75, 95);
+          controls.target.set(0, 0, 0);
+          document.getElementById('activeAngleName').innerText = "Vue Isométrique 3D";
+          break;
+        case 'top':
+          camera.position.set(0, 110, 0.1);
+          controls.target.set(0, 0, 0);
+          document.getElementById('activeAngleName').innerText = "Vue Côté Ponts (90°)";
+          break;
+        case 'dial':
+          camera.position.set(0, -110, 0.1);
+          controls.target.set(0, 0, 0);
+          document.getElementById('activeAngleName').innerText = "Vue Côté Cadran & Dateur";
+          break;
+        case 'escapement':
+          camera.position.set(-18, 35, 25);
+          controls.target.set(-10, 3, 5);
+          document.getElementById('activeAngleName').innerText = "Macro Échappement 28'800 A/h";
+          break;
+        case 'rotor':
+          camera.position.set(12, 45, 30);
+          controls.target.set(5, 5, 5);
+          document.getElementById('activeAngleName').innerText = "Rotor & Inverseurs d'Automatisme";
+          break;
+      }
+    }
+
+    function resetCamera() {
+      setCameraView('iso');
+    }
+
+    /* --- ORGAN SELECTION & ATELIER CARD UPDATE --- */
+    function selectOrgan(id) {
+      // Highlight button
+      document.querySelectorAll('[id^="tab-"]').forEach(btn => {
+        btn.className = "p-2 rounded-xl text-left border border-slate-200 dark:border-slate-800 hover:border-amber-400 transition text-xs font-mono-tech";
+      });
+      const activeBtn = document.getElementById(`tab-${id}`);
+      if (activeBtn) {
+        activeBtn.className = "p-2 rounded-xl text-left border-2 border-amber-500 bg-amber-500/10 text-amber-700 dark:text-amber-300 font-bold transition text-xs font-mono-tech";
+      }
+
+      const organ = ORGANS[id];
+      if (!organ) return;
+
+      const card = document.getElementById('organCard');
+      card.innerHTML = `
+        <div class="flex items-start justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
+          <div>
+            <h4 class="font-bold text-sm text-slate-900 dark:text-white">${organ.title}</h4>
+            <span class="text-[11px] font-mono-tech text-amber-600 dark:text-amber-400 font-semibold">${organ.specs}</span>
+          </div>
+          <span class="text-[10px] font-mono-tech px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-slate-700 font-bold">
+            ${organ.nihs}
+          </span>
+        </div>
+        <p class="text-xs text-slate-600 dark:text-slate-300 font-light leading-relaxed">
+          ${organ.desc}
+        </p>
+        <div class="space-y-1.5 pt-1 text-[11px] font-mono-tech">
+          <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-start gap-1.5">
+            <span class="text-rose-500 font-bold">●</span>
+            <div><strong class="text-slate-700 dark:text-slate-300">Lubrification :</strong> <span class="text-slate-600 dark:text-slate-400">${organ.oil}</span></div>
+          </div>
+          <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-start gap-1.5">
+            <span class="text-emerald-500 font-bold">▲</span>
+            <div><strong class="text-slate-700 dark:text-slate-300">Tolérance d'Ébat :</strong> <span class="text-slate-600 dark:text-slate-400">${organ.ebat}</span></div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* --- STEM & KEYLESS WORKS (TIRETTE 3 POSITIONS) --- */
+    function setStemPosition(pos) {
+      document.querySelectorAll('[id^="stemPos"]').forEach(b => {
+        b.className = "p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-amber-400 text-center transition font-mono-tech text-xs";
+      });
+      const badge = document.getElementById('stemStateBadge');
+      const desc = document.getElementById('stemDescription');
+      const activeBtn = document.getElementById(`stemPos${pos}`);
+      activeBtn.className = "p-2.5 rounded-xl border-2 border-amber-500 bg-amber-500/10 text-amber-700 dark:text-amber-300 font-bold text-center transition font-mono-tech text-xs";
+
+      // Translate stem mesh visually
+      if (partsMeshes.stem) {
+        partsMeshes.stem.mesh.position.x = pos * 3.5;
+      }
+
+      if (pos === 0) {
+        badge.innerText = "Pos. 0 : Remontage Manuel";
+        badge.className = "text-[11px] font-mono-tech font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-300 border border-amber-500/30";
+        desc.innerHTML = "Le pignon coulant est plaqué contre le <strong>pignon de remontoir</strong>. Tourner la couronne arme directement le ressort de barillet sans agir sur les aiguilles.";
+      } else if (pos === 1) {
+        badge.innerText = "Pos. 1 : Correction Rapide de Date";
+        badge.className = "text-[11px] font-mono-tech font-bold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-300 border border-rose-500/30";
+        desc.innerHTML = "La tirette déplace le pignon coulant au cran intermédiaire. La rotation de la couronne entraîne le <strong>correcteur de date</strong> qui fait avancer le quantième d'un cran par tour.";
+      } else if (pos === 2) {
+        badge.innerText = "Pos. 2 : Mise à l'Heure & Stop-Seconde";
+        badge.className = "text-[11px] font-mono-tech font-bold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-300 border border-blue-500/30";
+        desc.innerHTML = "Le levier de stop-seconde vient bloquer le balancier. Le pignon coulant engrène avec le <strong>rouage de minuterie</strong> (chaussée et roue de minuterie) pour régler précisément l'heure.";
+      }
+    }
+
+    /* --- DATE MECHANISM TRIGGER --- */
+    function triggerDateJump() {
+      const display = document.getElementById('currentDateDisplay');
+      display.classList.add('scale-125', 'text-rose-500');
+      
+      // Step date
+      currentDate = (currentDate % 31) + 1;
+      display.innerText = currentDate < 10 ? `0${currentDate}` : currentDate;
+
+      // Rotate date disc in 3D
+      if (partsMeshes.dateur) {
+        partsMeshes.dateur.mesh.rotation.y += (2 * Math.PI) / 31;
+      }
+
+      setTimeout(() => {
+        display.classList.remove('scale-125', 'text-rose-500');
+      }, 300);
+    }
+
+    function stepDate(step) {
+      triggerDateJump();
+    }
+
+    /* --- MOTION TOGGLE --- */
+    const toggleBtn = document.getElementById('toggleMotionBtn');
+    toggleBtn.addEventListener('click', () => {
+      isAnimating = !isAnimating;
+      document.getElementById('motionIcon').innerText = isAnimating ? "⏸" : "▶";
+      document.getElementById('motionText').innerText = isAnimating ? "Pause Battement" : "Reprendre 28'800 A/h";
+    });
+
+    /* --- THEME TOGGLE --- */
+    const themeBtn = document.getElementById('themeToggle');
+    themeBtn.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+    });
+
+    // Initialize on load
+    window.onload = () => {
+      initThree();
+      selectOrgan('rotor');
+      setStemPosition(0);
+    };
+  </script>
+</body>
+</html>
