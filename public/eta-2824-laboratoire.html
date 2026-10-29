@@ -86,28 +86,55 @@
     }
 
 
-    /* Fullscreen mode styles */
-    #calibreBox:fullscreen, #calibreBox:-webkit-full-screen {
+    /* Fullscreen mode styles (Natif & Fallback Mobile / iOS) */
+    #calibreBox:fullscreen,
+    #calibreBox:-webkit-full-screen,
+    #calibreBox.mobile-fullscreen {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
       width: 100vw !important;
       height: 100vh !important;
+      height: 100dvh !important;
       max-width: 100vw !important;
       max-height: 100vh !important;
+      max-height: 100dvh !important;
       border-radius: 0 !important;
       margin: 0 !important;
-      padding: 0 !important;
+      padding: 0.5rem !important;
       background: #04060c !important;
       display: flex !important;
       flex-direction: column !important;
-      z-index: 99999 !important;
+      justify-content: space-between !important;
+      z-index: 999999 !important;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch;
     }
-    #calibreBox:fullscreen #viewportContainer, #calibreBox:-webkit-full-screen #viewportContainer {
+
+    body.has-mobile-fullscreen {
+      overflow: hidden !important;
+      position: fixed !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    #calibreBox:fullscreen #viewportContainer,
+    #calibreBox:-webkit-full-screen #viewportContainer,
+    #calibreBox.mobile-fullscreen #viewportContainer {
       flex: 1 1 auto !important;
       height: auto !important;
-      max-height: none !important;
+      min-height: 260px !important;
+      max-height: 65vh !important;
+      max-height: 65dvh !important;
     }
-    #calibreBox:fullscreen .drawer_container, #calibreBox:-webkit-full-screen .drawer_container {
-      width: min(680px, 72vh) !important;
-      height: min(680px, 72vh) !important;
+
+    #calibreBox:fullscreen .drawer_container,
+    #calibreBox:-webkit-full-screen .drawer_container,
+    #calibreBox.mobile-fullscreen .drawer_container {
+      width: min(94vw, 640px, 58vh) !important;
+      height: min(94vw, 640px, 58vh) !important;
       max-width: none !important;
       max-height: none !important;
     }
@@ -844,51 +871,131 @@
     });
 
 
-    /* --- FULLSCREEN HANDLING --- */
-    function toggleFullscreen() {
-      const box = document.getElementById('calibreBox') || document.documentElement;
-      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-        if (box.requestFullscreen) {
-          box.requestFullscreen();
-        } else if (box.webkitRequestFullscreen) {
-          box.webkitRequestFullscreen();
-        }
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
-        }
+    /* --- GESTION DU PLEIN ÉCRAN UNIVERSEL (MOBILE, IOS, ANDROID, DESKTOP) --- */
+    let isPseudoFs = false;
+
+    function resizeCalibreDrawers() {
+      if (window.all_drawers) {
+        window.all_drawers.forEach(d => {
+          if (d && d.on_resize) d.on_resize();
+          if (d && d.request_repaint) d.request_repaint();
+        });
       }
     }
 
-    function handleFullscreenChange() {
-      const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    function updateFullscreenUI(active) {
       const label = document.getElementById('fullscreenLabel');
       const cornerText = document.getElementById('cornerFsText');
       const bottomText = document.getElementById('bottomFsText');
       
-      const txt = isFs ? "✕ Réduire" : "Plein Écran";
+      const txt = active ? "✕ Réduire" : "Plein Écran";
       if (label) label.innerText = txt;
       if (cornerText) cornerText.innerText = txt;
       if (bottomText) bottomText.innerText = txt;
 
-      // Trigger WebGL resize
-      setTimeout(() => {
-        if (window.all_drawers) {
-          window.all_drawers.forEach(d => {
-            if (d && d.on_resize) d.on_resize();
-            if (d && d.request_repaint) d.request_repaint();
+      // Notifier la fenêtre parente (Next.js) pour masquer les en-têtes parasites sur mobile
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'HORLO_FULLSCREEN_CHANGE', isFullscreen: active }, '*');
+        }
+      } catch (e) {}
+
+      // Déclencher plusieurs passes de resize pour fluidité maximale WebGL
+      setTimeout(resizeCalibreDrawers, 60);
+      setTimeout(resizeCalibreDrawers, 180);
+      setTimeout(resizeCalibreDrawers, 350);
+    }
+
+    function enterPseudoFullscreen(box) {
+      isPseudoFs = true;
+      box.classList.add('mobile-fullscreen');
+      document.body.classList.add('has-mobile-fullscreen');
+      updateFullscreenUI(true);
+    }
+
+    function exitPseudoFullscreen(box) {
+      isPseudoFs = false;
+      box.classList.remove('mobile-fullscreen');
+      document.body.classList.remove('has-mobile-fullscreen');
+      updateFullscreenUI(false);
+    }
+
+    function toggleFullscreen() {
+      const box = document.getElementById('calibreBox') || document.documentElement;
+
+      // 1. Si déjà en plein écran immersif mobile
+      if (isPseudoFs) {
+        exitPseudoFullscreen(box);
+        return;
+      }
+
+      // 2. Si déjà en plein écran natif
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        }
+        return;
+      }
+
+      // 3. Détection iOS (Safari iPhone/iPad ne supporte JAMAIS requestFullscreen sur les DIV)
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+      const hasNativeFs = typeof box.requestFullscreen === 'function' || 
+        typeof box.webkitRequestFullscreen === 'function';
+
+      if (isIOS || !hasNativeFs) {
+        // Activation directe du plein écran mobile immersif
+        enterPseudoFullscreen(box);
+        return;
+      }
+
+      // 4. Tentative plein écran natif avec repli automatique (fallback) en cas d'échec
+      try {
+        let req;
+        if (box.requestFullscreen) {
+          req = box.requestFullscreen();
+        } else if (box.webkitRequestFullscreen) {
+          req = box.webkitRequestFullscreen();
+        }
+
+        if (req && typeof req.then === 'function') {
+          req.catch((err) => {
+            console.log("Plein écran natif refusé (iframe ou sécurité), activation du mode mobile immersif:", err);
+            enterPseudoFullscreen(box);
           });
         }
-      }, 120);
+      } catch (err) {
+        console.log("Erreur plein écran natif, activation du mode mobile immersif:", err);
+        enterPseudoFullscreen(box);
+      }
+    }
+
+    function handleFullscreenChange() {
+      const isNativeFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      if (!isNativeFs && !isPseudoFs) {
+        updateFullscreenUI(false);
+      } else if (isNativeFs) {
+        updateFullscreenUI(true);
+      }
     }
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    window.addEventListener('resize', resizeCalibreDrawers);
+    window.addEventListener('orientationchange', () => {
+      setTimeout(resizeCalibreDrawers, 200);
+    });
 
-    // Keyboard shortcut F for fullscreen
+    // Raccourcis clavier : F pour plein écran, Escape pour quitter
     window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isPseudoFs) {
+        const box = document.getElementById('calibreBox') || document.documentElement;
+        exitPseudoFullscreen(box);
+        return;
+      }
       if (e.key === 'f' || e.key === 'F') {
         if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
         toggleFullscreen();
