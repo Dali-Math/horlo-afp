@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import TappingBenchSimulator from './TappingBenchSimulator';
 import PolishingBenchSimulator from './PolishingBenchSimulator';
 import { PrepMachineVisual, BarStickoutVisual, OriginVisual, FacingPassesVisual, LatheAnatomyVisual } from './MicromecaniqueVisuals';
@@ -36,6 +37,8 @@ export default function MicromecaniqueModulePage() {
   const [latheRpm, setLatheRpm] = useState(0);
   const [targetRpm, setTargetRpm] = useState(800);
   const [direction, setDirection] = useState<'ccw' | 'cw'>('ccw');
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const [isLoupeOpen, setIsLoupeOpen] = useState(false);
   const [loupeZoom, setLoupeZoom] = useState<1 | 2 | 5 | 10>(1);
 
@@ -1886,7 +1889,7 @@ export default function MicromecaniqueModulePage() {
       </div>
 
       {/* Modal Loupe 10x d'Atelier */}
-      {isLoupeOpen && (
+      {mounted && isLoupeOpen && createPortal(
         <div 
           className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
           onClick={() => setIsLoupeOpen(false)}
@@ -1971,7 +1974,8 @@ export default function MicromecaniqueModulePage() {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
