@@ -297,16 +297,28 @@ export default function EmboitageAcademy() {
                 </button>
               </div>
 
-              <button
+              <div
                 onClick={openHeroLoupe}
-                className="block w-full overflow-hidden rounded-xl bg-cream-tile dark:bg-slate-800/80 border border-cream-border dark:border-slate-700 p-1 cursor-zoom-in hover:ring-2 hover:ring-bronze/40 transition"
-                aria-label="Agrandir la coupe technique"
+                className="relative block w-full overflow-hidden rounded-xl bg-cream-tile dark:bg-slate-800/80 border border-cream-border dark:border-slate-700 cursor-zoom-in group shadow-inner"
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') openHeroLoupe();
+                }}
+                aria-label="Agrandir la coupe technique réelle à la loupe 10x"
               >
-                <CaseAssemblySVG />
-              </button>
+                <img
+                  src="/images/emboitage/coupe_technique_reelle.jpg"
+                  alt="Coupe technique réelle d'emboîtage — Vue réelle d'une montre mécanique"
+                  className="w-full h-auto object-cover group-hover:scale-105 transition duration-300"
+                />
+                <div className="absolute bottom-2 right-2 px-2 py-1 rounded bg-black/75 text-[10px] font-label text-white/90 backdrop-blur-sm flex items-center gap-1 opacity-80 group-hover:opacity-100">
+                  <ZoomIn className="w-3 h-3 text-amber-300" /> Agrandir 10x
+                </div>
+              </div>
 
               <p className="text-[11px] text-center text-ink-soft dark:text-slate-400 mt-2 font-label">
-                Coupe transversale : glace saphir, joint Hytrel, cercle, brides, tube &amp; couronne.
+                Coupe réelle : glace saphir, joint Hytrel, cercle, brides, tube, couronne &amp; fond vissé.
               </p>
             </div>
           </div>
