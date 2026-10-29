@@ -688,7 +688,7 @@ export default function VoiceWorkbenchAssistant() {
   return (
     <>
       {/* Floating Workbench Mic Button (Bottom-Left) */}
-      <div className="fixed bottom-6 left-6 z-40">
+      <div className="fixed bottom-4 sm:bottom-6 left-3 sm:left-6 z-40">
         <button
           onClick={toggleListening}
           className={`relative group w-13 h-13 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 backdrop-blur-md border-2 ${

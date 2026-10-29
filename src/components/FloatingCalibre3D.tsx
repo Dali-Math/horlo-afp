@@ -241,7 +241,7 @@ export default function FloatingCalibre3D() {
     <aside 
       ref={benchRef}
       aria-label="Visualiseur 3D interactif du calibre"
-      className={`fixed right-3 sm:right-6 lg:right-10 bottom-3 sm:bottom-6 z-40 w-[270px] sm:w-[320px] lg:w-[380px] pointer-events-none transition-all duration-500 ease-out ${
+      className={`fixed right-2 sm:right-6 lg:right-10 bottom-2 sm:bottom-6 z-40 w-[200px] sm:w-[300px] lg:w-[380px] pointer-events-none transition-all duration-500 ease-out ${
         benchVisibility === 'visible' 
           ? 'opacity-100 translate-y-0 pointer-events-auto' 
           : 'opacity-0 translate-y-8 pointer-events-none'
@@ -258,16 +258,17 @@ export default function FloatingCalibre3D() {
 
         <canvas 
           ref={canvasRef} 
-          className="w-full h-full block touch-none cursor-grab active:cursor-grabbing drop-shadow-[0_24px_38px_rgba(0,0,0,0.40)] dark:drop-shadow-[0_24px_38px_rgba(0,0,0,0.70)]"
+          style={{ touchAction: "pan-y" }}
+          className="w-full h-full block cursor-grab active:cursor-grabbing drop-shadow-[0_24px_38px_rgba(0,0,0,0.40)] dark:drop-shadow-[0_24px_38px_rgba(0,0,0,0.70)]"
         />
       </div>
 
       {/* Message d'accueil chaleureux */}
-      <div className="mt-2 text-right select-none bg-stone-100/85 dark:bg-slate-900/85 backdrop-blur-md px-3.5 py-2.5 rounded-2xl border border-amber-500/25 shadow-lg">
-        <p className="font-serif italic text-sm sm:text-base text-amber-600 dark:text-amber-400 leading-snug drop-shadow-sm font-bold">
+      <div className="mt-1.5 sm:mt-2 text-right select-none bg-stone-100/90 dark:bg-slate-900/90 backdrop-blur-md px-2.5 py-1.5 sm:px-3.5 sm:py-2.5 rounded-xl sm:rounded-2xl border border-amber-500/25 shadow-lg">
+        <p className="font-serif italic text-xs sm:text-base text-amber-600 dark:text-amber-400 leading-snug drop-shadow-sm font-bold">
           Bienvenue dans mon atelier horloger.
         </p>
-        <p className="font-serif italic text-xs text-stone-700 dark:text-stone-300 mt-1 leading-snug">
+        <p className="font-serif italic text-[10px] sm:text-xs text-stone-700 dark:text-stone-300 mt-0.5 sm:mt-1 leading-snug">
           Découvrez le cœur battant du temps, pièce par pièce.
         </p>
         <div className="mt-1.5 flex items-center justify-end gap-1 text-[10px] font-mono text-slate-500 dark:text-slate-400">

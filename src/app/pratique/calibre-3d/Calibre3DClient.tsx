@@ -322,7 +322,7 @@ export default function CalibreEcorchePage() {
           <div
             id="viewportCard"
             ref={viewportRef}
-            className="relative w-full h-[520px] sm:h-[620px] xl:h-[680px] rounded-2xl border border-[#D7D0C4] dark:border-[#2a2f36] bg-atelier-canvas overflow-hidden shadow-xl select-none"
+            className="relative w-full h-[440px] sm:h-[600px] xl:h-[680px] rounded-2xl border border-[#D7D0C4] dark:border-[#2a2f36] bg-atelier-canvas overflow-hidden shadow-xl select-none"
           >
             {/* Loader Haute Horlogerie instantané */}
             {!isSceneReady && (
