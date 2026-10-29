@@ -1832,7 +1832,7 @@ export default function MicromecaniqueModulePage() {
 
             {/* Score Summary Modal */}
             {showResultModal && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+              <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
                 <div className="max-w-md w-full rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 space-y-4 text-center shadow-2xl">
                   <div className="w-16 h-16 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto border border-amber-500/30">
                     <Award className="w-8 h-8" />
@@ -1888,7 +1888,7 @@ export default function MicromecaniqueModulePage() {
       {/* Modal Loupe 10x d'Atelier */}
       {isLoupeOpen && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
           onClick={() => setIsLoupeOpen(false)}
         >
           <div 
