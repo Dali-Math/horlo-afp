@@ -271,11 +271,23 @@ export default function Parcours({ activeStep, setActiveStep, validated, toggleV
                   <Hexagon className="w-3.5 h-3.5 text-bronze dark:text-amber-400" />
                   Schéma d'établi {current.id < 10 ? `0${current.id}` : current.id}
                 </span>
-                <span className="font-label text-[10px] text-bronze-dark dark:text-amber-400 font-bold">
-                  {current.standard}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="font-label text-[10px] text-bronze-dark dark:text-amber-400 font-bold hidden sm:inline">
+                    {current.standard}
+                  </span>
+                  <button
+                    onClick={() => openLoupe(current)}
+                    className="px-2.5 py-1 rounded-lg text-xs font-label font-bold bg-amber-500/10 hover:bg-amber-500/20 text-bronze dark:text-amber-300 border border-bronze/30 dark:border-amber-400/30 transition flex items-center gap-1.5 shadow-sm"
+                    title="Ouvrir la loupe d'inspection 10x avec les repères interactifs"
+                  >
+                    <ZoomIn className="w-3.5 h-3.5" /> Loupe 10x
+                  </button>
+                </div>
               </div>
-              <SchemaWithHotspots type={current.schemaType as SchemaType} />
+              <SchemaWithHotspots
+                type={current.schemaType as SchemaType}
+                onOpenLoupe={() => openLoupe(current)}
+              />
             </div>
           </div>
         </div>

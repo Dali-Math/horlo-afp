@@ -7,7 +7,7 @@
  */
 
 import { useState } from 'react';
-import { MapPin, X } from 'lucide-react';
+import { MapPin, X, ZoomIn } from 'lucide-react';
 import {
   SCHEMA_HOTSPOTS,
   SCHEMA_VIEWS,
@@ -77,18 +77,20 @@ export function renderSchemaComponent(type: SchemaType) {
 
 interface SchemaWithHotspotsProps {
   type: SchemaType;
-  /** Désactive le calque (ex. dans la loupe plein écran) */
+  /** Désactive le calque interactif */
   interactive?: boolean;
+  /** Déclencheur d'ouverture de la loupe d'inspection 10x */
+  onOpenLoupe?: () => void;
 }
 
-export function SchemaWithHotspots({ type, interactive = true }: SchemaWithHotspotsProps) {
+export function SchemaWithHotspots({ type, interactive = true, onOpenLoupe }: SchemaWithHotspotsProps) {
   const [active, setActive] = useState<Hotspot | null>(null);
   const hotspots = SCHEMA_HOTSPOTS[type] ?? [];
   const view = SCHEMA_VIEWS[type] ?? { w: 500, h: 280 };
 
   return (
     <div className="space-y-3">
-      <div className="relative">
+      <div className="relative group rounded-xl overflow-hidden">
         {renderSchemaComponent(type)}
 
         {interactive &&
@@ -98,9 +100,9 @@ export function SchemaWithHotspots({ type, interactive = true }: SchemaWithHotsp
               type="button"
               onClick={() => setActive(active === h ? null : h)}
               style={{ left: `${(h.x / view.w) * 100}%`, top: `${(h.y / view.h) * 100}%` }}
-              className={`absolute -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center border shadow-md transition-all duration-200 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-bronze/60 ${
+              className={`absolute -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center border shadow-md transition-all duration-200 hover:scale-125 focus:outline-none focus:ring-2 focus:ring-bronze/60 z-10 ${
                 active === h
-                  ? 'bg-bronze border-bronze-dark text-white scale-110'
+                  ? 'bg-bronze border-bronze-dark text-white scale-110 ring-2 ring-bronze/40'
                   : 'bg-white/95 dark:bg-slate-800/95 border-bronze/60 text-bronze hover:bg-bronze hover:text-white'
               }`}
               aria-label={`Point documenté : ${h.title}`}
@@ -109,6 +111,18 @@ export function SchemaWithHotspots({ type, interactive = true }: SchemaWithHotsp
               <MapPin className="w-3.5 h-3.5" />
             </button>
           ))}
+
+        {onOpenLoupe && (
+          <button
+            type="button"
+            onClick={onOpenLoupe}
+            className="absolute bottom-2 right-2 px-2.5 py-1 rounded-lg bg-black/75 hover:bg-black/90 text-white text-[11px] font-label font-bold backdrop-blur-sm flex items-center gap-1.5 shadow-md border border-white/20 transition hover:scale-105 z-20 cursor-zoom-in"
+            title="Ouvrir la loupe d'inspection 10x"
+          >
+            <ZoomIn className="w-3.5 h-3.5 text-amber-300" />
+            <span>Loupe 10x</span>
+          </button>
+        )}
       </div>
 
       {/* Panneau d'explication du point chaud sélectionné */}
