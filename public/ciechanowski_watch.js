@@ -24,18 +24,18 @@ let gear_train5_explainers;
     const white_color = rgba255_color(250, 250, 250, 1);
     const dial_color = rgba255_color(235, 235, 235, 1);
 
-    /* AUTHENTIC SWISS HOROLOGY PALETTE (ETA 2824-2 SUISSE) */
-    const gold_color = rgba255_color(232, 185, 68, 1);    // Or jaune doré horloger suisse 2N/3N
-    const steel_color = rgba255_color(210, 216, 224, 1);  // Acier trempé poli miroir suisse
-    const blued_color = rgba255_color(32, 72, 175, 1);    // Acier bleui horloger
+        /* VRAIES COULEURS D'ORIGINE — CALIBRE SUISSE ETA 2824-2 AUTHENTIQUE */
+    const gold_color = rgba255_color(228, 185, 75, 1);    // Véritable laiton doré horloger suisse 2N/3N
+    const steel_color = rgba255_color(210, 215, 222, 1);  // Véritable acier trempé poli miroir suisse
+    const blued_color = rgba255_color(28, 65, 165, 1);    // Acier bleui thermique
 
-    // Redéfinition intégrale des couleurs didactiques vers les vrais matériaux d'établi :
-    const red_color = steel_color;      // Ressorts et sautoirs en acier poli miroir
-    const orange_color = gold_color;    // Rouages en laiton doré 2N
-    const yellow_color = gold_color;    // Rouages et masse en or jaune doré
-    const green_color = gold_color;     // Engrenages et dateur en laiton doré
-    const cyan_color = steel_color;     // Leviers et tirettes en acier poli miroir
-    const blue_color = gold_color;      // Masse oscillante (Rotor) et mobiles en jaune doré
+    // Remplacement strict de toutes les teintes didactiques :
+    const red_color = steel_color;
+    const orange_color = gold_color;
+    const yellow_color = gold_color;
+    const green_color = gold_color;
+    const cyan_color = steel_color;
+    const blue_color = gold_color;
     const violet_color = gold_color;    // Balancier Glucydur en or doré 2N
 
     let crown_turn_arrow_color = rgba255_color(216, 112, 112, 1);
@@ -45,27 +45,28 @@ let gear_train5_explainers;
     const neutral_jewel_color = vec_lerp(jewel_color, neutral_color, 0.8);
 
 
+    /* ORGANES ET PIECES AUX VRAIES COULEURS SUISSES D'ORIGINE */
     const keyless_colors = {
-        "Corrector_lever": yellow_color,
-        "Setting_lever": green_color,
-        "Setting_wheel": orange_color,
-        "Yoke": cyan_color,
-        "Setting_lever_jumper": violet_color,
-        "Sliding_pinion": blue_color,
-        "Winding_pinion": red_color,
-        "Date_corrector": dark_gray_color,
+        "Corrector_lever": steel_color,        // Levier correcteur : acier poli
+        "Setting_lever": steel_color,          // Tirette : acier poli miroir
+        "Setting_wheel": gold_color,           // Roue de minuterie : laiton doré
+        "Yoke": steel_color,                   // Bascule : acier trempé poli
+        "Setting_lever_jumper": steel_color,   // Sautoir de tirette : acier poli
+        "Sliding_pinion": steel_color,         // Pignon coulant : acier trempé
+        "Winding_pinion": steel_color,         // Pignon de remontoir : acier trempé
+        "Date_corrector": steel_color,         // Doigt correcteur : acier poli
     }
 
     const train_colors = {
-        "First": red_color,
-        "Second": orange_color,
-        "Third": yellow_color,
-        "Fourth": green_color,
-        "Escape": cyan_color,
-        "Balance_wheel": violet_color,
-        "Pallet_fork": blue_color,
-        "Barrel_arbor": yellow_color,
-        "Main_spring": gray_color,
+        "First": gold_color,                   // Barillet : laiton doré suisse 2N !
+        "Second": gold_color,                  // Roue de centre : laiton doré 2N !
+        "Third": gold_color,                   // Roue de moyenne : laiton doré 2N !
+        "Fourth": gold_color,                  // Roue de seconde : laiton doré 2N !
+        "Escape": steel_color,                 // Roue d'échappement : acier poli miroir !
+        "Balance_wheel": gold_color,           // Balancier Glucydur : or jaune doré 2N !
+        "Pallet_fork": steel_color,            // Ancre suisse : acier nickelé poli miroir !
+        "Barrel_arbor": steel_color,           // Arbre de barillet : acier trempé poli !
+        "Main_spring": steel_color,            // Ressort Nivaflex : acier haute résistance !
     }
 
     const w11_n = 101;
@@ -3339,23 +3340,37 @@ let gear_train5_explainers;
                 Object.assign(colors, train_colors);
 
                 {
-                    colors["Hour_wheel"] = yellow_color;
-                    colors["Date_indicator_gear"] = green_color;
-                    colors["Date_indicator_cover"] = green_color;
-                    colors["Date_indicator_spring"] = orange_color;
-                    colors["Date_jumper_gears"] = blue_color;
-                    colors["Date_jumper"] = red_color;
+                    // Vraies couleurs suisses d'origine pour le mouvement complet :
+                    colors["Hour_wheel"] = gold_color;
+                    colors["Date_indicator_gear"] = gold_color;
+                    colors["Date_indicator_cover"] = gold_color;
+                    colors["Date_indicator_spring"] = steel_color;
+                    colors["Date_jumper_gears"] = gold_color;
+                    colors["Date_jumper"] = steel_color;
 
-                    colors["Cannon_wheel"] = blue_color;
-                    colors["Cannon_pinion"] = green_color;
-                    colors["Intermediate_wheel"] = red_color;
-                    colors["Click"] = blue_color;
+                    colors["Cannon_wheel"] = gold_color;
+                    colors["Cannon_pinion"] = steel_color;
+                    colors["Intermediate_wheel"] = gold_color;
+                    colors["Click"] = steel_color;
                     colors["Crown_wheel"] = steel_color;
                     colors["Click_spring"] = steel_color;
                     colors["Ratchet_wheel"] = steel_color;
                     colors["Stop_lever"] = steel_color;
-                    colors["Weight"] = gold_color; // MASSE OSCILLANTE EN JAUNE DORÉ
+                    colors["First"] = gold_color;          // Barillet doré
+                    colors["Second"] = gold_color;         // Roue centre dorée
+                    colors["Third"] = gold_color;          // Roue moyenne dorée
+                    colors["Fourth"] = gold_color;         // Roue seconde dorée
+                    colors["Escape"] = steel_color;        // Échappement acier
+                    colors["Balance_wheel"] = gold_color;  // Balancier doré
+                    colors["Pallet_fork"] = steel_color;   // Ancre acier
+                    colors["Weight"] = gold_color;         // MASSE OSCILLANTE EN JAUNE DORÉ
                     colors["Weight_gear"] = gold_color;
+                    colors["Reversing_wheel_top"] = gold_color;
+                    colors["Reversing_wheel_bottom"] = gold_color;
+                    colors["Reversing_wheel_top_cw"] = gold_color;
+                    colors["Reversing_wheel_bottom_cw"] = gold_color;
+                    colors["Automatic_gear0"] = gold_color;
+                    colors["Automatic_gear1"] = gold_color;
                     colors["Automatic_device_framework"] = bridge_color;
                     colors["Automatic_device_bridge"] = bridge_color;
                 }
