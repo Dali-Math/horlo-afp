@@ -36,7 +36,7 @@ const SwissWatchAtlas = dynamic(() => import('@/components/SwissWatchAtlas'), {
   ssr: false,
 });
 
-const ScrollytellingDemontage3D = dynamic(() => import('@/components/ScrollytellingDemontage3D'), {
+const FloatingCalibre3D = dynamic(() => import('@/components/FloatingCalibre3D'), {
   ssr: false,
   loading: () => null,
 });
@@ -494,10 +494,10 @@ export default function Home() {
     <div className="min-h-screen bg-slate-50 dark:bg-[#07090E] text-slate-900 dark:text-slate-100 transition-colors duration-300 selection:bg-amber-500/30 selection:text-amber-600 dark:selection:text-amber-200">
       <Hero />
       <Carousel />
-      <ScrollytellingDemontage3D />
       <GuidedPathwaysSection />
       <ExploreGrid />
       <PartnersSection />
+      <FloatingCalibre3D />
     </div>
   );
 }
