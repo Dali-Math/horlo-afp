@@ -268,8 +268,10 @@ export function buildCalibreScene(container: HTMLDivElement, xrayFactor: number)
         // se trouvent naturellement amplifiées par 8.5 dans le repère monde.
         // Un étagement Z compris entre -0.15 et +0.45 produit une séparation totale de ~5.1 unités monde,
         // garantissant que 100% des 97 fournitures restent toujours parfaitement visibles et cadrées.
-        const lift = (level - 0.25) * 0.58;
-        const push = new THREE.Vector3(c[0] * 0.04, c[1] * 0.04, 0);
+        // Séparation verticale Z micro-mécanique généreuse (étagement aéré des 7 strates) :
+        // Le niveau 0.32 (platine) reste au centre, le cadran descend (-Z) et les rouages/ponts/vis montent (+Z)
+        const lift = level < 0.32 ? (level - 0.35) * 1.55 : (level - 0.32) * 1.80;
+        const push = new THREE.Vector3(c[0] * 0.08, c[1] * 0.08, 0);
 
         glbParts.push({
           node: n,
@@ -278,7 +280,7 @@ export function buildCalibreScene(container: HTMLDivElement, xrayFactor: number)
           level,
           lift,
           push,
-          start: (1 - level) * 0.45,
+          start: (1 - level) * 0.35,
         });
       });
 

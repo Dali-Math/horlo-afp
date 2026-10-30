@@ -430,7 +430,7 @@ export function createCalibreEngine(container: HTMLDivElement, cb: EngineCallbac
     calibrePivot.position.copy(trackball.currentPivot);
 
     // Ajustement dynamique du recul caméra lors de l'écorché Z (+3.2 unités à 100%)
-    const dynamicZoom = trackball.targetZoom + simState.explodeFactor * 3.2;
+    const dynamicZoom = trackball.targetZoom + simState.explodeFactor * 5.2;
     trackball.currentZoom += (dynamicZoom - trackball.currentZoom) * 0.14;
     camera.position.set(0, 0, trackball.currentZoom);
     camera.lookAt(0, 0, 0);
