@@ -139,6 +139,25 @@
       max-height: none !important;
     }
 
+    /* Mode intégré dans HorloLearn (Next.js) : suppression définitive du double scrollbar */
+    html.is-embedded,
+    body.is-embedded {
+      overflow-y: hidden !important;
+      overflow-x: hidden !important;
+      min-height: auto !important;
+      height: auto !important;
+    }
+    body.is-embedded:not(.has-mobile-fullscreen) > header {
+      display: none !important;
+    }
+    body.is-embedded:not(.has-mobile-fullscreen) > footer {
+      display: none !important;
+    }
+    body.is-embedded:not(.has-mobile-fullscreen) main {
+      padding-top: 0.5rem !important;
+      padding-bottom: 0.5rem !important;
+    }
+
     /* Precision Glass Panel */
     .glass-panel {
       background: rgba(255, 255, 255, 0.88);
@@ -638,6 +657,7 @@
 
     /* --- SWITCH SCENE VIEWS --- */
     function switchView(view) {
+      setTimeout(sendHeightToParent, 50);
       currentActiveView = view;
 
       document.querySelectorAll('[id^="btnView-"]').forEach(btn => {
@@ -765,6 +785,7 @@
 
     /* --- TIRETTE / STEM POSITIONS --- */
     function setAtelierStem(pos) {
+      setTimeout(sendHeightToParent, 50);
       document.querySelectorAll('[id^="stemPos"]').forEach(b => {
         b.className = "p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-amber-400 text-center transition font-mono-tech text-xs";
       });
@@ -854,6 +875,7 @@
     }
 
     function selectOrgan(id) {
+      setTimeout(sendHeightToParent, 50);
       renderOrganCard(id);
       const organ = ORGANS[id];
       if (organ && organ.view && organ.view !== currentActiveView) {
@@ -902,9 +924,35 @@
     }
 
     // Réception des messages de changement de thème de la navbar
+    // --- MODE INTÉGRATION HORLOLEARN (ÉLIMINATION DU DOUBLE SCROLLBAR) ---
+    const isEmbeddedInNext = (window.parent && window.parent !== window);
+    if (isEmbeddedInNext) {
+      document.documentElement.classList.add('is-embedded');
+      document.body.classList.add('is-embedded');
+    }
+
+    function sendHeightToParent() {
+      if (!isEmbeddedInNext || isPseudoFs || document.fullscreenElement || document.webkitFullscreenElement) return;
+      const mainEl = document.querySelector('main');
+      if (!mainEl) return;
+      // Mesure directe et précise de la hauteur réelle sans dépendre de la hauteur de l'iframe
+      const rect = mainEl.getBoundingClientRect();
+      const totalH = Math.ceil(rect.height + 36);
+      try {
+        window.parent.postMessage({
+          type: 'HORLO_IFRAME_HEIGHT',
+          height: totalH,
+        }, '*');
+      } catch (e) {}
+    }
+
+    // Réception des messages de la fenêtre parente Next.js
     window.addEventListener('message', (event) => {
-      if (event.data && event.data.type === 'HORLO_THEME_CHANGE') {
+      if (!event.data) return;
+      if (event.data.type === 'HORLO_THEME_CHANGE') {
         applySiteTheme(event.data.theme);
+      } else if (event.data.type === 'HORLO_REQUEST_HEIGHT') {
+        sendHeightToParent();
       }
     });
 
@@ -912,6 +960,26 @@
       if (e.key === 'horlolearn-theme' && e.newValue) {
         applySiteTheme(e.newValue);
       }
+    });
+
+
+    
+    // Observation dynamique des changements de taille (onglets, redimensionnement, etc.)
+    if (typeof ResizeObserver !== 'undefined') {
+      const resizeObserver = new ResizeObserver(() => {
+        sendHeightToParent();
+      });
+      window.addEventListener('DOMContentLoaded', () => {
+        const m = document.querySelector('main');
+        if (m) resizeObserver.observe(m);
+      });
+    }
+
+    window.addEventListener('load', () => {
+      sendHeightToParent();
+      setTimeout(sendHeightToParent, 150);
+      setTimeout(sendHeightToParent, 600);
+      setTimeout(sendHeightToParent, 1200);
     });
 
 
@@ -962,6 +1030,7 @@
       box.classList.remove('mobile-fullscreen');
       document.body.classList.remove('has-mobile-fullscreen');
       updateFullscreenUI(false);
+      setTimeout(sendHeightToParent, 150);
     }
 
     function toggleFullscreen() {

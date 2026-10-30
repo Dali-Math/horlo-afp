@@ -3,10 +3,11 @@
 import React from 'react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
-import { ArrowLeft, ExternalLink, Maximize2, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowLeft, Maximize2, ShieldCheck } from 'lucide-react';
 
 export default function Calibre2824Client() {
   const [isEmbeddedFullscreen, setIsEmbeddedFullscreen] = React.useState(false);
+  const [iframeHeight, setIframeHeight] = React.useState<number>(1250);
   const { resolvedTheme } = useTheme();
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
 
@@ -26,8 +27,14 @@ export default function Calibre2824Client() {
 
   React.useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      if (event.data && event.data.type === 'HORLO_FULLSCREEN_CHANGE') {
-        setIsEmbeddedFullscreen(!!event.data.isFullscreen);
+      if (event.data) {
+        if (event.data.type === 'HORLO_FULLSCREEN_CHANGE') {
+          setIsEmbeddedFullscreen(!!event.data.isFullscreen);
+        } else if (event.data.type === 'HORLO_IFRAME_HEIGHT' && typeof event.data.height === 'number') {
+          // Ajustement micromécanique dynamique de la hauteur pour éliminer le double scrollbar
+          const newH = Math.max(Math.ceil(event.data.height), 750);
+          setIframeHeight((prev) => (Math.abs(prev - newH) > 6 ? newH : prev));
+        }
       }
     };
     window.addEventListener('message', handleMessage);
@@ -35,28 +42,28 @@ export default function Calibre2824Client() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 select-none">
+    <div className="min-h-screen flex flex-col bg-slate-100 dark:bg-slate-950 text-slate-800 dark:text-slate-100 select-none">
       
-      {/* HEADER ATELIER HORLOGER AVEC COMMUTATEUR DE CALIBRES SUISSES (Espacement élégant sous la navbar principale) */}
+      {/* HEADER ATELIER HORLOGER AVEC COMMUTATEUR DE CALIBRES SUISSES */}
       {!isEmbeddedFullscreen && (
         <div className="pt-20 sm:pt-24 px-3 sm:px-5 lg:px-8 max-w-[1720px] mx-auto w-full transition-all pb-2">
-          <header className="border border-slate-800 bg-slate-900/95 backdrop-blur-md rounded-2xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 shadow-md">
+          <header className="border border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 shadow-md">
             <div className="flex items-center gap-3">
               <Link
                 href="/pratique"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-mono transition border border-slate-700"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-xs font-mono transition border border-slate-300 dark:border-slate-700"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Atelier</span>
               </Link>
 
-              <span className="w-px h-5 bg-slate-800 hidden sm:inline" />
+              <span className="w-px h-5 bg-slate-300 dark:bg-slate-800 hidden sm:inline" />
 
               {/* SÉLECTEUR SUISSE DE CALIBRES */}
-              <div className="flex items-center bg-slate-800/80 p-1 rounded-xl text-xs font-mono border border-slate-700">
+              <div className="flex items-center bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl text-xs font-mono border border-slate-300 dark:border-slate-700">
                 <Link
                   href="/pratique/calibre-3d"
-                  className="px-3 py-1 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1"
+                  className="px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition flex items-center gap-1"
                 >
                   <span>ETA 6497-1 (Manuel)</span>
                 </Link>
@@ -69,7 +76,7 @@ export default function Calibre2824Client() {
 
             {/* TÉLÉMÉTRIE D'ATELIER */}
             <div className="flex items-center gap-2 text-xs font-mono">
-              <span className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">
+              <span className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-semibold">
                 <ShieldCheck className="w-3.5 h-3.5" />
                 <span>Normes NIHS &amp; Moebius</span>
               </span>
@@ -77,7 +84,7 @@ export default function Calibre2824Client() {
                 href="/eta-2824-laboratoire.html"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-400 hover:text-amber-300 border border-slate-700 transition flex items-center gap-1.5 text-xs font-mono font-semibold"
+                className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 border border-slate-300 dark:border-slate-700 transition flex items-center gap-1.5 text-xs font-mono font-semibold"
                 title="Ouvrir le laboratoire en page dédiée"
               >
                 <Maximize2 className="w-3.5 h-3.5" />
@@ -88,15 +95,26 @@ export default function Calibre2824Client() {
         </div>
       )}
 
-      {/* CONTAINER DU LABORATOIRE INTERACTIF 3D HAUTE FIDÉLITÉ */}
+      {/* CONTAINER DU LABORATOIRE INTERACTIF 3D HAUTE FIDÉLITÉ (SANS DOUBLE SCROLLBAR) */}
       <main className="flex-1 w-full flex flex-col">
         <iframe
           ref={iframeRef}
           src="/eta-2824-laboratoire.html"
-          onLoad={() => sendThemeToIframe(resolvedTheme)}
+          onLoad={() => {
+            sendThemeToIframe(resolvedTheme);
+            if (iframeRef.current && iframeRef.current.contentWindow) {
+              iframeRef.current.contentWindow.postMessage({ type: 'HORLO_REQUEST_HEIGHT' }, '*');
+            }
+          }}
           title="Laboratoire ETA 2824-2 3D Haute Fidélité"
-          className={`w-full flex-1 border-0 bg-[#070b14] transition-all ${
-            isEmbeddedFullscreen ? 'h-screen fixed inset-0 z-50' : 'min-h-[calc(100vh-140px)]'
+          scrolling={isEmbeddedFullscreen ? 'auto' : 'no'}
+          style={{
+            height: isEmbeddedFullscreen ? '100vh' : `${iframeHeight}px`,
+            minHeight: isEmbeddedFullscreen ? '100vh' : `${iframeHeight}px`,
+            overflow: isEmbeddedFullscreen ? 'auto' : 'hidden',
+          }}
+          className={`w-full border-0 bg-slate-100 dark:bg-[#070b14] transition-[height] duration-200 ${
+            isEmbeddedFullscreen ? 'h-screen fixed inset-0 z-50' : 'flex-1'
           }`}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen *"
           allowFullScreen={true}
