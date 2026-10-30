@@ -429,7 +429,9 @@ export function createCalibreEngine(container: HTMLDivElement, cb: EngineCallbac
     trackball.currentPivot.lerp(trackball.targetPivot, 0.14);
     calibrePivot.position.copy(trackball.currentPivot);
 
-    trackball.currentZoom += (trackball.targetZoom - trackball.currentZoom) * 0.14;
+    // Ajustement dynamique du recul caméra lors de l'écorché Z (+3.2 unités à 100%)
+    const dynamicZoom = trackball.targetZoom + simState.explodeFactor * 3.2;
+    trackball.currentZoom += (dynamicZoom - trackball.currentZoom) * 0.14;
     camera.position.set(0, 0, trackball.currentZoom);
     camera.lookAt(0, 0, 0);
 
@@ -534,12 +536,7 @@ export function createCalibreEngine(container: HTMLDivElement, cb: EngineCallbac
     simState.mainspringCharge = pct;
     refs.rebuildMainspringSpiral(pct);
 
-    if (meshes.windingCrown && meshes.crownWheel && meshes.ratchetWheel) {
-      const windRot = (pct / 100) * Math.PI * 8;
-      meshes.windingCrown.rotation.x = windRot;
-      meshes.crownWheel.rotation.y = -windRot * 0.5;
-      meshes.ratchetWheel.rotation.y = windRot * 0.25;
-    }
+
     cb.onMainspring(pct);
   }
 

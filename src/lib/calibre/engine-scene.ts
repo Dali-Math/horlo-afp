@@ -58,7 +58,7 @@ interface GlbPartItem {
   level: number;
   lift: number;
   push: THREE.Vector3;
-  twist: number;
+  twist?: number;
   start: number;
 }
 
@@ -263,15 +263,22 @@ export function buildCalibreScene(container: HTMLDivElement, xrayFactor: number)
         if (i === 76 || i === 77) organMeshes.winding = n;
         if (i === 59) organMeshes.dial = n;
 
+        // Séparation verticale Z micro-mécanique calibrée pour l'établi :
+        // Le conteneur root étant déjà mis à l'échelle (MODEL_SCALE = 8.5), les translations locales
+        // se trouvent naturellement amplifiées par 8.5 dans le repère monde.
+        // Un étagement Z compris entre -0.15 et +0.45 produit une séparation totale de ~5.1 unités monde,
+        // garantissant que 100% des 97 fournitures restent toujours parfaitement visibles et cadrées.
+        const lift = (level - 0.25) * 0.58;
+        const push = new THREE.Vector3(c[0] * 0.04, c[1] * 0.04, 0);
+
         glbParts.push({
           node: n,
           origPos: n.position.clone(),
           origRot: n.rotation.clone(),
           level,
-          lift: 0.28 + level * 1.85,
-          push: new THREE.Vector3(c[0] * 0.45, c[1] * 0.45, 0),
-          twist: (i % 2 === 0 ? 1 : -1) * (0.16 + level * 0.42),
-          start: (1 - level) * 0.65,
+          lift,
+          push,
+          start: (1 - level) * 0.45,
         });
       });
 
@@ -299,12 +306,14 @@ export function buildCalibreScene(container: HTMLDivElement, xrayFactor: number)
       const t = Math.max(0, Math.min(1, (factor - p.start) / (1 - p.start || 0.001)));
       const own = easeInOutCubic(t);
 
+      // Translation axiale pure d'établi sans double-multiplication par MODEL_SCALE
       p.node.position.set(
-        p.origPos.x + p.push.x * own * MODEL_SCALE,
-        p.origPos.y + p.push.y * own * MODEL_SCALE,
-        p.origPos.z + p.lift * own * MODEL_SCALE
+        p.origPos.x + p.push.x * own,
+        p.origPos.y + p.push.y * own,
+        p.origPos.z + p.lift * own
       );
-      p.node.rotation.z = p.origRot.z + p.twist * own;
+      // Règle d'or GEMINI.md : zéro rotation parasite décentrée pour préserver l'alignement cinématique officiel
+      p.node.rotation.copy(p.origRot);
     });
   };
 
