@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Wrench,
+  Flame,
   Clock,
   Droplet,
   FileText,
@@ -498,56 +499,65 @@ export default function PratiquePage() {
           </div>
         </div>
 
-        {/* ========================================================================= */}
-        {/* BANNIÈRE VEDETTE : DÉPANNAGE & ERREURS COURANTES (LE GUIDE DE SURVIE)     */}
-        {/* ========================================================================= */}
-        <section className="relative overflow-hidden rounded-3xl border-2 border-rose-300/80 dark:border-rose-500/40 bg-gradient-to-r from-[#FFF5F5] via-[#FFF9F2] to-white dark:from-[#1b0b10] dark:via-[#16100d] dark:to-slate-900 p-6 sm:p-9 shadow-xl dark:shadow-2xl transition-colors duration-300">
-          <div className="absolute top-0 right-0 -mr-16 -mt-16 w-72 h-72 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
-            <div className="space-y-3.5 max-w-3xl">
-              <div className="flex flex-wrap items-center gap-2.5">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-500/40 shadow-sm">
+                {/* BANNIERE DOUBLE VEDETTE : CLINIQUE DEPANNAGE & DEFI CHRONOMETRE */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          {/* CARTE 1 : CLINIQUE & DEPANNAGE */}
+          <div className="lg:col-span-7 relative overflow-hidden rounded-3xl border-2 border-rose-300/80 dark:border-rose-900/60 bg-gradient-to-br from-rose-500/10 via-amber-500/5 to-white dark:from-rose-950/30 dark:via-slate-900 dark:to-slate-950 p-6 sm:p-8 flex flex-col justify-between gap-5 shadow-xl">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-rose-500/15 text-rose-700 dark:text-rose-400 border border-rose-500/30">
                   <AlertTriangle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
-                  NOUVEAU MODULE CLINIQUE
-                </span>
-                <span className="text-xs font-mono text-slate-600 dark:text-slate-400 font-medium">
-                  Guide de Survie de l&apos;Apprenti Horloger
+                  GUIDE DE SURVIE D'ETABLI
                 </span>
               </div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-slate-900 dark:text-white tracking-tight">
-                Dépannage &amp; Erreurs courantes d&apos;établi
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-slate-900 dark:text-white">
+                Clinique &amp; Dépannage Horloger
               </h2>
-              <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 font-normal dark:font-light leading-relaxed">
-                Ressort qui saute du barillet, pivot écrasé sous le pont, dard frottant sur le plateau, spiral conique ou spires collées, vis à pas à gauche cisaillée ou chaussée lâche : diagnostiquez immédiatement l&apos;anomalie sous binoculaire 10x et appliquez le geste certifié par les normes suisses.
+              <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-light leading-relaxed">
+                Les 6 pannes critiques d&apos;établi décortiquées : spiral accroché, pivots bridés, casse de ressort de barillet et remèdes de Maître Horloger.
               </p>
-              <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-amber-800 dark:text-[#E2B44F] font-semibold pt-1">
-                <span>⚡ 4 Piliers de diagnostic</span>
-                <span>•</span>
-                <span>🔍 6 Cas Erreur vs Bon Geste</span>
-                <span>•</span>
-                <span>⏱️ Test d&apos;établi interactif</span>
-              </div>
             </div>
-
-            <div className="shrink-0 flex flex-col sm:flex-row lg:flex-col gap-3">
+            <div className="flex flex-wrap gap-3 pt-2">
               <Link
                 href="/pratique/depannage-erreurs"
-                className="inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-2xl bg-gradient-to-r from-rose-600 via-amber-600 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white font-bold font-serif text-sm tracking-wide uppercase transition-all shadow-xl shadow-rose-900/20 dark:shadow-rose-950/50 hover:scale-[1.02]"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-mono font-bold text-xs transition shadow-md"
               >
                 <span>Accéder au Guide Dépannage</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
-              <a
-                href="/depannage-erreurs.html"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-950 border border-slate-300 shadow-sm dark:bg-white/10 dark:hover:bg-white/15 dark:text-slate-200 dark:border-white/20 transition text-center font-mono text-xs font-medium"
-              >
-                <span>Ouvrir en plein écran ↗</span>
-              </a>
             </div>
           </div>
-        </section>
+
+          {/* CARTE 2 : DEFI CHRONOMETRE D'ETABLI (NOUVEAU) */}
+          <div className="lg:col-span-5 relative overflow-hidden rounded-3xl border-2 border-amber-500/60 bg-gradient-to-br from-amber-500/15 via-slate-900 to-[#07090E] p-6 sm:p-8 flex flex-col justify-between gap-5 shadow-xl">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/40">
+                  <Flame className="w-3.5 h-3.5 text-amber-500" />
+                  COMPETITION SOUS PRESSION
+                </span>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-slate-900 dark:text-white">
+                Défi Chronométré d&apos;Établi
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-light leading-relaxed">
+                10 questions chronométrées au centième : huilage Moebius, couples cNm, Witschi et réglages d&apos;échappement. Battez le chrono et défiez vos confrères sur WhatsApp !
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3 pt-2">
+              <Link
+                href="/pratique/defi-chronometre"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-mono font-bold text-xs uppercase tracking-wider transition shadow-md"
+              >
+                <Zap className="w-4 h-4 fill-current" />
+                <span>Lancer le Défi (10 Questions)</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+
+        </div>
 
         {/* ========================================================================= */}
         {/* SECTION VEDETTE : L'ÉTABLI VIRTUEL DU MAÎTRE HORLOGER (INTERACTIF)        */}
