@@ -76,7 +76,7 @@ export function buildCalibreScene(container: HTMLDivElement, xrayFactor: number)
   renderer.setSize(w, h);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.25;
+  renderer.toneMappingExposure = 1.70;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   container.innerHTML = '';
@@ -87,24 +87,29 @@ export function buildCalibreScene(container: HTMLDivElement, xrayFactor: number)
   // Environnement studio horloger suisse (reflets HDR métalliques)
   scene.environment = createStudioEnvironment(renderer);
 
-  // Éclairage studio haute définition
-  const ambient = new THREE.AmbientLight(0xffffff, 0.95);
+  // Éclairage studio haute définition horloger (Luminosité d'établi éclatante)
+  const ambient = new THREE.AmbientLight(0xffffff, 1.45);
   scene.add(ambient);
 
-  const keyLight = new THREE.DirectionalLight(0xfffaec, 2.4);
+  const keyLight = new THREE.DirectionalLight(0xfffaf0, 3.2);
   keyLight.position.set(12, 18, 16);
   keyLight.castShadow = true;
   keyLight.shadow.mapSize.set(1024, 1024);
   keyLight.shadow.bias = -0.0004;
   scene.add(keyLight);
 
-  const rimLight = new THREE.DirectionalLight(0xa5c4f2, 1.4);
+  const rimLight = new THREE.DirectionalLight(0xbdd8ff, 2.0);
   rimLight.position.set(-14, 10, 12);
   scene.add(rimLight);
 
-  const bounceLight = new THREE.DirectionalLight(0xf59e0b, 0.85);
+  const bounceLight = new THREE.DirectionalLight(0xffeedd, 1.5);
   bounceLight.position.set(0, -16, 10);
   scene.add(bounceLight);
+
+  // Éclairage frontal direct d'inspection (bain de lumière constant sur les 97 fournitures)
+  const frontLight = new THREE.DirectionalLight(0xffffff, 1.4);
+  frontLight.position.set(0, 4, 22);
+  scene.add(frontLight);
 
   // Établi horloger : attrapeur d'ombres douces
   const FLOOR_Y = -11.0;
@@ -137,54 +142,54 @@ export function buildCalibreScene(container: HTMLDivElement, xrayFactor: number)
 
   // Matériaux d'atelier micro-mécanique certifiés
   const matMainplate = new THREE.MeshStandardMaterial({
-    color: 0xd0d8e2,
-    metalness: 0.92,
-    roughness: 0.30,
+    color: 0xdfe7f0,
+    metalness: 0.90,
+    roughness: 0.26,
     bumpMap: perlageTexture,
     bumpScale: 0.025,
-    envMapIntensity: 1.0,
+    envMapIntensity: 1.6,
   });
 
   const matBridge = new THREE.MeshStandardMaterial({
-    color: 0xd8e0ea,
-    metalness: 0.94,
-    roughness: 0.24,
+    color: 0xe6eef6,
+    metalness: 0.92,
+    roughness: 0.20,
     bumpMap: cotesTexture,
     bumpScale: 0.02,
-    envMapIntensity: 1.15,
+    envMapIntensity: 1.75,
   });
 
   const matBrassGold = new THREE.MeshStandardMaterial({
-    color: 0xe0b946,
-    metalness: 0.95,
-    roughness: 0.22,
-    envMapIntensity: 1.2,
+    color: 0xedc755,
+    metalness: 0.94,
+    roughness: 0.18,
+    envMapIntensity: 1.8,
   });
 
   const matPolishedSteel = new THREE.MeshStandardMaterial({
-    color: 0xe8eef5,
+    color: 0xf2f6fa,
     metalness: 0.98,
-    roughness: 0.12,
-    envMapIntensity: 1.3,
+    roughness: 0.10,
+    envMapIntensity: 1.9,
   });
 
   const matBluedSteel = new THREE.MeshPhysicalMaterial({
-    color: 0x1b3eb5,
-    metalness: 0.92,
-    roughness: 0.16,
+    color: 0x224cd6,
+    metalness: 0.90,
+    roughness: 0.14,
     clearcoat: 1.0,
     clearcoatRoughness: 0.1,
-    envMapIntensity: 1.25,
+    envMapIntensity: 1.65,
   });
 
   const matRuby = new THREE.MeshPhysicalMaterial({
-    color: 0x9e0825,
+    color: 0xc41238,
     metalness: 0.05,
-    roughness: 0.08,
-    transmission: 0.72,
+    roughness: 0.06,
+    transmission: 0.75,
     thickness: 0.6,
-    ior: 1.77, // Indice de réfraction du rubis corindon synthétique Al2O3
-    envMapIntensity: 1.4,
+    ior: 1.77,
+    envMapIntensity: 2.0,
   });
 
   const bridgeMaterials: THREE.MeshStandardMaterial[] = [matBridge, matMainplate];
