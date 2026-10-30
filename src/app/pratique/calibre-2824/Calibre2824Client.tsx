@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
-import { ArrowLeft, Maximize2, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Maximize2, ShieldCheck, Sparkles } from 'lucide-react';
 
 export default function Calibre2824Client() {
   const [isEmbeddedFullscreen, setIsEmbeddedFullscreen] = React.useState(false);
@@ -120,6 +120,33 @@ export default function Calibre2824Client() {
           allowFullScreen={true}
         />
       </main>
+
+      {/* CARTOUCHE D'ATTRIBUTION OFFICIEL & ÉTHIQUE HORLOGÈRE */}
+      {!isEmbeddedFullscreen && (
+        <section className="max-w-4xl mx-auto w-full px-4 py-8 mb-6 text-center">
+          <div className="border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md rounded-2xl p-4 sm:p-5 shadow-sm space-y-2.5">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-mono">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="font-semibold">Transmission du Savoir &amp; Éthique Micromécanique Horlogère</span>
+            </div>
+            <p className="text-xs sm:text-sm font-light text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
+              Modélisation géométrique 3D inspirée des travaux mathématiques d&apos;exception de{' '}
+              <a
+                href="https://ciechanow.ski/mechanical-watch/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-amber-600 dark:text-amber-400 hover:underline font-semibold"
+              >
+                Bartosz Ciechanowski
+              </a>{' '}
+              (ciechanow.ski).
+            </p>
+            <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-mono">
+              Enrichi, réécrit et adapté par <strong className="text-slate-700 dark:text-slate-200">HorloLearn</strong> selon le référentiel horloger suisse (calibre automatique ETA 2824-2, finitions or 2N/3N, commandes d&apos;établi 3 positions, tolérances NIHS et lubrification officielle Moebius).
+            </p>
+          </div>
+        </section>
+      )}
 
     </div>
   );
