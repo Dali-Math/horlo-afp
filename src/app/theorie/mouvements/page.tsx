@@ -186,6 +186,12 @@ const ARCHITECTURE_DOSSIERS = [
     badge: 'Filetages NIHS & Couples cNm',
     desc: 'Vis de ponts, brides de boîte, clés de fixage et goupilles de centrage.',
     href: '/theorie/mouvements/systeme-fixation'
+  },
+  {
+    title: 'Palier & Fixation du Spiral',
+    badge: 'Antichoc Incabloc & NIHS 92-11',
+    desc: 'Coupe SVG Incabloc, ressort lyre, trou olivé, virolage et lubrification Moebius 9010.',
+    href: '/theorie/mouvements/palier-spiral'
   }
 ];
 
@@ -269,14 +275,14 @@ export default function MouvementsPage() {
             </h1>
 
             <p className="mt-3 text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">
-              Inspectez sous binoculaire la géométrie d’un anglage main à angle rentrant, explorez les 4 traités d’architecture structurelle (platine, ponts, ébats, finitions) et comparez les 7 calibres mythiques de l’horlogerie helvétique.
+              Inspectez sous binoculaire la géométrie d’un anglage main à angle rentrant, explorez les 5 traités d’architecture structurelle (platine, ponts, ébats, finitions) et comparez les 7 calibres mythiques de l’horlogerie helvétique.
             </p>
           </div>
         </div>
       </section>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
           {ARCHITECTURE_DOSSIERS.map((d) => (
             <Link
               key={d.href}
