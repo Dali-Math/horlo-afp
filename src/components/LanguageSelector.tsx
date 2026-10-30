@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Globe, ChevronDown, Check } from 'lucide-react';
+import { applyHorologicalGlossary } from '@/lib/horologicalGlossary';
 
 export interface Language {
   code: string;
@@ -49,10 +50,11 @@ export default function LanguageSelector() {
       return 'fr';
     };
 
-    setCurrentLang(getSavedLanguage());
+    const initialLang = getSavedLanguage();
+    setCurrentLang(initialLang);
 
-    // 2. Observer pour supprimer instantanément le bandeau Google Translate
-    const hideGoogleBanner = () => {
+    // 2. Observer pour supprimer instantanément le bandeau Google Translate et appliquer le glossaire horloger
+    const hideGoogleBannerAndApplyGlossary = () => {
       if (document.body.style.top && document.body.style.top !== '0px') {
         document.body.style.top = '0px';
       }
@@ -69,12 +71,25 @@ export default function LanguageSelector() {
         el.style.setProperty('height', '0px', 'important');
         el.style.setProperty('opacity', '0', 'important');
       });
+
+      // Application immédiate du glossaire horloger suisse certifié (évite les contresens comme anchor, rooster, etc.)
+      const activeLang = getSavedLanguage();
+      if (activeLang !== 'fr') {
+        applyHorologicalGlossary(activeLang);
+      }
     };
 
-    hideGoogleBanner();
-    const observer = new MutationObserver(hideGoogleBanner);
+    hideGoogleBannerAndApplyGlossary();
+    const observer = new MutationObserver(hideGoogleBannerAndApplyGlossary);
     observer.observe(document.body, { attributes: true, attributeFilter: ['style', 'class'], childList: true });
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
+
+    // Passes répétées pour attraper le rendu asynchrone des composants React
+    if (initialLang !== 'fr') {
+      setTimeout(() => applyHorologicalGlossary(initialLang), 200);
+      setTimeout(() => applyHorologicalGlossary(initialLang), 700);
+      setTimeout(() => applyHorologicalGlossary(initialLang), 1800);
+    }
 
     // 3. Charger le script Google Translate de façon propre
     if (!window.googleTranslateElementInit) {
