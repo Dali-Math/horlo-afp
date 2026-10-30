@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import TranslationNoticeBanner from "@/components/TranslationNoticeBanner";
 
 const FloatingSearchButton = dynamic(() => import("./FloatingSearchButton"), { ssr: false });
 const SearchModal = dynamic(() => import("./SearchModal"), { ssr: false });
@@ -32,6 +33,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   return (
     <>
       <Navbar onSearchClick={() => setIsSearchOpen(true)} />
+      <TranslationNoticeBanner />
       <div className="hl-site-content">{children}</div>
       <Footer />
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
