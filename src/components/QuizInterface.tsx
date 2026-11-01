@@ -25,7 +25,7 @@ const QuizInterface: React.FC<QuizInterfaceProps> = ({ quiz, onExit, onComplete 
       case 'QuizConversions':
         return <QuizConversions />;
       case 'MemoryGame6497':
-        return <MemoryGame6497 />;
+        return <MemoryGame6497 onExit={onExit} />;
       case 'AtelierHorloger':
         return <AtelierHorloger />;
       default:

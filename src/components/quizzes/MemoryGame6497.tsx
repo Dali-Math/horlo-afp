@@ -9,6 +9,10 @@ interface Card {
   matched: boolean;
 }
 
+interface MemoryGame6497Props {
+  onExit?: () => void;
+}
+
 const PIECES_CONFIG = [
   { file: 'barillet.png', label: 'Barillet complet' },
   { file: 'balancier.png', label: 'Balancier' },
@@ -26,7 +30,7 @@ const PIECES_CONFIG = [
   { file: 'platine.png', label: 'Platine principale' },
 ];
 
-const MemoryGame6497: React.FC = () => {
+const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
   const [cards, setCards] = useState<Card[]>([]);
   const [flippedIndices, setFlippedIndices] = useState<number[]>([]);
   const [timeLeft, setTimeLeft] = useState(180);
@@ -34,6 +38,16 @@ const MemoryGame6497: React.FC = () => {
   const [gameOver, setGameOver] = useState(false);
   const [win, setWin] = useState(false);
   const [matchedPairs, setMatchedPairs] = useState(0);
+
+  const handleQuit = () => {
+    if (onExit) {
+      onExit();
+    } else if (typeof window !== 'undefined' && window.history.length > 1) {
+      window.history.back();
+    } else if (typeof window !== 'undefined') {
+      window.location.href = '/quiz';
+    }
+  };
 
   // Initialisation des cartes doublées et mélangées
   const initGame = () => {
@@ -135,8 +149,16 @@ const MemoryGame6497: React.FC = () => {
   return (
     <div className="w-full flex flex-col items-center justify-center py-4">
       {/* HUD & Chrono */}
-      <div className="w-full max-w-5xl flex flex-wrap items-center justify-between gap-4 mb-6 px-2">
+      <div className="w-full max-w-5xl flex flex-wrap items-center justify-between gap-3 mb-6 px-2">
         <div className="flex items-center gap-3">
+          <button
+            onClick={handleQuit}
+            className="px-3.5 py-1.5 rounded-xl bg-slate-800/90 hover:bg-rose-950/70 hover:border-rose-500/50 text-slate-300 hover:text-rose-200 border border-slate-700 text-xs font-mono transition flex items-center gap-1.5"
+            title="Quitter le jeu"
+          >
+            <span className="text-rose-400 font-bold">←</span>
+            <span>Quitter</span>
+          </button>
           <div className="px-3.5 py-1.5 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-200 text-xs font-mono">
             Paires : <span className="text-amber-400 font-bold">{matchedPairs} / {PIECES_CONFIG.length}</span>
           </div>
@@ -228,20 +250,30 @@ const MemoryGame6497: React.FC = () => {
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="mt-8 text-center bg-slate-900/95 border border-rose-500/40 p-6 rounded-2xl max-w-md w-full shadow-2xl"
+          className="mt-8 text-center bg-slate-900/95 border border-rose-500/40 p-6 rounded-2xl max-w-md w-full shadow-2xl space-y-4"
         >
-          <div className="text-xl text-rose-400 font-bold mb-2">
-            Temps écoulé
+          <div>
+            <div className="text-xl text-rose-400 font-bold mb-1">
+              Temps écoulé
+            </div>
+            <p className="text-xs text-slate-400">
+              Prenez le temps d'observer chaque fourniture micromécanique et réessayez.
+            </p>
           </div>
-          <p className="text-xs text-slate-400 mb-4">
-            Prenez le temps d'observer chaque fourniture micromécanique et réessayez.
-          </p>
-          <button
-            onClick={initGame}
-            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold text-xs font-mono uppercase tracking-wider transition"
-          >
-            Rejouer
-          </button>
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            <button
+              onClick={initGame}
+              className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold text-xs font-mono uppercase tracking-wider transition"
+            >
+              Rejouer
+            </button>
+            <button
+              onClick={handleQuit}
+              className="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs font-mono uppercase tracking-wider transition"
+            >
+              Quitter
+            </button>
+          </div>
         </motion.div>
       )}
 
@@ -250,23 +282,38 @@ const MemoryGame6497: React.FC = () => {
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="mt-8 text-center bg-slate-900/95 border border-emerald-500/50 p-6 rounded-2xl max-w-md w-full shadow-2xl"
+          className="mt-8 text-center bg-slate-900/95 border border-emerald-500/50 p-6 rounded-2xl max-w-md w-full shadow-2xl space-y-4"
         >
-          <div className="text-xl text-emerald-400 font-bold mb-1">
-            Toutes les fournitures identifiées
+          <div>
+            <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 font-bold block mb-1">
+              Mémoire Horlogère Validée
+            </span>
+            <div className="text-xl text-white font-bold">
+              Toutes les fournitures identifiées
+            </div>
+            <p className="text-xs text-slate-400 mt-1">
+              Vous maîtrisez l'identification visuelle des composants du calibre 6497.
+            </p>
           </div>
-          <p className="text-xs text-slate-400 mb-3">
-            Vous maîtrisez l'identification visuelle des composants du calibre 6497.
-          </p>
-          <div className="text-xs font-mono text-amber-300 mb-5">
-            Temps réalisé : {Math.floor((180 - timeLeft) / 60)}:{String((180 - timeLeft) % 60).padStart(2, '0')}
+
+          <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800 font-mono text-xs text-amber-300">
+            Temps réalisé : <span className="font-bold text-white">{Math.floor((180 - timeLeft) / 60)}:{String((180 - timeLeft) % 60).padStart(2, '0')}</span>
           </div>
-          <button
-            onClick={initGame}
-            className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 hover:from-amber-300 text-slate-950 font-bold text-xs font-mono uppercase tracking-wider transition shadow-lg shadow-amber-500/20"
-          >
-            Rejouer une partie
-          </button>
+
+          <div className="grid grid-cols-2 gap-3 pt-1">
+            <button
+              onClick={initGame}
+              className="py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 hover:from-amber-300 text-slate-950 font-bold text-xs font-mono uppercase tracking-wider transition shadow-lg shadow-amber-500/20 active:scale-98"
+            >
+              Rejouer
+            </button>
+            <button
+              onClick={handleQuit}
+              className="py-3 px-4 rounded-xl bg-rose-950/70 hover:bg-rose-900/80 text-rose-200 hover:text-white border border-rose-500/50 font-bold text-xs font-mono uppercase tracking-wider transition shadow-lg shadow-rose-950/30 active:scale-98 flex items-center justify-center gap-1.5"
+            >
+              <span>Quitter</span>
+            </button>
+          </div>
         </motion.div>
       )}
 
