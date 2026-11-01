@@ -201,20 +201,27 @@ const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
                   card.flipped || card.matched ? 'flipped' : ''
                 }`}
               >
-                {/* Verso (Face cachée : Blason horloger sobre) */}
-                <div className="flip-card-front bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 border border-amber-500/40 hover:border-amber-400 flex flex-col items-center justify-between p-2 rounded-xl shadow-md transition-all group">
-                  <div className="w-full flex justify-between items-center opacity-60">
-                    <span className="text-[9px] font-mono tracking-widest text-amber-400 font-bold">HORLOLEARN</span>
-                    <span className="text-[9px] font-mono text-slate-400">16½'''</span>
+                {/* Verso (Face cachée : Mouvement ETA 6497 Complet) */}
+                <div className="flip-card-front bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 border border-amber-500/40 hover:border-amber-400 flex flex-col items-center justify-between p-2 rounded-xl shadow-md transition-all group overflow-hidden">
+                  <div className="w-full flex justify-between items-center opacity-70">
+                    <span className="text-[8px] font-mono tracking-widest text-amber-400 font-bold">HORLOLEARN</span>
+                    <span className="text-[8px] font-mono text-slate-400">16½'''</span>
                   </div>
 
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex flex-col items-center justify-center shadow-inner group-hover:scale-105 transition-transform">
-                    <span className="text-amber-300 font-mono font-bold text-xs sm:text-sm">6497</span>
-                    <span className="text-[8px] text-amber-400/70 font-mono tracking-widest uppercase">ETA</span>
+                  <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-amber-500/40 p-0.5 bg-slate-950/90 shadow-inner flex items-center justify-center my-0.5 group-hover:scale-105 transition-transform overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/images/emboitage/kit/3_mouvement_calibre.png"
+                      alt="Calibre ETA 6497 assemblé"
+                      className="w-full h-full object-contain filter drop-shadow rounded-full"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = '/images/eta6497/assemblage-6.png';
+                      }}
+                    />
                   </div>
 
-                  <div className="text-[8px] sm:text-[9px] font-mono text-slate-400 tracking-wider">
-                    CALIBRE SUISSE
+                  <div className="text-[8px] font-mono text-amber-300/90 tracking-wider">
+                    ETA 6497 · 17 RUBIS
                   </div>
                 </div>
 
