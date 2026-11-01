@@ -22,7 +22,7 @@ const QuizInterface: React.FC<QuizInterfaceProps> = ({ quiz, onExit, onComplete 
 
   if (quiz.component === 'AtelierHorloger') {
     return (
-      <div className="w-full min-h-screen pt-4 pb-8 px-2 sm:px-6">
+      <div className="w-full min-h-screen">
         <AtelierHorloger onExit={onExit} />
       </div>
     );

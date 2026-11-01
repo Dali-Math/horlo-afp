@@ -1,1040 +1,1303 @@
 <!DOCTYPE html>
-<html lang="fr" class="dark">
+<html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Atelier d'Assemblage Horloger — HorloLearn</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>⌛ Atelier d'Assemblage Horloger — Genève 1755</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Text:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #d4af37;
+    --gold-bright: #f0d47a;
+    --gold-dim: #8b6914;
+    --gold-pale: #c9a659;
+    --ink: #14100a;
+    --panel: rgba(24, 18, 10, 0.72);
+    --panel-border: rgba(212, 175, 55, 0.35);
+    --cream: #f3e6c2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Crimson Text', Georgia, serif;
+    color: var(--cream);
+    background:
+      radial-gradient(1200px 600px at 15% -10%, rgba(212,175,55,0.10), transparent 60%),
+      radial-gradient(1000px 700px at 90% 110%, rgba(139,105,20,0.12), transparent 60%),
+      linear-gradient(160deg, #0d0a06 0%, #1a130a 45%, #0d0a06 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  /* ---- engrenages de fond ---- */
+  .bg-gear {
+    position: fixed; font-size: 220px; opacity: 0.045; color: var(--gold);
+    animation: gearSpin linear infinite; pointer-events: none; z-index: 0;
+    filter: drop-shadow(0 0 20px rgba(212,175,55,0.4));
+  }
+  @keyframes gearSpin { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
+  .vignette { position: fixed; inset: 0; pointer-events: none; z-index: 1;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.55) 100%); }
 
-  <style>
-    body {
-      background: radial-gradient(circle at 50% 15%, #28201e 0%, #14141e 70%, #0d0d14 100%);
-      color: #d4af37;
-      min-height: 100vh;
-      font-family: 'Playfair Display', Georgia, serif;
-    }
-    .font-mono-tech {
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .font-cinzel {
-      font-family: 'Cinzel', serif;
-    }
-    /* Scrollbar personnalisée laiton */
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #14141e;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #8b6914;
-      border-radius: 3px;
-    }
-  </style>
+  .wrap { position: relative; z-index: 2; max-width: 1280px; margin: 0 auto; padding: 20px 16px 60px; }
+
+  /* ---- header ---- */
+  header { text-align: center; padding: 26px 18px 22px; margin-bottom: 22px; position: relative;
+    background: linear-gradient(180deg, rgba(212,175,55,0.10), rgba(212,175,55,0.02));
+    border: 1px solid var(--panel-border); border-radius: 22px;
+    box-shadow: 0 0 60px rgba(212,175,55,0.08) inset, 0 10px 40px rgba(0,0,0,0.5);
+    overflow: hidden; }
+  header::before { content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%;
+    background: linear-gradient(105deg, transparent, rgba(255,235,170,0.10), transparent);
+    animation: shine 6s ease-in-out infinite; }
+  @keyframes shine { 0% {left:-60%} 45% {left:130%} 100% {left:130%} }
+  .crown-row { font-size: 26px; letter-spacing: 14px; margin-bottom: 6px; opacity: .9; }
+  h1 {
+    font-family: 'Cinzel', serif; font-weight: 900; letter-spacing: 6px;
+    font-size: clamp(26px, 4.5vw, 52px);
+    background: linear-gradient(180deg, #fff3cf 0%, var(--gold-bright) 35%, var(--gold) 60%, #9a7514 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: drop-shadow(0 2px 14px rgba(212,175,55,0.35));
+  }
+  .subtitle { font-style: italic; font-size: clamp(14px, 2vw, 20px); color: var(--gold-pale); margin-top: 6px; }
+  .badge-geneve { display: inline-block; margin-top: 14px; padding: 6px 26px; border-radius: 999px;
+    border: 1px solid var(--gold); font-family: 'Cinzel', serif; font-size: 12px; letter-spacing: 5px;
+    color: var(--gold-bright); background: rgba(212,175,55,0.07); }
+  .gear-spin { display: inline-block; animation: gearSpin 6s linear infinite; }
+
+  /* ---- layout ---- */
+  .layout { display: grid; grid-template-columns: 290px minmax(320px, 1fr) 300px; gap: 18px; align-items: start; }
+  @media (max-width: 1080px) { .layout { grid-template-columns: 1fr; } .side { max-width: 640px; margin: 0 auto; width: 100%; } }
+
+  .panel {
+    background: var(--panel); border: 1px solid var(--panel-border); border-radius: 18px;
+    padding: 18px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.45), 0 0 0 1px rgba(0,0,0,0.3);
+    margin-bottom: 16px;
+  }
+  .panel h3 { font-family: 'Cinzel', serif; font-size: 17px; letter-spacing: 2px; color: var(--gold-bright);
+    text-align: center; padding-bottom: 10px; margin-bottom: 14px; border-bottom: 1px solid rgba(212,175,55,0.25); }
+
+  .score-box { text-align: center; padding: 16px; border-radius: 14px; margin-bottom: 12px;
+    background: linear-gradient(180deg, rgba(212,175,55,0.10), rgba(0,0,0,0.35));
+    border: 1px solid var(--gold); box-shadow: 0 0 25px rgba(212,175,55,0.10) inset; }
+  .score-box .label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold-pale); }
+  .score-box .value { font-family: 'Cinzel', serif; font-size: 42px; font-weight: 700; color: var(--gold-bright);
+    text-shadow: 0 0 22px rgba(240,212,122,0.45); line-height: 1.1; }
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .mini { text-align: center; padding: 10px 6px; border-radius: 12px; background: rgba(0,0,0,0.35); border: 1px solid rgba(212,175,55,0.25); }
+  .mini .label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold-pale); }
+  .mini .value { font-family: 'Cinzel', serif; font-size: 24px; font-weight: 700; color: var(--gold-bright); }
+
+  .progress-track { height: 16px; background: rgba(0,0,0,0.55); border-radius: 999px; border: 1px solid rgba(212,175,55,0.3); overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 999px; transition: width .4s ease;
+    background: linear-gradient(90deg, #9a7514, var(--gold), var(--gold-bright));
+    box-shadow: 0 0 12px rgba(240,212,122,0.6);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: bold; color: #1a1410; font-family: 'Cinzel', serif; }
+
+  .fact { font-size: 13px; font-style: italic; color: #e6d296; line-height: 1.55;
+    background: rgba(0,0,0,0.3); border-left: 3px solid var(--gold); border-radius: 0 10px 10px 0;
+    padding: 10px 12px; margin: 12px 0; }
+
+  .btn {
+    font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    border: none; cursor: pointer; border-radius: 12px; transition: transform .15s ease, box-shadow .2s ease, filter .2s;
+    background: linear-gradient(180deg, #f0d47a, #d4af37 45%, #9a7514);
+    color: #241a06; box-shadow: 0 4px 18px rgba(212,175,55,0.35), 0 1px 0 rgba(255,255,255,0.4) inset;
+  }
+  .btn:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 8px 26px rgba(212,175,55,0.5); }
+  .btn:active { transform: translateY(0); }
+  .btn.ghost { background: rgba(212,175,55,0.08); color: var(--gold-bright); border: 1px solid var(--gold);
+    box-shadow: none; }
+  .btn.ghost:hover { background: rgba(212,175,55,0.18); }
+  .btn-block { display: block; width: 100%; padding: 13px; font-size: 14px; }
+  .btn-sm { padding: 8px 14px; font-size: 11px; }
+
+  .lb-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px; margin: 4px 0;
+    background: rgba(0,0,0,0.3); font-size: 13px; }
+  .lb-row.top { background: linear-gradient(90deg, rgba(212,175,55,0.16), rgba(212,175,55,0.03)); border: 1px solid rgba(212,175,55,0.3); }
+  .lb-row .medal { font-size: 18px; }
+  .lb-row .who { flex: 1; }
+  .lb-row .who b { color: var(--gold-bright); display: block; }
+  .lb-row .who span { font-size: 11px; color: #a89152; }
+  .lb-row .pts { font-family: 'Cinzel', serif; font-weight: 700; color: var(--gold-bright); }
+  .empty { text-align: center; font-style: italic; color: #7a6425; padding: 12px 0; font-size: 13px; }
+
+  .stat-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--gold-pale); padding: 3px 0; }
+  .stat-row b { color: var(--gold-bright); }
+
+  /* ---- scène de jeu ---- */
+  .stage { display: flex; flex-direction: column; align-items: center; }
+  .board-frame { position: relative; border-radius: 18px; padding: 8px;
+    background: linear-gradient(160deg, #3a2c12, #191207 40%, #3a2c12);
+    box-shadow: 0 0 0 1px rgba(212,175,55,0.55), 0 0 45px rgba(212,175,55,0.18), 0 18px 50px rgba(0,0,0,0.6); }
+  canvas#board { display: block; border-radius: 10px; }
+  .overlay { position: absolute; inset: 8px; border-radius: 10px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center; gap: 12px;
+    background: rgba(10,7,3,0.82); backdrop-filter: blur(3px); z-index: 5; padding: 20px; }
+  .overlay.hidden { display: none; }
+  .overlay .big { font-family: 'Cinzel', serif; font-size: 30px; font-weight: 700; color: var(--gold-bright);
+    text-shadow: 0 0 25px rgba(240,212,122,0.5); letter-spacing: 3px; }
+  .overlay p { color: var(--gold-pale); font-style: italic; max-width: 260px; line-height: 1.5; }
+  .side-canvases { display: flex; gap: 14px; margin-top: 16px; }
+  .next-hold { text-align: center; background: var(--panel); border: 1px solid var(--panel-border);
+    border-radius: 14px; padding: 10px 14px; }
+  .next-hold .t { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 2px; color: var(--gold-pale); margin-bottom: 6px; text-transform: uppercase; }
+  .next-hold canvas { display: block; border-radius: 8px; background: rgba(0,0,0,0.4); border: 1px solid rgba(212,175,55,0.3); }
+  .piece-name { font-style: italic; color: var(--gold-bright); font-size: 13px; margin-top: 8px; min-height: 18px; }
+
+  /* ---- quiz ---- */
+  .quiz-box { background: linear-gradient(180deg, rgba(30,52,72,0.35), rgba(10,20,32,0.5));
+    border: 1px solid rgba(120,165,205,0.45); border-radius: 14px; padding: 14px; }
+  .quiz-box h4, .enc-box h4, .obj-box h4 { font-family: 'Cinzel', serif; font-size: 13px; letter-spacing: 2px;
+    text-align: center; margin-bottom: 10px; }
+  .quiz-box h4 { color: #a5cbe8; }
+  .quiz-q { font-weight: bold; color: #dbe9f5; font-size: 14px; margin-bottom: 10px; line-height: 1.45; }
+  .quiz-opt { padding: 9px 12px; border-radius: 9px; margin: 6px 0; cursor: pointer; font-size: 13px;
+    background: rgba(120,165,205,0.10); border: 1px solid rgba(120,165,205,0.25); color: #cfe0ee;
+    transition: background .15s, border-color .15s, transform .1s; }
+  .quiz-opt:hover { background: rgba(120,165,205,0.22); border-color: #a5cbe8; transform: translateX(3px); }
+  .quiz-opt.correct { background: rgba(40,140,70,0.35) !important; border-color: #4ade80 !important; color: #d2f5d8; }
+  .quiz-opt.wrong { background: rgba(160,40,40,0.35) !important; border-color: #f87171 !important; color: #f5d2d2; }
+  .quiz-opt.locked { pointer-events: none; }
+  .enc-box { background: rgba(0,0,0,0.3); border: 1px solid rgba(212,175,55,0.25); border-radius: 12px; padding: 12px; margin: 14px 0; }
+  .enc-box h4 { color: var(--gold-bright); }
+  .enc-box .txt { font-size: 13px; color: #dcc98a; line-height: 1.55; }
+  .obj-box { background: linear-gradient(180deg, rgba(212,175,55,0.10), rgba(0,0,0,0.25));
+    border: 1px solid var(--panel-border); border-radius: 14px; padding: 12px; }
+  .obj-box h4 { color: var(--gold-bright); }
+  .obj-row { display: flex; justify-content: space-between; font-size: 12.5px; padding: 6px 2px;
+    border-bottom: 1px solid rgba(212,175,55,0.15); }
+  .obj-row:last-child { border-bottom: none; }
+  .obj-row.done { color: #6ee787; font-weight: bold; }
+  .obj-row.current { color: var(--gold-bright); font-weight: bold; }
+  .obj-row.todo { color: #8b6914; }
+
+  /* ---- modales ---- */
+  .modal-bg { position: fixed; inset: 0; background: rgba(4,3,1,0.92); z-index: 50;
+    display: flex; align-items: center; justify-content: center; padding: 18px; overflow-y: auto; }
+  .modal-bg.hidden { display: none; }
+  .modal { width: 100%; max-width: 560px; border-radius: 24px; padding: 34px 30px; text-align: center; position: relative;
+    background: linear-gradient(165deg, #2b2010, #171008 60%);
+    border: 1px solid var(--gold);
+    box-shadow: 0 0 80px rgba(212,175,55,0.15), 0 30px 80px rgba(0,0,0,0.7); }
+  .modal.wide { max-width: 900px; }
+  .modal h2 { font-family: 'Cinzel', serif; letter-spacing: 4px; font-size: 30px; margin-bottom: 8px;
+    background: linear-gradient(180deg, #fff3cf, var(--gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .modal .sep { width: 120px; height: 1px; margin: 14px auto 20px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+  .welcome-desc { color: #dcc98a; font-size: 15px; font-style: italic; line-height: 1.6; margin-bottom: 20px; }
+  .ctrl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; margin-bottom: 22px; }
+  .ctrl { background: rgba(0,0,0,0.35); border: 1px solid rgba(212,175,55,0.25); border-radius: 10px; padding: 8px 4px; font-size: 12px; color: var(--gold-pale); }
+  .ctrl b { display: block; color: var(--gold-bright); font-size: 15px; margin-bottom: 2px; }
+  input.pseudo { width: 100%; padding: 13px; font-family: 'Cinzel', serif; font-size: 18px; text-align: center;
+    background: rgba(0,0,0,0.45); border: 1px solid var(--gold); border-radius: 12px; color: var(--gold-bright);
+    outline: none; margin-bottom: 20px; }
+  input.pseudo::placeholder { color: #7a6425; }
+  input.pseudo:focus { box-shadow: 0 0 25px rgba(212,175,55,0.25); }
+  .certif { background: rgba(212,175,55,0.08); border: 1px solid var(--gold); border-radius: 14px;
+    padding: 16px; margin-bottom: 16px; font-size: 14px; line-height: 1.55; color: #ecd9a0; white-space: pre-line; }
+  .final-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+  .rank-line { color: var(--gold-bright); font-style: italic; font-size: 15px; margin-bottom: 14px; }
+
+  .badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; margin: 20px 0; text-align: center; }
+  .badge-card { border-radius: 14px; padding: 16px 12px; border: 1px solid rgba(212,175,55,0.25); background: rgba(0,0,0,0.35); transition: transform .15s; }
+  .badge-card:hover { transform: translateY(-3px); }
+  .badge-card.unlocked { background: linear-gradient(180deg, rgba(212,175,55,0.20), rgba(212,175,55,0.05));
+    border-color: var(--gold); box-shadow: 0 0 22px rgba(212,175,55,0.18); }
+  .badge-card .ic { font-size: 38px; margin-bottom: 8px; }
+  .badge-card .nm { font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+  .badge-card.unlocked .nm { color: var(--gold-bright); }
+  .badge-card:not(.unlocked) .nm { color: #8b6914; }
+  .badge-card .ds { font-size: 11.5px; margin-bottom: 8px; line-height: 1.4; }
+  .badge-card.unlocked .ds { color: #dcc98a; }
+  .badge-card:not(.unlocked) .ds { color: #6b5210; }
+  .badge-prog { height: 7px; background: rgba(0,0,0,0.5); border-radius: 999px; overflow: hidden; margin-bottom: 4px; }
+  .badge-prog div { height: 100%; background: linear-gradient(90deg, #9a7514, var(--gold-bright)); border-radius: 999px; }
+  .badge-card .ok { color: #6ee787; font-weight: bold; font-size: 12px; letter-spacing: 1px; }
+
+  /* ---- toasts ---- */
+  #toasts { position: fixed; top: 18px; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; flex-direction: column; gap: 10px; align-items: center; pointer-events: none; }
+  .toast { padding: 13px 26px; border-radius: 14px; font-family: 'Cinzel', serif; font-size: 14px; letter-spacing: 1px;
+    background: linear-gradient(180deg, rgba(40,30,12,0.95), rgba(20,14,6,0.95));
+    border: 1px solid var(--gold); color: var(--gold-bright); box-shadow: 0 0 30px rgba(212,175,55,0.25);
+    animation: toastIn .3s ease, toastOut .4s ease 2.6s forwards; max-width: 90vw; text-align: center; }
+  .toast.err { border-color: #f87171; color: #fca5a5; box-shadow: 0 0 30px rgba(248,113,113,0.2); }
+  @keyframes toastIn { from { opacity: 0; transform: translateY(-18px) scale(.95);} to { opacity: 1; transform: none;} }
+  @keyframes toastOut { to { opacity: 0; transform: translateY(-12px);} }
+
+  /* ---- boutons flottants ---- */
+  .float-btns { position: fixed; top: 14px; right: 14px; z-index: 40; display: flex; gap: 8px; }
+  .fbtn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--gold); cursor: pointer;
+    background: rgba(20,14,6,0.85); color: var(--gold-bright); font-size: 18px; transition: transform .15s, background .2s; }
+  .fbtn:hover { transform: scale(1.1); background: rgba(212,175,55,0.2); }
+
+  /* ---- contrôles tactiles ---- */
+  .touch-controls { display: none; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 16px; width: 100%; max-width: 420px; }
+  .tbtn { padding: 16px 0; font-size: 22px; border-radius: 12px; border: 1px solid rgba(212,175,55,0.4);
+    background: rgba(212,175,55,0.08); color: var(--gold-bright); cursor: pointer; user-select: none; }
+  .tbtn:active { background: rgba(212,175,55,0.3); }
+  @media (pointer: coarse) { .touch-controls { display: grid; } }
+
+  footer { text-align: center; margin-top: 30px; color: #7a6425; font-style: italic; font-size: 13px; }
+
+  /* ================= LIFTING HAUTE JOAILLERIE ================= */
+  /* ---- poussière dorée ambiante ---- */
+  #dust { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+  /* ---- engrenages SVG laiton ---- */
+  .bg-gear svg { display: block; width: 100%; height: 100%; }
+  .bg-gear { filter: drop-shadow(0 0 26px rgba(212,175,55,0.35)); }
+  /* ---- secousse d'écran ---- */
+  @keyframes shakeIt {
+    0% { transform: translate(0,0) } 15% { transform: translate(-5px,3px) }
+    30% { transform: translate(4px,-3px) } 45% { transform: translate(-3px,2px) }
+    60% { transform: translate(2px,-1px) } 75% { transform: translate(-1px,1px) } 100% { transform: translate(0,0) }
+  }
+  .board-frame.shaking { animation: shakeIt .32s ease-out; }
+  /* ---- ornements dorés des panneaux ---- */
+  .panel { position: relative; }
+  .panel::before { content: ''; position: absolute; top: 0; left: 18px; right: 18px; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(240,212,122,0.65), transparent); }
+  .panel::after { content: '❦'; position: absolute; top: 6px; left: 12px; font-size: 12px;
+    color: rgba(212,175,55,0.4); }
+  /* ---- cadre du plateau : visserie laiton ---- */
+  .board-frame::before { content: ''; position: absolute; inset: 0; border-radius: 18px; pointer-events: none;
+    background:
+      radial-gradient(circle 5px at 14px 14px, #f0d47a 0 2px, #6b5210 2.6px 3.5px, transparent 4.5px),
+      radial-gradient(circle 5px at calc(100% - 14px) 14px, #f0d47a 0 2px, #6b5210 2.6px 3.5px, transparent 4.5px),
+      radial-gradient(circle 5px at 14px calc(100% - 14px), #f0d47a 0 2px, #6b5210 2.6px 3.5px, transparent 4.5px),
+      radial-gradient(circle 5px at calc(100% - 14px) calc(100% - 14px), #f0d47a 0 2px, #6b5210 2.6px 3.5px, transparent 4.5px); }
+  /* ---- score : pop à chaque changement ---- */
+  @keyframes scorePop { 0% { transform: scale(1) } 40% { transform: scale(1.18); text-shadow: 0 0 34px rgba(240,212,122,0.9) } 100% { transform: scale(1) } }
+  .score-box .value.pop { animation: scorePop .35s ease-out; }
+  /* ---- barre de progression : éclat roulant ---- */
+  .progress-track { position: relative; }
+  .progress-fill { position: relative; overflow: hidden; }
+  .progress-fill::after { content: ''; position: absolute; top: 0; left: -40%; width: 40%; height: 100%;
+    background: linear-gradient(105deg, transparent, rgba(255,255,255,0.55), transparent);
+    animation: shine 2.8s ease-in-out infinite; }
+  /* ---- titre : halo respirant ---- */
+  header h1 { animation: titleGlow 5s ease-in-out infinite; }
+  @keyframes titleGlow {
+    0%, 100% { filter: drop-shadow(0 2px 14px rgba(212,175,55,0.35)); }
+    50% { filter: drop-shadow(0 2px 26px rgba(240,212,122,0.65)); }
+  }
+  /* ---- modales : entrée élégante ---- */
+  .modal-bg { animation: modalFade .25s ease-out; }
+  .modal { animation: modalIn .35s cubic-bezier(.2,.9,.3,1.2); }
+  @keyframes modalFade { from { opacity: 0 } to { opacity: 1 } }
+  @keyframes modalIn { from { opacity: 0; transform: translateY(24px) scale(.94) } to { opacity: 1; transform: none } }
+  /* ---- pendule de pause ---- */
+  @keyframes pendulum { 0%,100% { transform: rotate(14deg) } 50% { transform: rotate(-14deg) } }
+  .pendulum { display: inline-block; transform-origin: 50% 0; animation: pendulum 1.6s ease-in-out infinite; }
+  /* ---- bouton : éclat au survol ---- */
+  .btn { position: relative; overflow: hidden; }
+  .btn::after { content: ''; position: absolute; top: 0; left: -70%; width: 50%; height: 100%;
+    background: linear-gradient(105deg, transparent, rgba(255,255,255,0.5), transparent);
+    opacity: 0; transition: none; }
+  .btn:hover::after { animation: shine 1s ease-out; }
+  /* ---- mini-cadvas : liseré plus riche ---- */
+  .next-hold { background: linear-gradient(180deg, rgba(30,22,10,0.85), rgba(14,10,4,0.9));
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,0,0,0.4); }
+  .next-hold canvas { box-shadow: 0 0 18px rgba(212,175,55,0.12) inset; }
+  @media (prefers-reduced-motion: reduce) {
+    .bg-gear, #dust, .progress-fill::after, .pendulum { animation: none !important; }
+    .board-frame.shaking { animation: none !important; }
+  }
+</style>
 </head>
-<body class="p-3 sm:p-6 min-h-screen">
-  <div class="max-w-7xl mx-auto">
+<body>
 
-    <!-- BARRE HAUTE NAVIGATION / QUITTER -->
-    <div class="flex items-center justify-between mb-4">
-      <button onclick="quitGame()" class="px-4 py-2 rounded-xl bg-[#281e1490] hover:bg-[#3c2814] text-[#d4af37] border-2 border-[#8b6914] flex items-center gap-2 text-xs font-mono-tech transition shadow-md hover:border-[#d4af37]" title="Quitter l'atelier">
-        <svg class="w-4 h-4 text-[#d4af37]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        <span class="font-bold tracking-wider uppercase">← Quitter l'atelier</span>
-      </button>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <radialGradient id="brass" cx="35%" cy="28%" r="80%">
+      <stop offset="0%" stop-color="#f7e3a0"/><stop offset="45%" stop-color="#c49b3a"/>
+      <stop offset="80%" stop-color="#8a6a1e"/><stop offset="100%" stop-color="#5a430f"/>
+    </radialGradient>
+    <g id="gearShape">
+      <g fill="url(#brass)">
+        <rect x="46" y="1" width="8" height="16" rx="2.5"/>
+        <rect x="46" y="1" width="8" height="16" rx="2.5" transform="rotate(30 50 50)"/>
+        <rect x="46" y="1" width="8" height="16" rx="2.5" transform="rotate(60 50 50)"/>
+        <rect x="46" y="1" width="8" height="16" rx="2.5" transform="rotate(90 50 50)"/>
+        <rect x="46" y="1" width="8" height="16" rx="2.5" transform="rotate(120 50 50)"/>
+        <rect x="46" y="1" width="8" height="16" rx="2.5" transform="rotate(150 50 50)"/>
+        <rect x="46" y="1" width="8" height="16" rx="2.5" transform="rotate(180 50 50)"/>
+        <rect x="46" y="1" width="8" height="16" rx="2.5" transform="rotate(210 50 50)"/>
+        <rect x="46" y="1" width="8" height="16" rx="2.5" transform="rotate(240 50 50)"/>
+        <rect x="46" y="1" width="8" height="16" rx="2.5" transform="rotate(270 50 50)"/>
+        <rect x="46" y="1" width="8" height="16" rx="2.5" transform="rotate(300 50 50)"/>
+        <rect x="46" y="1" width="8" height="16" rx="2.5" transform="rotate(330 50 50)"/>
+        <circle cx="50" cy="50" r="35"/>
+      </g>
+      <circle cx="50" cy="50" r="28" fill="none" stroke="rgba(20,14,6,0.55)" stroke-width="2" stroke-dasharray="4 5"/>
+      <circle cx="50" cy="50" r="13" fill="#1a1308" stroke="url(#brass)" stroke-width="3"/>
+      <circle cx="50" cy="50" r="6" fill="#0d0a06"/>
+    </g>
+  </defs>
+</svg>
+<div class="bg-gear" style="top:-90px; left:-90px; width:300px; height:300px; animation-duration: 70s;"><svg viewBox="0 0 100 100"><use href="#gearShape"/></svg></div>
+<div class="bg-gear" style="bottom:-110px; right:-100px; width:340px; height:340px; animation-duration: 95s; animation-direction: reverse;"><svg viewBox="0 0 100 100"><use href="#gearShape"/></svg></div>
+<div class="bg-gear" style="top:38%; left:83%; width:170px; height:170px; animation-duration: 55s;"><svg viewBox="0 0 100 100"><use href="#gearShape"/></svg></div>
+<div class="bg-gear" style="top:8%; left:46%; width:110px; height:110px; animation-duration: 80s; animation-direction: reverse;"><svg viewBox="0 0 100 100"><use href="#gearShape"/></svg></div>
+<canvas id="dust"></canvas>
+<div class="vignette"></div>
 
-      <div class="text-xs font-mono-tech text-[#c9a659] flex items-center gap-3">
-        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>Atelier d'horlogerie suisse</span>
-        <span class="text-[#8b6914]">|</span>
-        <span class="text-[#e0c87e]">Contrôles : Fleches + Espace</span>
+
+<div class="top-nav" style="position: fixed; top: 14px; left: 14px; z-index: 40;">
+  <button onclick="quitGame()" class="btn ghost btn-sm" style="display:flex; align-items:center; gap:6px; padding:9px 16px; font-size:12px; cursor:pointer;" title="Quitter l'atelier">
+    <span>←</span> QUITTER L'ATELIER
+  </button>
+</div>
+<div class="float-btns">
+  <button class="fbtn" id="soundBtn" title="Son">🔊</button>
+  <button class="fbtn" id="badgesBtn" title="Mes badges">🏅</button>
+</div>
+
+<div id="toasts"></div>
+
+<div class="wrap">
+  <header>
+    <div class="crown-row">👑 ⌛ 👑</div>
+    <h1>ATELIER D'ASSEMBLAGE HORLOGER</h1>
+    <div class="subtitle">Manufacture de Haute Précision Suisse — empilez les composants, façonnez la précision</div>
+    <div class="badge-geneve">GENÈVE · MDCCLV · 1755</div>
+  </header>
+
+  <div class="layout">
+    <!-- Colonne gauche -->
+    <div class="side">
+      <div class="panel">
+        <h3>📊 Établi</h3>
+        <div class="score-box">
+          <div class="label">Points</div>
+          <div class="value" id="score">0</div>
+        </div>
+        <div class="duo">
+          <div class="mini"><div class="label">Calibre</div><div class="value" id="level">1</div></div>
+          <div class="mini"><div class="label">Assemblages</div><div class="value" id="lines">0</div></div>
+        </div>
+        <div class="label" style="font-size:10px; letter-spacing:2px; color:var(--gold-pale); margin-bottom:6px; text-transform:uppercase;">Progression vers Légende</div>
+        <div class="progress-track"><div class="progress-fill" id="progress" style="width:0%">0%</div></div>
+        <div class="fact" id="fact">📜 …</div>
+        <button class="btn btn-block" id="badgesBtn2">🏅 Mes Badges (<span id="badgeCount">0</span>/10)</button>
+      </div>
+
+      <div class="panel">
+        <h3>📊 Statistiques</h3>
+        <div class="stat-row"><span>Parties jouées</span><b id="stGames">0</b></div>
+        <div class="stat-row"><span>Meilleur score</span><b id="stBest">0</b></div>
+        <div class="stat-row"><span>Total assemblages</span><b id="stLines">0</b></div>
+        <div class="stat-row"><span>Réussite au quiz</span><b id="stQuiz">0/0</b></div>
+      </div>
+
+      <div class="panel">
+        <h3>🏆 Hall of Fame</h3>
+        <div id="leaderboard"><div class="empty">Aucun score — soyez le premier Maître !</div></div>
       </div>
     </div>
 
-    <!-- CARTOUCHE TITRE MANUFACTURE -->
-    <div class="text-center mb-6 bg-gradient-to-br from-[#d4af3720] to-[#b8860b20] p-6 sm:p-8 rounded-2xl border-2 border-[#d4af37] shadow-[0_8px_30px_rgba(0,0,0,0.6)]">
-      <h1 class="text-3xl sm:text-5xl font-bold text-[#d4af37] mb-2 sm:mb-3 tracking-widest font-cinzel">
-        ⚙️ ATELIER D'ASSEMBLAGE HORLOGER ⚙️
-      </h1>
-      <div class="text-base sm:text-xl italic text-[#c9a659]">Manufacture de Haute Précision Suisse</div>
-      <div class="inline-block mt-3 px-6 sm:px-8 py-1.5 sm:py-2 border-2 border-[#d4af37] rounded-full text-xs sm:text-sm tracking-widest bg-[#d4af3710] font-mono-tech font-bold">
-        GENÈVE 1755
+    <!-- Centre : jeu -->
+    <div class="stage">
+      <div class="board-frame">
+        <canvas id="board" width="300" height="600"></canvas>
+        <div class="overlay" id="startOverlay">
+          <div class="big">⚙️ PRÊT ?</div>
+          <p>Assemblez les composants, complétez des lignes et gravissez les rangs de la Haute Horlogerie.</p>
+          <button class="btn" id="startBtn" style="padding:14px 40px; font-size:16px;">▶️ DÉMARRER</button>
+        </div>
+        <div class="overlay hidden" id="pauseOverlay">
+          <div class="big">⏸️ PAUSE</div>
+          <p>Le temps suspend son vol… <span class="pendulum" style="font-size:34px; margin-top:6px;">⏱️</span></p>
+          <button class="btn" id="resumeBtn" style="padding:12px 30px;">▶️ REPRENDRE</button>
+        </div>
+      </div>
+
+      <div class="side-canvases">
+        <div class="next-hold">
+          <div class="t">Prochain</div>
+          <canvas id="next" width="110" height="110"></canvas>
+          <div class="piece-name" id="pieceName">—</div>
+        </div>
+        <div class="next-hold">
+          <div class="t">Réserve</div>
+          <canvas id="hold" width="110" height="110"></canvas>
+          <div class="piece-name" id="holdHint">Touche C</div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top:14px;">
+        <button class="btn btn-sm" id="pauseBtn">⏸️ Pause</button>
+        <button class="btn btn-sm ghost" id="restartBtn">🔄 Recommencer</button>
+      </div>
+
+      <div class="touch-controls">
+        <button class="tbtn" data-act="left">◀</button>
+        <button class="tbtn" data-act="rotate">⟳</button>
+        <button class="tbtn" data-act="right">▶</button>
+        <button class="tbtn" data-act="down">▼</button>
+        <button class="tbtn" data-act="drop">⤓</button>
       </div>
     </div>
 
-    <!-- GRILLE 3 COLONNES ORIGINALE DU SITE -->
-    <div class="grid grid-cols-1 lg:grid-cols-[300px_1fr_300px] gap-6">
-
-      <!-- COLONNE GAUCHE : ÉTABLI & STATS -->
-      <div class="bg-gradient-to-br from-[#3c281490] to-[#281e1490] border-2 border-[#8b6914] rounded-xl p-5 shadow-lg flex flex-col justify-between">
-        <div>
-          <h3 class="text-xl text-center border-b-2 border-[#8b6914] pb-2 mb-4 font-bold font-cinzel">📊 Établi</h3>
-          
-          <!-- Score -->
-          <div class="bg-[#00000066] p-4 rounded-xl text-center mb-3 border-2 border-[#d4af37] shadow-inner">
-            <div class="text-xs text-[#c9a659] uppercase tracking-wider font-mono-tech">Points</div>
-            <div id="stat-score" class="text-4xl font-bold text-[#d4af37] font-cinzel">0</div>
-          </div>
-
-          <!-- Calibre & Assemblages -->
-          <div class="grid grid-cols-2 gap-2 mb-3">
-            <div class="bg-[#00000066] p-3 rounded-xl text-center border border-[#8b6914]">
-              <div class="text-xs text-[#c9a659] font-mono-tech">Calibre</div>
-              <div id="stat-level" class="text-2xl font-bold text-[#d4af37] font-cinzel">1</div>
-            </div>
-            <div class="bg-[#00000066] p-3 rounded-xl text-center border border-[#8b6914]">
-              <div class="text-xs text-[#c9a659] font-mono-tech">Assemblages</div>
-              <div id="stat-lines" class="text-2xl font-bold text-[#d4af37] font-cinzel">0</div>
-            </div>
-          </div>
-
-          <!-- Progression bar -->
-          <div class="bg-[#00000066] p-3 rounded-xl mb-3 border border-[#8b6914] text-xs">
-            <div class="text-[#d4af37] mb-2 text-center font-bold font-cinzel">Progression</div>
-            <div class="h-5 bg-[#00000080] rounded-xl overflow-hidden border border-[#8b6914]">
-              <div id="progress-bar-inner" class="h-full bg-gradient-to-r from-[#d4af37] to-[#f0c14b] flex items-center justify-center text-[10px] font-bold text-[#1a1410] font-mono-tech transition-all duration-300" style="width: 0%">
-                0%
-              </div>
-            </div>
-          </div>
-
-          <!-- Anecdote historique -->
-          <div id="historical-fact" class="bg-[#00000050] p-3 rounded-xl mb-3 border border-[#8b6914] text-xs italic text-[#e0c87e] leading-relaxed">
-            📜 Abraham-Louis Breguet perfectionne le tourbillon en 1801 pour compenser les effets de la gravité terrestre.
-          </div>
-          
-          <!-- Bouton Badges -->
-          <button onclick="openBadgesModal()" class="w-full bg-gradient-to-br from-[#d4af37] to-[#b8860b] hover:from-[#e5be48] hover:to-[#c99516] text-[#1a1410] px-4 py-3 rounded-xl font-bold text-sm mb-3 shadow-md hover:shadow-xl transition-all cursor-pointer font-mono-tech">
-            🏅 Mes Badges (<span id="badges-count">0</span>/10)
-          </button>
-
-          <!-- Statistiques Joueur -->
-          <div class="bg-[#00000066] p-3 rounded-xl border border-[#d4af37] mb-3">
-            <h4 class="text-[#d4af37] text-center mb-2 text-xs font-bold font-cinzel">📊 Statistiques Joueur</h4>
-            <div class="space-y-1 text-[11px] text-[#c9a659] font-mono-tech">
-              <div class="flex justify-between">
-                <span>Parties :</span>
-                <strong id="stat-total-games" class="text-[#d4af37]">0</strong>
-              </div>
-              <div class="flex justify-between">
-                <span>Meilleur score :</span>
-                <strong id="stat-best-score" class="text-[#d4af37]">0</strong>
-              </div>
-              <div class="flex justify-between">
-                <span>Total lignes :</span>
-                <strong id="stat-total-lines" class="text-[#d4af37]">0</strong>
-              </div>
-              <div class="flex justify-between">
-                <span>Quiz :</span>
-                <strong id="stat-quiz-score" class="text-[#d4af37]">0/0</strong>
-              </div>
+    <!-- Colonne droite -->
+    <div class="side">
+      <div class="panel">
+        <h3>🎓 Examen</h3>
+        <div class="quiz-box">
+          <h4>Questions Techniques</h4>
+          <div id="quizZone">
+            <div style="color:#cfe0ee; font-size:13px; font-style:italic; line-height:1.5;">
+              Complétez 3 assemblages pour débloquer l'examen technique. Chaque bonne réponse vaut <b style="color:#a5cbe8;">+750 points</b> !
             </div>
           </div>
         </div>
-
-        <!-- Hall of Fame -->
-        <div class="bg-[#00000066] p-3 rounded-xl border border-[#d4af37]">
-          <h4 class="text-[#d4af37] text-center mb-2 text-sm font-bold font-cinzel">🏆 Hall of Fame</h4>
-          <div id="leaderboard-list" class="space-y-1">
-            <div class="text-center py-3 text-[#8b6914] italic text-xs">Aucun score enregistré</div>
-          </div>
+        <div class="enc-box">
+          <h4>📚 Encyclopédie</h4>
+          <div class="txt" id="encyclopedia">…</div>
         </div>
-      </div>
-
-      <!-- COLONNE CENTRALE : PLATEAU DE JEU & PROCHAIN COMPOSANT -->
-      <div class="flex flex-col items-center">
-        <!-- Canvas de jeu -->
-        <div class="relative">
-          <canvas id="game-canvas" width="300" height="600" class="border-4 border-[#d4af37] rounded-xl shadow-[0_12px_36px_rgba(0,0,0,0.8)]"></canvas>
-
-          <!-- Overlay pause -->
-          <div id="pause-overlay" class="absolute inset-0 bg-black/80 rounded-xl flex-col items-center justify-center gap-3 hidden">
-            <div class="text-3xl font-bold font-cinzel text-[#d4af37]">EN PAUSE</div>
-            <p class="text-xs text-[#c9a659] font-mono-tech">Appuyez sur Reprendre pour continuer</p>
-          </div>
+        <div class="obj-box">
+          <h4>🏆 Objectifs</h4>
+          <div id="objList"></div>
         </div>
-
-        <!-- Boutons Démarrer / Pause -->
-        <div class="flex gap-3 my-4">
-          <button id="btn-start" onclick="toggleStartGame()" class="bg-gradient-to-br from-[#d4af37] to-[#b8860b] hover:from-[#e5be48] hover:to-[#c99516] text-[#1a1410] px-8 py-3 rounded-xl font-bold uppercase tracking-wider text-sm shadow-lg hover:shadow-xl transition-all cursor-pointer font-cinzel">
-            ▶️ Démarrer
-          </button>
-        </div>
-
-        <!-- Prochain Composant Horloger -->
-        <div class="bg-gradient-to-br from-[#00000099] to-[#281e1499] p-4 rounded-xl border-2 border-[#8b6914] text-center w-full max-w-[300px] shadow-lg">
-          <h4 class="text-[#d4af37] mb-2 font-bold font-cinzel text-sm">Prochain Composant</h4>
-          <canvas id="next-canvas" width="120" height="120" class="mx-auto border-2 border-[#8b6914] rounded-lg mb-2 shadow-inner" style="background: rgba(0,0,0,0.4)"></canvas>
-          <div id="next-piece-name" class="text-[#d4af37] italic text-xs font-mono-tech font-bold">---</div>
-        </div>
-      </div>
-
-      <!-- COLONNE DROITE : EXAMEN TECHNIQUE, ENCYCLOPÉDIE & OBJECTIFS -->
-      <div class="bg-gradient-to-br from-[#3c281490] to-[#281e1490] border-2 border-[#8b6914] rounded-xl p-5 shadow-lg flex flex-col justify-between">
-        <div>
-          <h3 class="text-xl text-center border-b-2 border-[#8b6914] pb-2 mb-4 font-bold font-cinzel">🎓 Examen</h3>
-          
-          <!-- Section Quiz Horloger -->
-          <div class="bg-gradient-to-br from-[#143c5050] to-[#14283c50] p-4 rounded-xl border-2 border-[#5a7fa0] mb-3 shadow-md">
-            <h4 class="text-[#8bb4d9] text-center mb-3 text-sm font-bold font-cinzel">Questions Techniques</h4>
-            <div id="quiz-container" class="bg-[#00000066] p-3 rounded-lg border-l-2 border-[#8bb4d9] text-xs">
-              <div id="quiz-idle" class="text-[#c9d4e0] leading-relaxed font-mono-tech">
-                Complétez 3 assemblages pour débloquer l'examen technique (+750 pts) !
-              </div>
-              <div id="quiz-active" class="hidden">
-                <div id="quiz-question-text" class="text-[#c9d4e0] font-bold mb-3 leading-relaxed"></div>
-                <div id="quiz-options-list" class="space-y-2"></div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Encyclopédie horlogère -->
-          <div class="bg-[#00000050] p-3 rounded-xl mb-3 border border-[#8b6914] text-xs">
-            <h4 class="text-[#d4af37] text-center mb-2 font-bold font-cinzel">📚 Encyclopédie</h4>
-            <div id="encyclopedia-text" class="text-[#c9a659] leading-relaxed">
-              <strong>Le Balancier-Spiral</strong> est l'organe régulateur du mouvement. Il oscille à fréquence constante (2.5 à 5 Hz).
-            </div>
-          </div>
-        </div>
-
-        <!-- Objectifs Maîtrise -->
-        <div class="bg-gradient-to-br from-[#8b691420] to-[#d4af3720] p-3 rounded-xl border-2 border-[#d4af37]">
-          <h4 class="text-[#d4af37] text-center mb-2 text-sm font-bold font-cinzel">🏆 Objectifs</h4>
-          <div id="objectives-list" class="text-[#e0c87e] text-xs space-y-1 font-mono-tech">
-            <!-- Rendu dynamique -->
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- MODAL DE BIENVENUE (PSEUDO) -->
-  <div id="modal-pseudo" class="fixed inset-0 bg-black/95 flex items-center justify-center z-50 p-4">
-    <div class="bg-gradient-to-br from-[#281e14f0] to-[#3c2814f0] p-8 sm:p-10 rounded-3xl text-center border-4 border-[#d4af37] max-w-lg w-full shadow-[0_0_50px_rgba(212,175,55,0.4)]">
-      <h2 class="text-3xl sm:text-4xl text-[#d4af37] mb-4 font-bold font-cinzel">⚙️ BIENVENUE ⚙️</h2>
-      <div class="bg-[#d4af3720] p-4 rounded-xl mb-6 border-2 border-[#d4af37] text-sm text-[#e0c87e]">
-        Entrez votre nom d'horloger pour inscrire vos exploits au registre officiel de la manufacture.
-      </div>
-      <input 
-        id="input-pseudo"
-        type="text" 
-        placeholder="Votre pseudo d'horloger..." 
-        maxlength="20" 
-        autofocus 
-        class="w-full p-3.5 text-lg bg-[#00000066] border-2 border-[#d4af37] rounded-xl text-[#d4af37] text-center mb-6 placeholder-[#8b6914] focus:outline-none focus:ring-2 focus:ring-[#f0c14b] font-mono-tech" 
-      />
-      <button onclick="savePseudoAndStart()" class="bg-gradient-to-br from-[#d4af37] to-[#b8860b] hover:from-[#e5be48] hover:to-[#c99516] text-[#1a1410] px-8 py-3.5 rounded-xl font-bold uppercase tracking-wider font-cinzel cursor-pointer shadow-lg w-full">
-        ✨ Commencer
-      </button>
-    </div>
-  </div>
-
-  <!-- MODAL GAME OVER / CERTIFICATION -->
-  <div id="modal-gameover" class="fixed inset-0 bg-black/95 flex items-center justify-center z-50 p-4 overflow-y-auto hidden">
-    <div class="bg-gradient-to-br from-[#281e14f0] to-[#3c2814f0] p-6 sm:p-8 rounded-3xl text-center border-4 border-[#d4af37] max-w-2xl w-full max-h-[92vh] overflow-y-auto shadow-[0_0_60px_rgba(212,175,55,0.4)]">
-      <h2 class="text-3xl sm:text-4xl text-[#d4af37] mb-3 font-bold font-cinzel">⚙️ RAPPORT D'ATELIER ⚙️</h2>
-      
-      <div id="gameover-certif" class="bg-[#d4af3720] p-4 rounded-xl mb-4 border-2 border-[#d4af37] whitespace-pre-line text-sm text-[#e0c87e] leading-relaxed"></div>
-      
-      <div class="grid grid-cols-3 gap-3 mb-4">
-        <div class="bg-[#00000066] p-3 rounded-xl border-2 border-[#8b6914]">
-          <div class="text-xs text-[#c9a659] font-mono-tech">Points</div>
-          <div id="gameover-score" class="text-2xl font-bold text-[#d4af37] font-cinzel">0</div>
-        </div>
-        <div class="bg-[#00000066] p-3 rounded-xl border-2 border-[#8b6914]">
-          <div class="text-xs text-[#c9a659] font-mono-tech">Assemblages</div>
-          <div id="gameover-lines" class="text-2xl font-bold text-[#d4af37] font-cinzel">0</div>
-        </div>
-        <div class="bg-[#00000066] p-3 rounded-xl border-2 border-[#8b6914]">
-          <div class="text-xs text-[#c9a659] font-mono-tech">Calibre</div>
-          <div id="gameover-level" class="text-2xl font-bold text-[#d4af37] font-cinzel">1</div>
-        </div>
-      </div>
-
-      <div id="gameover-rank" class="text-[#c9a659] italic mb-4 font-cinzel text-lg"></div>
-
-      <!-- TOP 5 LEADERBOARD -->
-      <div class="bg-[#00000080] p-4 rounded-xl mb-6 border-2 border-[#d4af37]">
-        <h3 class="text-lg text-[#d4af37] mb-3 font-bold font-cinzel">🏆 TOP 5 REGISTRE OFFICIEL 🏆</h3>
-        <div id="gameover-leaderboard" class="space-y-1"></div>
-      </div>
-
-      <div class="flex gap-3 justify-center flex-wrap font-cinzel">
-        <button onclick="quickRestart()" class="bg-gradient-to-br from-[#d4af37] to-[#b8860b] hover:from-[#e5be48] hover:to-[#c99516] text-[#1a1410] px-6 py-3 rounded-xl font-bold uppercase tracking-wider text-sm shadow-md cursor-pointer">
-          ▶️ Nouvelle Partie
-        </button>
-        <button onclick="changePseudo()" class="bg-gradient-to-br from-[#8b6914] to-[#6b5210] hover:from-[#a37e19] text-[#d4af37] px-6 py-3 rounded-xl font-bold uppercase tracking-wider text-sm shadow-md cursor-pointer border border-[#d4af37]">
-          ✏️ Changer Pseudo
-        </button>
-        <button onclick="quitGame()" class="bg-[#14141e] hover:bg-rose-950/80 text-rose-300 px-6 py-3 rounded-xl font-bold uppercase tracking-wider text-sm border border-rose-500/40">
-          Quitter
-        </button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL COLLECTION DES BADGES -->
-  <div id="modal-badges" class="fixed inset-0 bg-black/95 flex items-center justify-center z-50 p-4 hidden">
-    <div class="bg-gradient-to-br from-[#281e14f0] to-[#3c2814f0] p-6 sm:p-8 rounded-3xl border-4 border-[#d4af37] max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-[0_0_60px_rgba(212,175,55,0.5)]">
-      <h2 class="text-3xl sm:text-4xl text-[#d4af37] mb-4 text-center font-bold font-cinzel">
-        🏅 Collection de Badges Horlogers
-      </h2>
-      
-      <div class="mb-6 text-center text-[#c9a659] font-mono-tech">
-        <span id="badges-unlocked-title" class="text-2xl font-bold text-[#d4af37]">0</span> / 10 badges débloqués
-      </div>
+  <footer>Chaque pièce compte. Chaque seconde aussi. — Manufacture Genève 1755</footer>
+</div>
 
-      <div id="badges-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-        <!-- Rendu dynamique des badges -->
-      </div>
+<!-- MODALE PSEUDO -->
+<div class="modal-bg" id="pseudoModal">
+  <div class="modal">
+    <div class="crown-row" style="font-size:34px;">⚙️</div>
+    <h2>BIENVENUE À L'ATELIER</h2>
+    <div class="sep"></div>
+    <div class="welcome-desc">
+      Vous êtes Apprenti Horloger à Genève, en 1755. Empilez balanciers, rubis et rouages
+      pour compléter les lignes de la platine. Chaque calibre franchi accélère le tempo de la manufacture…
+    </div>
+    <div class="ctrl-grid">
+      <div class="ctrl"><b>← →</b>Déplacer</div>
+      <div class="ctrl"><b>↑</b>Pivoter</div>
+      <div class="ctrl"><b>↓</b>Descendre</div>
+      <div class="ctrl"><b>Espace</b>Chute libre</div>
+      <div class="ctrl"><b>C</b>Réserve</div>
+    </div>
+    <input class="pseudo" id="pseudoInput" placeholder="Votre nom d'horloger…" maxlength="20" autocomplete="off">
+    <button class="btn btn-block" id="pseudoOk" style="font-size:16px; padding:15px;">✨ SIGNER LE LIVRE DE L'ATELIER</button>
+  </div>
+</div>
 
-      <button onclick="closeBadgesModal()" class="bg-gradient-to-br from-[#d4af37] to-[#b8860b] hover:from-[#e5be48] text-[#1a1410] px-8 py-3.5 rounded-xl font-bold w-full text-base uppercase tracking-wider font-cinzel cursor-pointer shadow-xl">
-        ✨ Fermer
-      </button>
+<!-- MODALE GAME OVER -->
+<div class="modal-bg hidden" id="overModal">
+  <div class="modal">
+    <h2 id="overTitle">FIN DE QUART</h2>
+    <div class="sep"></div>
+    <div class="certif" id="certif"></div>
+    <div class="final-grid">
+      <div class="mini"><div class="label">Points</div><div class="value" id="fScore">0</div></div>
+      <div class="mini"><div class="label">Assemblages</div><div class="value" id="fLines">0</div></div>
+      <div class="mini"><div class="label">Calibre</div><div class="value" id="fLevel">1</div></div>
+    </div>
+    <div class="rank-line" id="fRank"></div>
+    <div style="background:rgba(0,0,0,0.45); border:1px solid var(--gold); border-radius:14px; padding:14px; margin-bottom:18px;">
+      <h3 style="font-family:'Cinzel',serif; color:var(--gold-bright); letter-spacing:3px; margin-bottom:10px;">🏆 TOP 5 🏆</h3>
+      <div id="overLb"></div>
+    </div>
+    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+      <button class="btn" id="againBtn" style="padding:13px 28px;">▶️ Nouvelle Partie</button>
+      <button class="btn ghost" id="changePseudoBtn" style="padding:13px 28px;">✏️ Changer de Pseudo</button>
+      <button class="btn ghost" onclick="quitGame()" style="padding:13px 28px; border-color: rgba(248,113,113,0.5); color:#fca5a5;">Quitter</button>
     </div>
   </div>
+</div>
 
-  <script>
-    // --- ÉTAT & LOGIQUE HORLOGÈRE OFFICIELLE DU SITE ---
-    const COLS = 10;
-    const ROWS = 20;
-    const BLOCK_SIZE = 30;
+<!-- MODALE BADGES -->
+<div class="modal-bg hidden" id="badgesModal">
+  <div class="modal wide">
+    <h2>🏅 COLLECTION DE BADGES</h2>
+    <div class="sep"></div>
+    <div style="color:var(--gold-pale); margin-bottom:6px;"><span style="font-size:24px; font-weight:bold; color:var(--gold-bright);" id="badgeTotal">0</span> / 10 badges débloqués</div>
+    <div class="badge-grid" id="badgeGrid"></div>
+    <button class="btn btn-block" id="closeBadges">✨ Fermer</button>
+  </div>
+</div>
 
-    const COLORS = ['#c9a659', '#8b4513', '#dc143c', '#4169e1', '#32cd32', '#9370db', '#ff6347'];
-    const PIECE_NAMES = ['⚖️ Balancier-Spiral', '⚙️ Échappement', '💎 Rubis', '⬛ Platine', '🔄 Rotor', '🎯 Rouage', '👑 Couronne'];
-    const SHAPES = [
-      [[1,1,1,1]],          // I - Platine / Balancier
-      [[1,1],[1,1]],        // O - Rubis
-      [[0,1,0],[1,1,1]],    // T - Échappement
-      [[1,0,0],[1,1,1]],    // L - Rouage
-      [[0,0,1],[1,1,1]],    // J - Rotor
-      [[0,1,1],[1,1,0]],    // S - Spiral
-      [[1,1,0],[0,1,1]]     // Z - Ancre
-    ];
+<script>
+/* Filet de sécurité : si une erreur JS survient, l'afficher à l'écran
+   au lieu de laisser une page silencieusement inerte. */
+window.addEventListener('error', function(ev) {
+  try {
+    var el = document.getElementById('fatalErr');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'fatalErr';
+      el.style.cssText = 'position:fixed;bottom:8px;left:8px;right:8px;z-index:99999;background:#4a1010;color:#ffd9d9;border:1px solid #a33;padding:8px 12px;font:12px monospace;border-radius:6px;';
+      (document.body || document.documentElement).appendChild(el);
+    }
+    el.textContent = 'Erreur : ' + (ev.message || ev.error || 'inconnue');
+  } catch(e) {}
+});
+(() => {
+'use strict';
+/* ================= CONSTANTES ================= */
+const COLS = 10, ROWS = 20, B = 30;
+const COLORS = ['#e8c15a', '#c47f3e', '#e0245e', '#4a7ce8', '#3ecf6e', '#a06ee0', '#ff8a5c'];
+const NAMES  = ['⚖️ Balancier-Spiral', '⚙️ Échappement', '💎 Rubis', '⬛ Platine', '🔄 Rotor', '🎯 Rouage', '👑 Couronne'];
+const SHAPES = [
+  [[1,1,1,1]],
+  [[1,1],[1,1]],
+  [[0,1,0],[1,1,1]],
+  [[1,0,0],[1,1,1]],
+  [[0,0,1],[1,1,1]],
+  [[0,1,1],[1,1,0]],
+  [[1,1,0],[0,1,1]]
+];
+const BADGES = [
+  { id:'apprentice',     name:'Apprenti Horloger',   icon:'🔰', desc:'Compléter 25 parties',          target:25,     stat:'totalGames' },
+  { id:'precision_100',  name:'Précision Suisse',    icon:'🎖️', desc:'Assembler 100 lignes au total', target:100,    stat:'totalLines' },
+  { id:'precision_500',  name:'Maître Artisan',      icon:'⚙️', desc:'Assembler 500 lignes au total', target:500,    stat:'totalLines' },
+  { id:'precision_1000', name:'Compagnon Certifié',  icon:'🔧', desc:'Assembler 1000 lignes au total',target:1000,   stat:'totalLines' },
+  { id:'precision_2500', name:'Grande Complication', icon:'👑', desc:'Assembler 2500 lignes au total',target:2500,   stat:'totalLines' },
+  { id:'quiz_master',    name:'Expert COSC',         icon:'🎓', desc:'50 bonnes réponses au quiz',    target:50,     stat:'quizCorrect' },
+  { id:'score_25000',    name:'Horloger Confirmé',   icon:'💎', desc:'25 000 points en une partie',   target:25000,  stat:'bestScore' },
+  { id:'score_50000',    name:'Maître Horloger',     icon:'🏆', desc:'50 000 points en une partie',   target:50000,  stat:'bestScore' },
+  { id:'score_100000',   name:'Légende Horlogère',   icon:'⭐', desc:'100 000 points en une partie',  target:100000, stat:'bestScore' },
+  { id:'veteran',        name:'Vétéran du Calibre',  icon:'🛡️', desc:'Jouer 100 parties',             target:100,    stat:'totalGames' }
+];
+const FACTS = [
+  "En 1770, Abraham-Louis Perrelet invente le mécanisme de remontage automatique.",
+  "Le spiral Breguet, avec sa courbe terminale, améliore la concentricité et la précision.",
+  "Les rubis synthétiques sont introduits en horlogerie dès 1902 pour réduire les frottements.",
+  "Un balancier à 28'800 alt/h effectue 691'200 oscillations par jour !",
+  "Le Calibre 89 de Patek Philippe (1989) compte 1'728 composants et 33 complications."
+];
+const ENCY = [
+  "<b>Le Balancier-Spiral</b> est l'organe régulateur du mouvement. Il oscille à fréquence constante (2,5 à 5 Hz).",
+  "<b>L'Échappement</b> transforme l'énergie continue du barillet en impulsions régulières pour le balancier.",
+  "<b>Les Rubis</b> sont des paliers en corindon synthétique qui réduisent les frottements à près de zéro.",
+  "<b>La Platine</b> est la base du mouvement sur laquelle tous les composants sont assemblés."
+];
+const QUIZ = [
+  { q:"Quelle est la fréquence standard d'un mouvement mécanique moderne ?", o:["18'000 alt/h","21'600 alt/h","28'800 alt/h","36'000 alt/h"], c:2 },
+  { q:"Combien de rubis contient typiquement un mouvement ETA 2824-2 ?", o:["17 rubis","21 rubis","25 rubis","31 rubis"], c:2 },
+  { q:"Qu'est-ce que l'échappement à ancre suisse ?", o:["Un système de remontage","Un mécanisme régulateur","Un indicateur de réserve","Un type de spiral"], c:1 },
+  { q:"Quelle est la réserve de marche typique d'un calibre automatique ?", o:["24 heures","38-42 heures","7 jours","14 jours"], c:1 },
+  { q:"Que signifie 'COSC' en horlogerie ?", o:["Centre Optique Suisse Cadran","Contrôle Officiel Suisse Chronomètres","Comité Organisation Suisse Calibres","Centre Observation Spiraux Chronomètres"], c:1 }
+];
 
-    const ALL_BADGES = [
-      { id: 'apprentice', name: 'Apprenti Horloger', icon: '🔰', desc: 'Compléter 25 parties complètes', target: 25, stat: 'totalGames' },
-      { id: 'precision_100', name: 'Précision Suisse', icon: '🎖️', desc: 'Assembler 100 lignes au total', target: 100, stat: 'totalLines' },
-      { id: 'precision_500', name: 'Maître Artisan', icon: '⚙️', desc: 'Assembler 500 lignes au total', target: 500, stat: 'totalLines' },
-      { id: 'precision_1000', name: 'Compagnon Certifié', icon: '🔧', desc: 'Assembler 1000 lignes au total', target: 1000, stat: 'totalLines' },
-      { id: 'precision_2500', name: 'Grande Complication', icon: '👑', desc: 'Assembler 2500 lignes au total', target: 2500, stat: 'totalLines' },
-      { id: 'quiz_master', name: 'Expert COSC', icon: '🎓', desc: 'Répondre correctement à 50 questions', target: 50, stat: 'quizCorrect' },
-      { id: 'score_25000', name: 'Horloger Confirmé', icon: '💎', desc: 'Atteindre 25000 points en une partie', target: 25000, stat: 'bestScore' },
-      { id: 'score_50000', name: 'Maître Horloger', icon: '🏆', desc: 'Atteindre 50000 points en une partie', target: 50000, stat: 'bestScore' },
-      { id: 'score_100000', name: 'Légende Horlogère', icon: '⭐', desc: 'Atteindre 100000 points en une partie', target: 100000, stat: 'bestScore' },
-      { id: 'veteran', name: 'Vétéran du Calibre', icon: '🛡️', desc: 'Jouer 100 parties complètes', target: 100, stat: 'totalGames' },
-    ];
+/* ================= ÉTAT ================= */
+const $ = id => document.getElementById(id);
+const canvas = $('board'), ctx = canvas.getContext('2d');
+const nextC = $('next'), nctx = nextC.getContext('2d');
+const holdC = $('hold'), hctx = holdC.getContext('2d');
 
-    const historicalFacts = [
-      "En 1770, Abraham-Louis Perrelet invente le mécanisme de remontage automatique.",
-      "Le spiral Breguet, avec sa courbe terminale, améliore la concentricité et la précision chronométrique.",
-      "Les rubis synthétiques sont introduits en horlogerie dès 1902 par Auguste Verneuil pour réduire les frottements.",
-      "Un balancier à 28'800 alt/h effectue 691'200 oscillations par jour !",
-      "Le Calibre 89 de Patek Philippe (1989) compte 1'728 composants et 33 complications horlogères."
-    ];
+let board, piece, nextPiece, holdPiece, canHold;
+let score = 0, lines = 0, level = 1;
+let running = false, paused = false;
+let dropTimer = 0, dropInterval = 1000, lastTime = 0;
+let particles = [], popups = [], flashRows = [];
+let quizIndex = 0, currentQuestion = null, answered = false;
+let pseudo = '';
+let soundOn = true;
+let rafId = null;
 
-    const encyclopediaEntries = [
-      "<strong>Le Balancier-Spiral</strong> est l'organe régulateur du mouvement. Il oscille à fréquence constante (2.5 à 5 Hz).",
-      "<strong>L'Échappement</strong> transforme l'énergie continue du barillet en impulsions régulières pour le balancier.",
-      "<strong>Les Rubis</strong> sont des paliers en corindon synthétique qui réduisent les frottements à près de zéro.",
-      "<strong>La Platine</strong> est la base du mouvement sur laquelle tous les composants sont assemblés."
-    ];
+/* ================= STOCKAGE ================= */
+const loadJSON = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch(e){ return d; } };
+const saveJSON = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} };
+const loadStats  = () => loadJSON('horlogerStats', { totalGames:0, totalLines:0, bestScore:0, quizCorrect:0, quizTotal:0 });
+const saveStats  = s => saveJSON('horlogerStats', s);
+const loadBadges = () => loadJSON('horlogerBadges', []);
+const saveBadges = b => saveJSON('horlogerBadges', b);
+const loadScores = () => loadJSON('horlogerScores', []);
+const saveScores = s => saveJSON('horlogerScores', s);
 
-    const quizQuestions = [
-      {
-        question: "Quelle est la fréquence standard d'un mouvement mécanique moderne ?",
-        options: ["18'000 alt/h", "21'600 alt/h", "28'800 alt/h", "36'000 alt/h"],
-        correct: 2
-      },
-      {
-        question: "Combien de rubis contient typiquement un mouvement ETA 2824-2 ?",
-        options: ["17 rubis", "21 rubis", "25 rubis", "31 rubis"],
-        correct: 2
-      },
-      {
-        question: "Qu'est-ce que l'échappement à ancre suisse ?",
-        options: ["Un système de remontage", "Un mécanisme régulateur", "Un indicateur de réserve", "Un type de spiral"],
-        correct: 1
-      },
-      {
-        question: "Quelle est la réserve de marche typique d'un calibre automatique ?",
-        options: ["24 heures", "38-42 heures", "7 jours", "14 jours"],
-        correct: 1
-      },
-      {
-        question: "Que signifie 'COSC' en horlogerie ?",
-        options: ["Centre Optique Suisse Cadran", "Contrôle Officiel Suisse des Chronomètres", "Comité Organisation Suisse Calibres", "Centre Observation Spiraux Chronomètres"],
-        correct: 1
+/* ================= SONS (WebAudio) ================= */
+let audioCtx = null;
+function beep(freq, dur, type, vol) {
+  if (!soundOn) return;
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = type || 'sine'; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol || 0.08, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(); o.stop(audioCtx.currentTime + dur);
+  } catch(e){}
+}
+const sfx = {
+  move:  () => beep(220, 0.06, 'square', 0.04),
+  rot:   () => beep(330, 0.08, 'square', 0.05),
+  drop:  () => beep(140, 0.12, 'sawtooth', 0.06),
+  lock:  () => beep(110, 0.15, 'triangle', 0.09),
+  line:  n => { [0,1,2,3].slice(0, n).forEach((i) => setTimeout(() => beep(440 + i*160, 0.18, 'sine', 0.1), i*90)); },
+  quiz:  ok => ok ? [523,659,784].forEach((f,i)=>setTimeout(()=>beep(f,0.2,'sine',0.1), i*120))
+                  : beep(180, 0.35, 'sawtooth', 0.08),
+  badge: () => [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,0.25,'sine',0.12), i*130)),
+  over:  () => [392,330,262,196].forEach((f,i)=>setTimeout(()=>beep(f,0.3,'triangle',0.1), i*180))
+};
+
+/* ================= TOASTS ================= */
+function toast(msg, isErr) {
+  const t = document.createElement('div');
+  t.className = 'toast' + (isErr ? ' err' : '');
+  t.innerHTML = msg;
+  $('toasts').appendChild(t);
+  setTimeout(() => t.remove(), 3100);
+}
+
+/* ================= DESSIN ================= */
+function shade(hex, amt) {
+  const h = hex.replace('#','');
+  const r = Math.max(0, Math.min(255, parseInt(h.substr(0,2),16)+amt));
+  const g = Math.max(0, Math.min(255, parseInt(h.substr(2,2),16)+amt));
+  const b = Math.max(0, Math.min(255, parseInt(h.substr(4,2),16)+amt));
+  return `rgb(${r},${g},${b})`;
+}
+function drawBlock(c, x, y, size, color, glow) {
+  const px = x*size, py = y*size, r = Math.max(3, size*0.15);
+  if (glow) { c.save(); c.shadowColor = color; c.shadowBlur = size*0.5; }
+  // ombre portée douce sous le bloc
+  c.fillStyle = 'rgba(0,0,0,0.35)';
+  c.fillRect(px+3, py+4, size-4, size-2);
+  const grad = c.createLinearGradient(px, py, px+size, py+size);
+  grad.addColorStop(0, shade(color, 45));
+  grad.addColorStop(0.45, color);
+  grad.addColorStop(1, shade(color, -55));
+  c.fillStyle = grad;
+  c.beginPath();
+  c.moveTo(px+r+1, py+1);
+  c.arcTo(px+size-1, py+1, px+size-1, py+size-1, r);
+  c.arcTo(px+size-1, py+size-1, px+1, py+size-1, r);
+  c.arcTo(px+1, py+size-1, px+1, py+1, r);
+  c.arcTo(px+1, py+1, px+size-1, py+1, r);
+  c.closePath(); c.fill();
+  if (glow) c.restore();
+  // facette gemme : reflet diagonal + lumière radiale
+  const rg = c.createRadialGradient(px+size*0.32, py+size*0.28, 1, px+size*0.32, py+size*0.28, size*0.75);
+  rg.addColorStop(0, 'rgba(255,255,255,0.30)'); rg.addColorStop(0.5, 'rgba(255,255,255,0.06)'); rg.addColorStop(1, 'rgba(255,255,255,0)');
+  c.fillStyle = rg; c.fillRect(px+1, py+1, size-2, size-2);
+  c.fillStyle = 'rgba(255,255,255,0.22)';
+  c.beginPath();
+  c.moveTo(px+r+2, py+2); c.lineTo(px+size-3, py+2);
+  c.lineTo(px+size-Math.max(4,size*0.3), py+size*0.35);
+  c.lineTo(px+2, py+size*0.35); c.closePath(); c.fill();
+  // arête basse sombre (profondeur)
+  c.fillStyle = 'rgba(0,0,0,0.22)';
+  c.fillRect(px+2, py+size-4, size-4, 2.5);
+  // vis centrale miniature
+  c.fillStyle = 'rgba(255,244,200,0.28)';
+  c.beginPath(); c.arc(px+size/2, py+size/2, size*0.08, 0, Math.PI*2); c.fill();
+  // liseré doré
+  c.strokeStyle = 'rgba(240,212,122,0.4)'; c.lineWidth = 1;
+  c.strokeRect(px+1.5, py+1.5, size-3, size-3);
+}
+function drawBoardCanvas() {
+  const g = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  g.addColorStop(0, '#171008'); g.addColorStop(1, '#241a0c');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // guilloché gravé : arcs concentriques entrecroisés
+  ctx.save();
+  ctx.strokeStyle = 'rgba(212,175,55,0.05)'; ctx.lineWidth = 0.6;
+  const R = 60;
+  for (let cx = 0; cx <= COLS*B + R; cx += R*2) {
+    for (let rr = 14; rr < R*2.2; rr += 14) {
+      ctx.beginPath(); ctx.arc(cx, 0, rr, 0, Math.PI); ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx, ROWS*B, rr, Math.PI, 2*Math.PI); ctx.stroke();
+    }
+  }
+  for (let cy = 0; cy <= ROWS*B + R; cy += R*2) {
+    for (let rr = 14; rr < R*2.2; rr += 14) {
+      ctx.beginPath(); ctx.arc(0, cy, rr, -Math.PI/2, Math.PI/2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(COLS*B, cy, rr, Math.PI/2, 3*Math.PI/2); ctx.stroke();
+    }
+  }
+  // colonne de lumière sous la pièce active
+  if (piece && running && !paused) {
+    const lg = ctx.createLinearGradient(piece.x*B, 0, (piece.x+piece.shape[0].length)*B, 0);
+    lg.addColorStop(0, 'rgba(240,212,122,0)'); lg.addColorStop(0.5, 'rgba(240,212,122,0.06)'); lg.addColorStop(1, 'rgba(240,212,122,0)');
+    ctx.fillStyle = lg; ctx.fillRect(piece.x*B, 0, piece.shape[0].length*B, ROWS*B);
+  }
+  ctx.restore();
+  // grille discrète
+  ctx.strokeStyle = 'rgba(212,175,55,0.07)'; ctx.lineWidth = 0.5;
+  for (let i = 1; i < ROWS; i++) { ctx.beginPath(); ctx.moveTo(0, i*B); ctx.lineTo(COLS*B, i*B); ctx.stroke(); }
+  for (let i = 1; i < COLS; i++) { ctx.beginPath(); ctx.moveTo(i*B, 0); ctx.lineTo(i*B, ROWS*B); ctx.stroke(); }
+  // lignes en flash
+  flashRows.forEach(r => {
+    ctx.fillStyle = `rgba(255,235,170,${0.25 + 0.25*Math.sin(Date.now()/40)})`;
+    ctx.fillRect(0, r*B, COLS*B, B);
+  });
+  for (let row = 0; row < ROWS; row++)
+    for (let col = 0; col < COLS; col++)
+      if (board[row][col]) drawBlock(ctx, col, row, B, board[row][col], false);
+  // fantôme : contour doré en pointillés
+  if (piece && running && !paused) {
+    let gy = 0;
+    while (!collide(piece, 0, gy+1)) gy++;
+    if (gy > 0) {
+      ctx.save();
+      ctx.strokeStyle = 'rgba(240,212,122,0.5)'; ctx.lineWidth = 1.5;
+      ctx.setLineDash([5, 4]);
+      for (let r = 0; r < piece.shape.length; r++)
+        for (let c = 0; c < piece.shape[r].length; c++)
+          if (piece.shape[r][c]) ctx.strokeRect(piece.x*B+c*B+3, (piece.y+r+gy)*B+3, B-6, B-6);
+      ctx.restore();
+    }
+  }
+  if (piece && running && !paused) {
+    for (let r = 0; r < piece.shape.length; r++)
+      for (let c = 0; c < piece.shape[r].length; c++)
+        if (piece.shape[r][c] && piece.y + r >= 0)
+          drawBlock(ctx, piece.x+c, piece.y+r, B, piece.color, true);
+  }
+  // particules
+  particles = particles.filter(p => p.life > 0);
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy; p.vy += 0.18; p.life -= 0.02;
+    ctx.globalAlpha = Math.max(0, p.life);
+    ctx.fillStyle = p.color;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+    ctx.globalAlpha = 1;
+  });
+  // popups de score
+  popups = popups.filter(p => p.life > 0);
+  popups.forEach(p => {
+    p.y -= 0.8; p.life -= 0.016;
+    ctx.globalAlpha = Math.max(0, p.life);
+    ctx.font = 'bold 20px Cinzel, serif';
+    ctx.fillStyle = '#f0d47a';
+    ctx.shadowColor = '#d4af37'; ctx.shadowBlur = 12;
+    ctx.textAlign = 'center';
+    ctx.fillText(p.txt, p.x, p.y);
+    ctx.shadowBlur = 0; ctx.globalAlpha = 1;
+  });
+  // traînées de chute libre
+  beams = beams.filter(bm => bm.life > 0);
+  beams.forEach(bm => {
+    bm.life -= 0.07;
+    ctx.globalAlpha = Math.max(0, bm.life) * 0.55;
+    const bg = ctx.createLinearGradient(bm.x0, bm.y0, bm.x0, bm.y1);
+    bg.addColorStop(0, 'rgba(240,212,122,0)'); bg.addColorStop(1, 'rgba(240,212,122,0.9)');
+    ctx.fillStyle = bg;
+    ctx.fillRect(bm.x0, bm.y0, bm.x1 - bm.x0, bm.y1 - bm.y0);
+    ctx.globalAlpha = 1;
+  });
+  // ondes de choc
+  rings = rings.filter(rg => rg.life > 0);
+  rings.forEach(rg => {
+    rg.r += 5.5; rg.life -= 0.05;
+    ctx.globalAlpha = Math.max(0, rg.life) * 0.7;
+    ctx.strokeStyle = '#f0d47a'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.arc(rg.x, rg.y, rg.r, 0, Math.PI*2); ctx.stroke();
+    ctx.globalAlpha = 1;
+  });
+  if (flashRows.length && Date.now() - flashStart > 220) { flashRows = []; }
+}
+function draw() { drawBoardCanvas(); }
+function drawMini(c, cv, pc) {
+  c.clearRect(0, 0, cv.width, cv.height);
+  const g = c.createLinearGradient(0, 0, 0, cv.height);
+  g.addColorStop(0, 'rgba(30,22,10,0.9)'); g.addColorStop(1, 'rgba(10,7,3,0.9)');
+  c.fillStyle = g; c.fillRect(0, 0, cv.width, cv.height);
+  if (!pc) return;
+  const s = 22;
+  const ox = (cv.width - pc.shape[0].length*s)/2, oy = (cv.height - pc.shape.length*s)/2;
+  for (let r = 0; r < pc.shape.length; r++)
+    for (let col = 0; col < pc.shape[r].length; col++)
+      if (pc.shape[r][col]) {
+        const x = ox + col*s, y = oy + r*s;
+        const grad = c.createLinearGradient(x, y, x+s, y+s);
+        grad.addColorStop(0, shade(pc.color, 40)); grad.addColorStop(1, shade(pc.color, -50));
+        c.fillStyle = grad; c.fillRect(x+1.5, y+1.5, s-3, s-3);
+        c.strokeStyle = 'rgba(240,212,122,0.4)'; c.strokeRect(x+1.5, y+1.5, s-3, s-3);
       }
-    ];
+}
 
-    // Variables de jeu
-    let gameState = {
-      score: 0,
-      level: 1,
-      lines: 0,
-      gameRunning: false,
-      gamePaused: false,
-      playerPseudo: ''
-    };
-
-    let board = [];
-    let currentPiece = null;
-    let nextPiece = null;
-    let dropInterval = null;
-    let currentQuestionIndex = 0;
-    let currentQuestion = null;
-    let questionAnswered = false;
-
-    const canvas = document.getElementById('game-canvas');
-    const ctx = canvas.getContext('2d');
-    const nextCanvas = document.getElementById('next-canvas');
-    const nextCtx = nextCanvas.getContext('2d');
-
-    // Système Audio Synthétique Haute Précision Horlogère
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    function playTone(freq, duration = 0.05, type = 'sine') {
-      try {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + duration);
-      } catch (e) {}
-    }
-
-    // Gestion du Stockage Local
-    function loadHighScores() {
-      const saved = localStorage.getItem('horlogerScores');
-      return saved ? JSON.parse(saved) : [];
-    }
-    function saveHighScores(scores) {
-      localStorage.setItem('horlogerScores', JSON.stringify(scores));
-    }
-    function loadPlayerStats() {
-      const saved = localStorage.getItem('horlogerStats');
-      return saved ? JSON.parse(saved) : { totalGames: 0, totalLines: 0, bestScore: 0, quizCorrect: 0, quizTotal: 0 };
-    }
-    function savePlayerStats(stats) {
-      localStorage.setItem('horlogerStats', JSON.stringify(stats));
-    }
-    function loadBadges() {
-      const saved = localStorage.getItem('horlogerBadges');
-      return saved ? JSON.parse(saved) : [];
-    }
-    function saveBadges(list) {
-      localStorage.setItem('horlogerBadges', JSON.stringify(list));
-    }
-
-    function updateStats(updates) {
-      const cur = loadPlayerStats();
-      const updated = { ...cur, ...updates };
-      savePlayerStats(updated);
-      renderStatsUI(updated);
-      checkAndUnlockBadges(updated);
-    }
-
-    function checkAndUnlockBadges(stats) {
-      const unlocked = loadBadges();
-      let newlyUnlocked = null;
-      for (const badge of ALL_BADGES) {
-        if (!unlocked.includes(badge.id)) {
-          const val = stats[badge.stat] || 0;
-          if (val >= badge.target) {
-            unlocked.push(badge.id);
-            newlyUnlocked = badge;
-            saveBadges(unlocked);
-            break;
-          }
-        }
+/* ================= LOGIQUE ================= */
+function makePiece(shapeIdx) {
+  const i = shapeIdx !== undefined ? shapeIdx : Math.floor(Math.random()*SHAPES.length);
+  return { shape: SHAPES[i].map(r => r.slice()), color: COLORS[i], name: NAMES[i],
+    x: Math.floor(COLS/2 - SHAPES[i][0].length/2), y: 0 };
+}
+function collide(pc, ox, oy) {
+  for (let r = 0; r < pc.shape.length; r++)
+    for (let c = 0; c < pc.shape[r].length; c++)
+      if (pc.shape[r][c]) {
+        const nx = pc.x + c + ox, ny = pc.y + r + oy;
+        if (nx < 0 || nx >= COLS || ny >= ROWS) return true;
+        if (ny >= 0 && board[ny][nx]) return true;
       }
-      renderBadgesCount(unlocked.length);
-      if (newlyUnlocked) {
-        setTimeout(() => {
-          alert(`🎉 NOUVEAU BADGE DÉBLOQUÉ !\n\n${newlyUnlocked.icon} ${newlyUnlocked.name}\n${newlyUnlocked.desc}`);
-        }, 300);
-      }
+  return false;
+}
+function rotateShape(s) { return s[0].map((_, i) => s.map(row => row[i]).reverse()); }
+function rotate() {
+  if (!piece || paused || !running) return;
+  const old = piece.shape;
+  const rotated = rotateShape(piece.shape);
+  const kicks = [0, -1, 1, -2, 2];
+  for (const k of kicks) {
+    piece.shape = rotated;
+    if (!collide(piece, k, 0)) { piece.x += k; sfx.rot(); draw(); return; }
+  }
+  piece.shape = old;
+  draw();
+}
+function move(dir) {
+  if (!piece || paused || !running) return;
+  if (!collide(piece, dir, 0)) { piece.x += dir; sfx.move(); draw(); }
+}
+function softDrop() {
+  if (!piece || paused || !running) return;
+  if (!collide(piece, 0, 1)) { piece.y++; score += 1; updateHUD(); }
+  else lockPiece();
+  draw();
+}
+function hardDrop() {
+  if (!piece || paused || !running) return;
+  const y0 = Math.max(0, piece.y);
+  let d = 0;
+  while (!collide(piece, 0, 1)) { piece.y++; d++; }
+  score += d * 2;
+  sfx.drop();
+  if (d > 1) {
+    beams.push({ x0: piece.x*B+6, x1: (piece.x+piece.shape[0].length)*B-6, y0: y0*B, y1: (piece.y)*B, life: 1 });
+    shakeBoard();
+  }
+  spawnParticles(piece);
+  lockPiece();
+  draw();
+}
+function hold() {
+  if (!piece || !canHold || paused || !running) return;
+  const cur = { shape: piece.shape, color: piece.color, name: piece.name };
+  if (holdPiece) {
+    piece.shape = holdPiece.shape; piece.color = holdPiece.color; piece.name = holdPiece.name;
+    piece.x = Math.floor(COLS/2 - piece.shape[0].length/2); piece.y = 0;
+  } else {
+    spawn();
+  }
+  holdPiece = cur;
+  canHold = false;
+  drawMini(hctx, holdC, holdPiece);
+  sfx.rot();
+  draw();
+}
+function lockPiece() {
+  for (let r = 0; r < piece.shape.length; r++)
+    for (let c = 0; c < piece.shape[r].length; c++)
+      if (piece.shape[r][c] && piece.y + r >= 0) board[piece.y + r][piece.x + c] = piece.color;
+  sfx.lock();
+  clearLines();
+  canHold = true;
+  spawn();
+}
+function clearLines() {
+  let cleared = [];
+  for (let row = ROWS-1; row >= 0; row--)
+    if (board[row].every(cell => cell !== 0)) cleared.push(row);
+  if (!cleared.length) return;
+  flashRows = cleared.slice();
+  flashStart = Date.now();
+  // onde de choc au centre de chaque ligne + pluie d'étincelles dorées
+  cleared.forEach(row => rings.push({ x: COLS*B/2, y: (row+0.5)*B, r: 8, life: 1 }));
+  cleared.forEach(row => {
+    for (let col = 0; col < COLS; col++) {
+      const color = board[row][col];
+      for (let k = 0; k < 4; k++)
+        particles.push({ x:(col+0.5)*B, y:(row+0.5)*B,
+          vx:(Math.random()-0.5)*5, vy:(Math.random()-0.8)*5,
+          size: 2+Math.random()*3, color, life: 1 });
+      for (let k = 0; k < 3; k++)
+        particles.push({ x:(col+0.5)*B, y:(row+0.5)*B,
+          vx:(Math.random()-0.5)*7, vy:(Math.random()-1.2)*6,
+          size: 1+Math.random()*2, color: '#f0d47a', life: 1.2 });
     }
+  });
+  cleared.forEach(row => { board.splice(row, 1); board.unshift(Array(COLS).fill(0)); });
+  const n = cleared.length;
+  const gained = [0, 150, 400, 800, 1500][n] * level;
+  score += gained;
+  lines += n;
+  sfx.line(n);
+  popups.push({ x: COLS*B/2, y: ROWS*B/2, txt: `+${gained}${n===4 ? '  TETRIS ! 👑' : ''}`, life: 1.4 });
+  const oldLevel = level;
+  level = Math.floor(lines/10) + 1;
+  dropInterval = Math.max(100, 1000 - (level-1)*90);
+  if (level > oldLevel) popups.push({ x: COLS*B/2, y: ROWS*B*0.35, txt: '⚙️ CALIBRE ' + roman(level) + ' !', life: 1.6 });
+  updateHUD();
+  // tous les 3 assemblages -> quiz
+  if (lines % 3 === 0) showQuiz();
+  $('fact').textContent = '📜 ' + FACTS[Math.floor(Math.random()*FACTS.length)];
+  $('encyclopedia').innerHTML = ENCY[Math.floor(Math.random()*ENCY.length)];
+  updateObjectives();
+}
+function spawn() {
+  piece = nextPiece || makePiece();
+  nextPiece = makePiece();
+  drawMini(nctx, nextC, nextPiece);
+  $('pieceName').textContent = piece.name;
+  if (collide(piece, 0, 0)) gameOver();
+}
+function spawnParticles(pc) {
+  for (let r = 0; r < pc.shape.length; r++)
+    for (let c = 0; c < pc.shape[r].length; c++)
+      if (pc.shape[r][c])
+        for (let k = 0; k < 2; k++)
+          particles.push({ x:(pc.x+c+0.5)*B, y:(pc.y+r+0.5)*B,
+            vx:(Math.random()-0.5)*3, vy:(Math.random()-0.5)*3,
+            size: 1.5+Math.random()*2.5, color: pc.color, life: 0.8 });
+}
 
-    function renderBadgesCount(count) {
-      document.getElementById('badges-count').textContent = count;
-      document.getElementById('badges-unlocked-title').textContent = count;
+/* ================= BOUCLE ================= */
+let flashStart = 0;
+let rings = [], beams = [];
+function roman(n) {
+  const R = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV'];
+  return R[n-1] || n;
+}
+function shakeBoard() {
+  const f = document.querySelector('.board-frame');
+  if (!f) return;
+  f.classList.remove('shaking'); void f.offsetWidth; f.classList.add('shaking');
+}
+function loop(time) {
+  if (!rafId) return;
+  const dt = time - lastTime; lastTime = time;
+  if (running && !paused) {
+    dropTimer += dt;
+    if (dropTimer > dropInterval) { dropTimer = 0; softDrop(); }
+  }
+  drawBoardCanvas();
+  rafId = requestAnimationFrame(loop);
+}
+
+/* ================= HUD ================= */
+function updateHUD() {
+  const sc = $('score');
+  const prev = sc.textContent;
+  const next = score.toLocaleString('fr-CH');
+  if (prev !== next) {
+    sc.textContent = next;
+    sc.classList.remove('pop'); void sc.offsetWidth; sc.classList.add('pop');
+  }
+  $('level').textContent = level;
+  $('lines').textContent = lines;
+  const pct = Math.min(100, Math.round(lines/100*100));
+  const pf = $('progress');
+  pf.style.width = pct + '%';
+  pf.textContent = pct + '%';
+  updateObjectives();
+}
+const OBJECTIVES = [
+  { t: 10,  name: 'Apprenti' },
+  { t: 25,  name: 'Compagnon' },
+  { t: 50,  name: 'Maître Horloger' },
+  { t: 100, name: 'Grande Complication' }
+];
+function updateObjectives() {
+  $('objList').innerHTML = OBJECTIVES.map((o, idx) => {
+    const prev = idx === 0 ? 0 : OBJECTIVES[idx-1].t;
+    const done = lines >= o.t;
+    const current = !done && lines >= prev;
+    const cls = done ? 'done' : current ? 'current' : 'todo';
+    const icon = done ? '✅' : current ? '🔄' : '⭕';
+    const count = current ? ` <span style="color:var(--gold)">${lines}/${o.t}</span>` : '';
+    return `<div class="obj-row ${cls}"><span>${icon} ${o.t} lignes — ${o.name}${count}</span></div>`;
+  }).join('');
+}
+
+/* ================= BADGES / STATS ================= */
+function refreshStats() {
+  const s = loadStats();
+  $('stGames').textContent = s.totalGames;
+  $('stBest').textContent = s.bestScore.toLocaleString('fr-CH');
+  $('stLines').textContent = s.totalLines;
+  $('stQuiz').textContent = s.quizCorrect + '/' + s.quizTotal;
+  const b = loadBadges();
+  $('badgeCount').textContent = b.length;
+  $('badgeTotal').textContent = b.length;
+  renderBadges();
+}
+function checkBadges() {
+  const stats = loadStats();
+  const unlocked = loadBadges();
+  let newly = null;
+  for (const b of BADGES) {
+    if (!unlocked.includes(b.id) && (stats[b.stat] || 0) >= b.target) {
+      unlocked.push(b.id); newly = b; saveBadges(unlocked); break;
     }
+  }
+  $('badgeCount').textContent = unlocked.length;
+  $('badgeTotal').textContent = unlocked.length;
+  if (newly) { sfx.badge(); toast('🎉 Nouveau badge : ' + newly.icon + ' ' + newly.name + ' !'); }
+}
+function addStat(updates) {
+  const s = { ...loadStats(), ...updates };
+  saveStats(s); refreshStats(); checkBadges();
+}
+function renderBadges() {
+  const unlocked = loadBadges(), stats = loadStats();
+  $('badgeGrid').innerHTML = BADGES.map(b => {
+    const u = unlocked.includes(b.id);
+    const p = Math.min(100, Math.round((stats[b.stat]||0)/b.target*100));
+    return `<div class="badge-card ${u?'unlocked':''}">
+      <div class="ic">${u ? b.icon : '🔒'}</div>
+      <div class="nm">${b.name}</div>
+      <div class="ds">${b.desc}</div>
+      ${u ? '<div class="ok">✅ DÉBLOQUÉ</div>'
+         : `<div class="badge-prog"><div style="width:${p}%"></div></div><div style="font-size:10px;color:#8b6914;">${Math.min(stats[b.stat]||0, b.target)} / ${b.target}</div>`}
+    </div>`;
+  }).join('');
+}
+function renderLeaderboard() {
+  const scores = loadScores();
+  const el = $('leaderboard');
+  if (!scores.length) { el.innerHTML = '<div class="empty">Aucun score — soyez le premier Maître !</div>'; return; }
+  el.innerHTML = scores.map((e, i) =>
+    `<div class="lb-row ${i<3?'top':''}">
+      <span class="medal">${i===0?'🥇':i===1?'🥈':i===2?'🥉':'⚙️'}</span>
+      <div class="who"><b>${esc(e.pseudo)}</b><span>${e.lines} assemblages · Calibre ${e.level}</span></div>
+      <div class="pts">${e.score.toLocaleString('fr-CH')}</div>
+    </div>`).join('');
+}
+const esc = s => String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
-    function renderStatsUI(stats) {
-      document.getElementById('stat-total-games').textContent = stats.totalGames;
-      document.getElementById('stat-best-score').textContent = stats.bestScore;
-      document.getElementById('stat-total-lines').textContent = stats.totalLines;
-      document.getElementById('stat-quiz-score').textContent = `${stats.quizCorrect}/${stats.quizTotal}`;
+/* ================= QUIZ ================= */
+function showQuiz() {
+  if (quizIndex >= QUIZ.length) quizIndex = 0;
+  currentQuestion = QUIZ[quizIndex];
+  answered = false;
+  renderQuiz();
+}
+function renderQuiz() {
+  const z = $('quizZone');
+  if (!currentQuestion) {
+    z.innerHTML = '<div style="color:#cfe0ee; font-size:13px; font-style:italic; line-height:1.5;">Complétez 3 assemblages pour débloquer l\'examen technique. Chaque bonne réponse vaut <b style="color:#a5cbe8;">+750 points</b> !</div>';
+    return;
+  }
+  z.innerHTML = `<div class="quiz-q">${currentQuestion.q}</div>` +
+    currentQuestion.o.map((o, i) => `<div class="quiz-opt" data-i="${i}">${esc(o)}</div>`).join('');
+  z.querySelectorAll('.quiz-opt').forEach(el =>
+    el.addEventListener('click', () => answer(+el.dataset.i)));
+}
+function answer(i) {
+  if (answered || !currentQuestion) return;
+  answered = true;
+  const opts = $('quizZone').querySelectorAll('.quiz-opt');
+  opts.forEach(el => el.classList.add('locked'));
+  const ok = i === currentQuestion.c;
+  opts[currentQuestion.c].classList.add('correct');
+  if (!ok) opts[i].classList.add('wrong');
+  sfx.quiz(ok);
+  const stats = loadStats();
+  if (ok) {
+    score += 750; updateHUD();
+    popups.push({ x: COLS*B/2, y: ROWS*B/2 - 40, txt: '+750 🎓', life: 1.4 });
+    toast('✅ Excellent ! Maîtrise technique confirmée. +750 points');
+    addStat({ quizCorrect: stats.quizCorrect + 1, quizTotal: stats.quizTotal + 1 });
+  } else {
+    toast('❌ La bonne réponse : ' + esc(currentQuestion.o[currentQuestion.c]), true);
+    addStat({ quizTotal: stats.quizTotal + 1 });
+  }
+  setTimeout(() => { quizIndex++; currentQuestion = null; renderQuiz(); }, 2200);
+}
+
+/* ================= PARTIE ================= */
+function initBoard() { board = Array.from({length: ROWS}, () => Array(COLS).fill(0)); }
+function startGame() {
+  initBoard();
+  score = 0; lines = 0; level = 1;
+  dropInterval = 1000; dropTimer = 0;
+  particles = []; popups = []; flashRows = [];
+  holdPiece = null; canHold = true;
+  drawMini(hctx, holdC, null);
+  nextPiece = makePiece();
+  spawn();
+  running = true; paused = false;
+  $('startOverlay').classList.add('hidden');
+  $('pauseOverlay').classList.add('hidden');
+  $('pauseBtn').textContent = '⏸️ Pause';
+  updateHUD();
+  $('fact').textContent = '📜 ' + FACTS[Math.floor(Math.random()*FACTS.length)];
+  $('encyclopedia').innerHTML = ENCY[Math.floor(Math.random()*ENCY.length)];
+  updateObjectives();
+  sfx.badge();
+}
+function gameOver() {
+  running = false;
+  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+  sfx.over();
+  addStat({
+    totalGames: loadStats().totalGames + 1,
+    totalLines: loadStats().totalLines + lines,
+    bestScore: Math.max(loadStats().bestScore, score)
+  });
+  // classement
+  let scores = loadScores();
+  scores.push({ pseudo, score, lines, level, date: new Date().toISOString() });
+  scores.sort((a,b) => b.score - a.score);
+  scores = scores.slice(0, 5);
+  saveScores(scores);
+  renderLeaderboard();
+  // rang
+  let rank, certif;
+  if (lines < 10)      { rank = 'Apprenti Horloger'; certif = "Vous débutez dans l'art de l'horlogerie. Continuez à vous exercer !"; }
+  else if (lines < 25) { rank = 'Compagnon'; certif = "Vous maîtrisez les bases de l'assemblage horloger. Bien joué !"; }
+  else if (lines < 50) { rank = 'Maître Horloger'; certif = "Excellente maîtrise technique ! Vous êtes un véritable artisan."; }
+  else if (lines < 100){ rank = 'Grande Complication'; certif = "Expertise exceptionnelle ! Vous maîtrisez les assemblages complexes."; }
+  else                 { rank = 'Légende de la Haute Horlogerie'; certif = "Performance extraordinaire ! Vous êtes entré dans la légende des maîtres horlogers !"; }
+  const myRank = scores.findIndex(s => s.pseudo === pseudo && s.score === score) + 1;
+  if (myRank === 1) certif += "\n\n🏆 INCROYABLE ! Vous êtes N°1 du classement !";
+  else if (myRank === 2) certif += "\n\n🥈 Brillant ! Vous êtes N°2 du classement !";
+  else if (myRank === 3) certif += "\n\n🥉 Très bien ! Vous êtes N°3 du classement !";
+  else if (myRank > 0 && myRank <= 5) certif += `\n\n✨ Félicitations ! Vous êtes dans le Top 5 (N°${myRank}) !`;
+  $('certif').textContent = certif;
+  $('fScore').textContent = score.toLocaleString('fr-CH');
+  $('fLines').textContent = lines;
+  $('fLevel').textContent = level;
+  $('fRank').textContent = 'Rang obtenu : ' + rank;
+  $('overLb').innerHTML = scores.map((e, i) => {
+    const me = e.pseudo === pseudo && e.score === score;
+    return `<div class="lb-row ${me?'top':''} ${i<3?'top':''}">
+      <span class="medal">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</span>
+      <div class="who"><b>${esc(e.pseudo)} ${me?'⭐':''}</b><span>${e.lines} assemblages · Calibre ${e.level}</span></div>
+      <div class="pts">${e.score.toLocaleString('fr-CH')}</div></div>`;
+  }).join('');
+  $('overModal').classList.remove('hidden');
+}
+function togglePause() {
+  if (!running) return;
+  paused = !paused;
+  $('pauseOverlay').classList.toggle('hidden', !paused);
+  $('pauseBtn').textContent = paused ? '▶️ Reprendre' : '⏸️ Pause';
+  if (!paused) lastTime = performance.now();
+}
+
+/* ================= ÉVÉNEMENTS ================= */
+document.addEventListener('keydown', e => {
+  if ($('pseudoModal').classList.contains('hidden') === false) return;
+  if (!running || paused) {
+    if (e.key === 'p' || e.key === 'P') togglePause();
+    return;
+  }
+  if (currentQuestion) return; // clavier bloqué pendant le quiz
+  switch (e.key) {
+    case 'ArrowLeft': move(-1); e.preventDefault(); break;
+    case 'ArrowRight': move(1); e.preventDefault(); break;
+    case 'ArrowDown': softDrop(); e.preventDefault(); break;
+    case 'ArrowUp': rotate(); e.preventDefault(); break;
+    case ' ': hardDrop(); e.preventDefault(); break;
+    case 'c': case 'C': hold(); break;
+    case 'p': case 'P': togglePause(); break;
+  }
+});
+document.querySelectorAll('.tbtn').forEach(b => {
+  const act = () => {
+    if (!running || paused || currentQuestion) return;
+    ({ left:()=>move(-1), right:()=>move(1), down:softDrop, rotate, drop:hardDrop })[b.dataset.act]();
+  };
+  b.addEventListener('touchstart', e => { e.preventDefault(); act(); }, {passive:false});
+  b.addEventListener('click', act);
+});
+$('startBtn').onclick = startGame;
+$('pauseBtn').onclick = togglePause;
+$('resumeBtn').onclick = togglePause;
+$('restartBtn').onclick = () => { if (running || confirm('Recommencer une nouvelle partie ?')) startGame(); };
+$('againBtn').onclick = () => { $('overModal').classList.add('hidden'); startGame(); };
+$('changePseudoBtn').onclick = () => {
+  $('overModal').classList.add('hidden');
+  $('pseudoInput').value = '';
+  $('pseudoModal').classList.remove('hidden');
+  $('pseudoInput').focus();
+};
+
+function quitGame() {
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: 'HORLO_QUIT' }, '*');
     }
+  } catch(e) {}
+  if (window.history.length > 1) {
+    window.history.back();
+  } else {
+    window.location.href = '/';
+  }
+}
 
-    function renderLeaderboard() {
-      const list = loadHighScores();
-      const container = document.getElementById('leaderboard-list');
-      if (list.length === 0) {
-        container.innerHTML = '<div class="text-center py-3 text-[#8b6914] italic text-xs">Aucun score</div>';
-        return;
-      }
-      container.innerHTML = list.map((e, i) => `
-        <div class="p-1.5 my-1 rounded flex items-center gap-2 text-xs ${i < 3 ? 'bg-[#d4af3720]' : ''}">
-          <span>${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '⚙️'}</span>
-          <div class="flex-1">
-            <div class="font-bold text-[#d4af37]">${e.pseudo}</div>
-            <div class="text-[10px] text-[#a89152] font-mono-tech">${e.lines} ass. • Calibre ${e.level}</div>
-          </div>
-          <div class="font-bold text-[#d4af37] font-cinzel">${e.score}</div>
-        </div>
-      `).join('');
-    }
+function confirmPseudo() {
+  const v = $('pseudoInput').value.trim();
+  if (!v) { toast("⚠️ Veuillez entrer un pseudo pour continuer", true); return; }
+  pseudo = v;
+  $('pseudoModal').classList.add('hidden');
+  startGame();
+}
+$('pseudoOk').onclick = confirmPseudo;
+$('pseudoInput').addEventListener('keydown', e => { if (e.key === 'Enter') confirmPseudo(); });
+const openBadges = () => { renderBadges(); $('badgesModal').classList.remove('hidden'); };
+$('badgesBtn').onclick = openBadges;
+$('badgesBtn2').onclick = openBadges;
+$('closeBadges').onclick = () => $('badgesModal').classList.add('hidden');
+$('soundBtn').onclick = () => {
+  soundOn = !soundOn;
+  $('soundBtn').textContent = soundOn ? '🔊' : '🔇';
+  toast(soundOn ? '🔊 Son activé' : '🔇 Son coupé');
+};
+// fermer modales par clic extérieur
+$('badgesModal').addEventListener('click', e => { if (e.target === $('badgesModal')) $('badgesModal').classList.add('hidden'); });
 
-    function renderObjectives() {
-      const container = document.getElementById('objectives-list');
-      const milestones = [
-        [10, 'Apprenti'],
-        [25, 'Compagnon'],
-        [50, 'Maître Horloger'],
-        [100, 'Grande Complication']
-      ];
-      container.innerHTML = milestones.map(([target, rank], idx) => {
-        const isCompleted = gameState.lines >= target;
-        const isCurrent = gameState.lines < target && (idx === 0 || gameState.lines >= milestones[idx - 1][0]);
-        return `
-          <div class="py-1 border-b border-[#d4af3750] last:border-0 flex items-center justify-between ${
-            isCompleted ? 'text-green-400 font-bold' : isCurrent ? 'text-[#f0c14b]' : 'text-[#8b6914]'
-          }">
-            <span>${isCompleted ? '✅' : isCurrent ? '🔄' : '⭕'} Assembler ${target} lignes : <strong>${rank}</strong></span>
-            ${isCurrent ? `<span class="text-[#d4af37] text-[10px] font-mono-tech">${gameState.lines}/${target}</span>` : ''}
-          </div>
-        `;
-      }).join('');
-    }
-
-    // Gestion du Board & Dessin
-    function initBoard() {
-      board = Array(ROWS).fill(null).map(() => Array(COLS).fill(0));
-    }
-
-    function adjustBrightness(color, amount) {
-      const hex = color.replace('#', '');
-      const r = Math.max(0, Math.min(255, parseInt(hex.substr(0, 2), 16) + amount));
-      const g = Math.max(0, Math.min(255, parseInt(hex.substr(2, 2), 16) + amount));
-      const b = Math.max(0, Math.min(255, parseInt(hex.substr(4, 2), 16) + amount));
-      return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-    }
-
-    function drawBlock(targetContext, x, y, color, size = BLOCK_SIZE) {
-      const px = x * size;
-      const py = y * size;
-      const gradient = targetContext.createLinearGradient(px, py, px + size, py + size);
-      gradient.addColorStop(0, color);
-      gradient.addColorStop(0.5, adjustBrightness(color, 35));
-      gradient.addColorStop(1, adjustBrightness(color, -35));
-      targetContext.fillStyle = gradient;
-      targetContext.fillRect(px + 1, py + 1, size - 2, size - 2);
-
-      // Bordure dorée
-      targetContext.strokeStyle = 'rgba(212, 175, 55, 0.45)';
-      targetContext.lineWidth = 1;
-      targetContext.strokeRect(px + 1, py + 1, size - 2, size - 2);
-
-      // Reflet biseauté
-      targetContext.fillStyle = 'rgba(255, 255, 255, 0.2)';
-      targetContext.fillRect(px + 2, py + 2, size - 4, size / 3);
-    }
-
-    function drawBoard() {
-      // Fond établi horloger
-      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      gradient.addColorStop(0, '#1a1410');
-      gradient.addColorStop(1, '#2a2010');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Grille micro-mécanique
-      ctx.strokeStyle = 'rgba(139, 105, 20, 0.25)';
-      ctx.lineWidth = 0.5;
-      for (let i = 0; i <= ROWS; i++) {
-        ctx.beginPath();
-        ctx.moveTo(0, i * BLOCK_SIZE);
-        ctx.lineTo(COLS * BLOCK_SIZE, i * BLOCK_SIZE);
-        ctx.stroke();
-      }
-      for (let i = 0; i <= COLS; i++) {
-        ctx.beginPath();
-        ctx.moveTo(i * BLOCK_SIZE, 0);
-        ctx.lineTo(i * BLOCK_SIZE, ROWS * BLOCK_SIZE);
-        ctx.stroke();
-      }
-
-      // Pièces posées
-      for (let row = 0; row < ROWS; row++) {
-        for (let col = 0; col < COLS; col++) {
-          if (board[row][col]) drawBlock(ctx, col, row, board[row][col]);
-        }
-      }
-
-      // Pièce active
-      if (currentPiece) {
-        for (let row = 0; row < currentPiece.shape.length; row++) {
-          for (let col = 0; col < currentPiece.shape[row].length; col++) {
-            if (currentPiece.shape[row][col]) {
-              drawBlock(ctx, currentPiece.x + col, currentPiece.y + row, currentPiece.color);
-            }
-          }
-        }
-      }
-    }
-
-    function drawNextPiece() {
-      nextCtx.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
-      if (!nextPiece) return;
-
-      const blockSize = 20;
-      const offsetX = (nextCanvas.width - nextPiece.shape[0].length * blockSize) / 2;
-      const offsetY = (nextCanvas.height - nextPiece.shape.length * blockSize) / 2;
-
-      for (let row = 0; row < nextPiece.shape.length; row++) {
-        for (let col = 0; col < nextPiece.shape[row].length; col++) {
-          if (nextPiece.shape[row][col]) {
-            const x = offsetX + col * blockSize;
-            const y = offsetY + row * blockSize;
-            const gradient = nextCtx.createLinearGradient(x, y, x + blockSize, y + blockSize);
-            gradient.addColorStop(0, nextPiece.color);
-            gradient.addColorStop(0.5, adjustBrightness(nextPiece.color, 30));
-            gradient.addColorStop(1, adjustBrightness(nextPiece.color, -30));
-            nextCtx.fillStyle = gradient;
-            nextCtx.fillRect(x + 1, y + 1, blockSize - 2, blockSize - 2);
-            nextCtx.strokeStyle = 'rgba(212, 175, 55, 0.4)';
-            nextCtx.strokeRect(x + 1, y + 1, blockSize - 2, blockSize - 2);
-          }
-        }
-      }
-      document.getElementById('next-piece-name').textContent = nextPiece.name;
-    }
-
-    function createPiece() {
-      const idx = Math.floor(Math.random() * SHAPES.length);
-      return {
-        shape: SHAPES[idx],
-        color: COLORS[idx],
-        name: PIECE_NAMES[idx],
-        x: Math.floor(COLS / 2) - Math.floor(SHAPES[idx][0].length / 2),
-        y: 0
-      };
-    }
-
-    function checkCollision(piece, offsetX = 0, offsetY = 0) {
-      for (let row = 0; row < piece.shape.length; row++) {
-        for (let col = 0; col < piece.shape[row].length; col++) {
-          if (piece.shape[row][col]) {
-            const newX = piece.x + col + offsetX;
-            const newY = piece.y + row + offsetY;
-            if (newX < 0 || newX >= COLS || newY >= ROWS) return true;
-            if (newY >= 0 && board[newY][newX]) return true;
-          }
-        }
-      }
-      return false;
-    }
-
-    function rotatePiece() {
-      if (!currentPiece || !gameState.gameRunning || gameState.gamePaused) return;
-      const rotated = currentPiece.shape[0].map((_, i) => currentPiece.shape.map(row => row[i]).reverse());
-      const oldShape = currentPiece.shape;
-      currentPiece.shape = rotated;
-      if (checkCollision(currentPiece)) currentPiece.shape = oldShape;
-      else playTone(440, 0.04);
-      drawBoard();
-    }
-
-    function movePiece(direction) {
-      if (!currentPiece || !gameState.gameRunning || gameState.gamePaused) return;
-      if (!checkCollision(currentPiece, direction, 0)) {
-        currentPiece.x += direction;
-        playTone(330, 0.03);
-        drawBoard();
-      }
-    }
-
-    function dropPiece() {
-      if (!currentPiece || !gameState.gameRunning || gameState.gamePaused) return;
-      if (!checkCollision(currentPiece, 0, 1)) {
-        currentPiece.y++;
-      } else {
-        placePiece();
-        clearLines();
-        spawnNewPiece();
-      }
-      drawBoard();
-    }
-
-    function hardDrop() {
-      if (!currentPiece || !gameState.gameRunning || gameState.gamePaused) return;
-      while (!checkCollision(currentPiece, 0, 1)) currentPiece.y++;
-      playTone(520, 0.08, 'triangle');
-      placePiece();
-      clearLines();
-      spawnNewPiece();
-      drawBoard();
-    }
-
-    function placePiece() {
-      if (!currentPiece) return;
-      for (let row = 0; row < currentPiece.shape.length; row++) {
-        for (let col = 0; col < currentPiece.shape[row].length; col++) {
-          if (currentPiece.shape[row][col]) {
-            const boardY = currentPiece.y + row;
-            const boardX = currentPiece.x + col;
-            if (boardY >= 0) board[boardY][boardX] = currentPiece.color;
-          }
-        }
-      }
-    }
-
-    function clearLines() {
-      let linesCleared = 0;
-      for (let row = ROWS - 1; row >= 0; row--) {
-        if (board[row].every(cell => cell !== 0)) {
-          board.splice(row, 1);
-          board.unshift(Array(COLS).fill(0));
-          linesCleared++;
-          row++;
-        }
-      }
-      if (linesCleared > 0) {
-        playTone(660, 0.15, 'sine');
-        gameState.lines += linesCleared;
-        gameState.score += linesCleared * 150 * gameState.level;
-        gameState.level = Math.floor(gameState.lines / 10) + 1;
-
-        // Mise à jour interface
-        document.getElementById('stat-score').textContent = gameState.score;
-        document.getElementById('stat-lines').textContent = gameState.lines;
-        document.getElementById('stat-level').textContent = gameState.level;
-        
-        const pct = Math.min(100, Math.round((gameState.lines / 100) * 100));
-        const bar = document.getElementById('progress-bar-inner');
-        bar.style.width = pct + '%';
-        bar.textContent = pct + '%';
-
-        renderObjectives();
-
-        // Anecdote et Encyclopédie aléatoire
-        document.getElementById('historical-fact').innerHTML = '📜 ' + historicalFacts[Math.floor(Math.random() * historicalFacts.length)];
-        document.getElementById('encyclopedia-text').innerHTML = encyclopediaEntries[Math.floor(Math.random() * encyclopediaEntries.length)];
-
-        // Question technique tous les 3 assemblages
-        if (gameState.lines % 3 === 0 && gameState.lines > 0) {
-          triggerQuizQuestion();
-        }
-      }
-    }
-
-    function spawnNewPiece() {
-      currentPiece = nextPiece || createPiece();
-      nextPiece = createPiece();
-      drawNextPiece();
-      if (checkCollision(currentPiece)) gameOver();
-    }
-
-    // Question Technique d'Atelier
-    function triggerQuizQuestion() {
-      if (currentQuestionIndex >= quizQuestions.length) currentQuestionIndex = 0;
-      currentQuestion = quizQuestions[currentQuestionIndex];
-      questionAnswered = false;
-
-      document.getElementById('quiz-idle').classList.add('hidden');
-      const active = document.getElementById('quiz-active');
-      active.classList.remove('hidden');
-
-      document.getElementById('quiz-question-text').textContent = currentQuestion.question;
-      const opts = document.getElementById('quiz-options-list');
-      opts.innerHTML = currentQuestion.options.map((opt, i) => `
-        <div onclick="handleQuizAnswer(${i})" id="quiz-opt-${i}" class="p-2 rounded cursor-pointer transition-all bg-[#5a7fa020] hover:bg-[#5a7fa040] border-2 border-transparent hover:border-[#8bb4d9] text-[#c9d4e0] font-mono-tech text-[11px]">
-          ${opt}
-        </div>
-      `).join('');
-    }
-
-    function handleQuizAnswer(index) {
-      if (questionAnswered || !currentQuestion) return;
-      questionAnswered = true;
-
-      const stats = loadPlayerStats();
-      const isCorrect = (index === currentQuestion.correct);
-
-      const targetOpt = document.getElementById(`quiz-opt-${index}`);
-      if (isCorrect) {
-        targetOpt.className = 'p-2 rounded border-2 border-green-500 bg-green-900/50 text-green-200 font-mono-tech text-[11px] font-bold';
-        gameState.score += 750;
-        document.getElementById('stat-score').textContent = gameState.score;
-        updateStats({ quizCorrect: stats.quizCorrect + 1, quizTotal: stats.quizTotal + 1 });
-        playTone(880, 0.2);
-        setTimeout(() => {
-          alert('✅ Excellent ! Maîtrise technique confirmée. +750 points');
-          resetQuizUI();
-        }, 400);
-      } else {
-        targetOpt.className = 'p-2 rounded border-2 border-red-500 bg-red-900/50 text-red-200 font-mono-tech text-[11px]';
-        const correctOpt = document.getElementById(`quiz-opt-${currentQuestion.correct}`);
-        if (correctOpt) correctOpt.className = 'p-2 rounded border-2 border-green-500 bg-green-900/50 text-green-200 font-mono-tech text-[11px] font-bold';
-        updateStats({ quizTotal: stats.quizTotal + 1 });
-        playTone(220, 0.2, 'sawtooth');
-        setTimeout(() => {
-          alert('❌ Réponse incorrecte. La bonne réponse : ' + currentQuestion.options[currentQuestion.correct]);
-          resetQuizUI();
-        }, 400);
-      }
-    }
-
-    function resetQuizUI() {
-      currentQuestion = null;
-      currentQuestionIndex++;
-      document.getElementById('quiz-active').classList.add('hidden');
-      document.getElementById('quiz-idle').classList.remove('hidden');
-    }
-
-    // Contrôles du Jeu
-    function toggleStartGame() {
-      if (!gameState.gameRunning) {
-        startGame();
-      } else {
-        togglePause();
-      }
-    }
-
-    function startGame() {
-      initBoard();
-      gameState.score = 0;
-      gameState.level = 1;
-      gameState.lines = 0;
-      gameState.gameRunning = true;
-      gameState.gamePaused = false;
-
-      document.getElementById('stat-score').textContent = '0';
-      document.getElementById('stat-level').textContent = '1';
-      document.getElementById('stat-lines').textContent = '0';
-      document.getElementById('progress-bar-inner').style.width = '0%';
-      document.getElementById('progress-bar-inner').textContent = '0%';
-      document.getElementById('btn-start').innerHTML = '⏸️ Pause';
-      document.getElementById('pause-overlay').classList.add('hidden');
-
-      spawnNewPiece();
-      drawBoard();
-
-      if (dropInterval) clearInterval(dropInterval);
-      const speed = Math.max(100, 1000 - (gameState.level - 1) * 100);
-      dropInterval = setInterval(dropPiece, speed);
-      renderObjectives();
-    }
-
-    function togglePause() {
-      gameState.gamePaused = !gameState.gamePaused;
-      const overlay = document.getElementById('pause-overlay');
-      const btn = document.getElementById('btn-start');
-
-      if (gameState.gamePaused) {
-        if (dropInterval) clearInterval(dropInterval);
-        dropInterval = null;
-        overlay.classList.remove('hidden');
-        overlay.classList.add('flex');
-        btn.innerHTML = '▶️ Reprendre';
-      } else {
-        overlay.classList.add('hidden');
-        overlay.classList.remove('flex');
-        btn.innerHTML = '⏸️ Pause';
-        const speed = Math.max(100, 1000 - (gameState.level - 1) * 100);
-        dropInterval = setInterval(dropPiece, speed);
-      }
-    }
-
-    function gameOver() {
-      if (dropInterval) clearInterval(dropInterval);
-      gameState.gameRunning = false;
-      document.getElementById('btn-start').innerHTML = '▶️ Démarrer';
-
-      const stats = loadPlayerStats();
-      updateStats({
-        totalGames: stats.totalGames + 1,
-        totalLines: stats.totalLines + gameState.lines,
-        bestScore: Math.max(stats.bestScore, gameState.score)
-      });
-
-      let rank = '';
-      let certif = '';
-      if (gameState.lines < 10) {
-        rank = 'Apprenti Horloger';
-        certif = "Vous débutez dans l'art de l'horlogerie. Continuez à vous exercer à l'établi !";
-      } else if (gameState.lines < 25) {
-        rank = 'Compagnon';
-        certif = "Vous maîtrisez les bases de l'assemblage horloger. Travail soigné !";
-      } else if (gameState.lines < 50) {
-        rank = 'Maître Horloger';
-        certif = "Excellente maîtrise technique ! Vous êtes un véritable artisan des calibres suisses.";
-      } else if (gameState.lines < 100) {
-        rank = 'Grande Complication';
-        certif = "Expertise exceptionnelle ! Vous maîtrisez les assemblages les plus exigeants.";
-      } else {
-        rank = 'Légende de la Haute Horlogerie';
-        certif = "Performance extraordinaire ! Vous entrez dans la légende des grands maîtres horlogers !";
-      }
-
-      // Enregistrement au Hall of Fame
-      let scores = loadHighScores();
-      scores.push({ pseudo: gameState.playerPseudo || 'Anonyme', score: gameState.score, lines: gameState.lines, level: gameState.level, date: new Date().toISOString() });
-      scores.sort((a, b) => b.score - a.score);
-      scores = scores.slice(0, 5);
-      saveHighScores(scores);
-      renderLeaderboard();
-
-      const playerRank = scores.findIndex(s => s.pseudo === gameState.playerPseudo && s.score === gameState.score) + 1;
-      if (playerRank > 0 && playerRank <= 3) {
-        certif += `\n\n🏆 INCROYABLE ! Vous êtes ${playerRank === 1 ? 'N°1 👑' : playerRank === 2 ? 'N°2 🥈' : 'N°3 🥉'} du classement officiel !`;
-      } else if (playerRank > 0 && playerRank <= 5) {
-        certif += `\n\n✨ Félicitations ! Vous êtes dans le Top 5 (N°${playerRank}) !`;
-      }
-
-      // Remplir modal game over
-      document.getElementById('gameover-certif').textContent = certif;
-      document.getElementById('gameover-score').textContent = gameState.score;
-      document.getElementById('gameover-lines').textContent = gameState.lines;
-      document.getElementById('gameover-level').textContent = gameState.level;
-      document.getElementById('gameover-rank').textContent = 'Rang : ' + rank;
-
-      const goLeaderboard = document.getElementById('gameover-leaderboard');
-      goLeaderboard.innerHTML = scores.map((e, i) => {
-        const isCurrent = e.score === gameState.score && e.pseudo === gameState.playerPseudo;
-        return `
-          <div class="p-2 my-1.5 rounded-lg flex items-center gap-2 text-sm ${isCurrent ? 'bg-[#d4af3750] border-2 border-[#d4af37]' : i < 3 ? 'bg-[#d4af3720]' : 'bg-[#00000033]'}">
-            <span class="text-xl">${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}</span>
-            <div class="flex-1 text-left">
-              <div class="font-bold text-[#d4af37]">${e.pseudo} ${isCurrent ? '⭐' : ''}</div>
-              <div class="text-xs text-[#a89152] font-mono-tech">${e.lines} ass. • Calibre ${e.level}</div>
-            </div>
-            <div class="font-bold text-[#d4af37] font-cinzel text-base">${e.score}</div>
-          </div>
-        `;
-      }).join('');
-
-      document.getElementById('modal-gameover').classList.remove('hidden');
-    }
-
-    function quickRestart() {
-      document.getElementById('modal-gameover').classList.add('hidden');
-      startGame();
-    }
-
-    function changePseudo() {
-      document.getElementById('modal-gameover').classList.add('hidden');
-      document.getElementById('modal-pseudo').classList.remove('hidden');
-      document.getElementById('input-pseudo').value = '';
-      document.getElementById('input-pseudo').focus();
-    }
-
-    function savePseudoAndStart() {
-      const val = document.getElementById('input-pseudo').value.trim();
-      if (!val) {
-        alert('⚠️ Veuillez entrer un pseudo pour commencer');
-        return;
-      }
-      gameState.playerPseudo = val;
-      document.getElementById('modal-pseudo').classList.add('hidden');
-      startGame();
-    }
-
-    // Modal Badges
-    function openBadgesModal() {
-      const unlocked = loadBadges();
-      const stats = loadPlayerStats();
-      const grid = document.getElementById('badges-grid');
-
-      grid.innerHTML = ALL_BADGES.map(badge => {
-        const isUnlocked = unlocked.includes(badge.id);
-        const progress = stats[badge.stat] || 0;
-        const percent = Math.min(100, Math.round((progress / badge.target) * 100));
-
-        return `
-          <div class="p-4 rounded-xl border-2 transition-all ${
-            isUnlocked 
-              ? 'bg-gradient-to-br from-[#d4af3750] to-[#b8860b30] border-[#d4af37] shadow-lg shadow-[#d4af3730]' 
-              : 'bg-[#00000070] border-[#8b6914]'
-          }">
-            <div class="text-4xl mb-2 text-center">${isUnlocked ? badge.icon : '🔒'}</div>
-            <div class="text-center text-sm mb-1 font-bold font-cinzel ${isUnlocked ? 'text-[#d4af37]' : 'text-[#8b6914]'}">
-              ${badge.name}
-            </div>
-            <div class="text-xs text-center mb-3 ${isUnlocked ? 'text-[#c9a659]' : 'text-[#6b5210]'}">
-              ${badge.desc}
-            </div>
-            ${!isUnlocked ? `
-              <div>
-                <div class="w-full h-2 bg-[#00000080] rounded-full overflow-hidden mb-1">
-                  <div class="h-full bg-gradient-to-r from-[#8b6914] to-[#d4af37]" style="width: ${percent}%"></div>
-                </div>
-                <div class="text-[10px] text-center text-[#8b6914] font-mono-tech">${progress} / ${badge.target}</div>
-              </div>
-            ` : `
-              <div class="text-center text-green-400 text-xs font-bold font-mono-tech">✅ DÉBLOQUÉ</div>
-            `}
-          </div>
-        `;
-      }).join('');
-
-      document.getElementById('modal-badges').classList.remove('hidden');
-    }
-
-    function closeBadgesModal() {
-      document.getElementById('modal-badges').classList.add('hidden');
-    }
-
-    function quitGame() {
-      if (window.history.length > 1) {
-        window.history.back();
-      } else {
-        window.location.href = '/';
-      }
-    }
-
-    // Écouteurs de clavier
-    window.addEventListener('keydown', (e) => {
-      if (!gameState.gameRunning || gameState.gamePaused) return;
-      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
-        e.preventDefault();
-      }
-      switch (e.key) {
-        case 'ArrowLeft': movePiece(-1); break;
-        case 'ArrowRight': movePiece(1); break;
-        case 'ArrowDown': dropPiece(); break;
-        case 'ArrowUp': rotatePiece(); break;
-        case ' ': hardDrop(); break;
-      }
+/* ================= INIT ================= */
+initBoard();
+drawBoardCanvas();
+drawMini(nctx, nextC, null);
+drawMini(hctx, holdC, null);
+$('fact').textContent = '📜 ' + FACTS[Math.floor(Math.random()*FACTS.length)];
+$('encyclopedia').innerHTML = ENCY[Math.floor(Math.random()*ENCY.length)];
+renderLeaderboard();
+refreshStats();
+updateObjectives();
+let savedPseudo = null;
+try { savedPseudo = localStorage.getItem('horlogerPseudo'); } catch(e) {}
+if (savedPseudo) {
+  pseudo = savedPseudo;
+  $('pseudoModal').classList.add('hidden');
+  $('startOverlay').classList.remove('hidden');
+} else {
+  try { $('pseudoInput').focus(); } catch(e) {}
+}
+$('pseudoInput').addEventListener('input', () => {}); // noop garde-fou
+window.addEventListener('beforeunload', () => { try { if (pseudo) localStorage.setItem('horlogerPseudo', pseudo); } catch(e) {} });
+/* ---- poussière dorée ambiante ---- */
+const dustCv = $('dust');
+if (dustCv && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const dctx = dustCv.getContext('2d');
+  const sizeDust = () => { dustCv.width = innerWidth; dustCv.height = innerHeight; };
+  sizeDust(); window.addEventListener('resize', sizeDust);
+  const motes = Array.from({length: 46}, () => ({
+    x: Math.random()*innerWidth, y: Math.random()*innerHeight,
+    r: 0.6+Math.random()*1.8, vy: 0.12+Math.random()*0.3, vx: (Math.random()-0.5)*0.18,
+    tw: Math.random()*Math.PI*2
+  }));
+  (function dustLoop() {
+    dctx.clearRect(0, 0, dustCv.width, dustCv.height);
+    motes.forEach(m => {
+      m.x += m.vx; m.y -= m.vy; m.tw += 0.03;
+      if (m.y < -6) { m.y = dustCv.height+6; m.x = Math.random()*dustCv.width; }
+      if (m.x < -6) m.x = dustCv.width+6;
+      if (m.x > dustCv.width+6) m.x = -6;
+      dctx.globalAlpha = 0.22 + 0.3*Math.abs(Math.sin(m.tw));
+      dctx.fillStyle = '#e8c15a';
+      dctx.beginPath(); dctx.arc(m.x, m.y, m.r, 0, Math.PI*2); dctx.fill();
     });
-
-    document.getElementById('input-pseudo').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') savePseudoAndStart();
-    });
-
-    // Initialisation
-    window.addEventListener('DOMContentLoaded', () => {
-      initBoard();
-      drawBoard();
-      const stats = loadPlayerStats();
-      renderStatsUI(stats);
-      renderBadgesCount(loadBadges().length);
-      renderLeaderboard();
-      renderObjectives();
-    });
-  </script>
+    dctx.globalAlpha = 1;
+    requestAnimationFrame(dustLoop);
+  })();
+}
+lastTime = performance.now();
+rafId = requestAnimationFrame(loop);
+})();
+</script>
 </body>
 </html>
