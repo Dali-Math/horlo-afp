@@ -364,7 +364,7 @@ const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
   const spentSec = timeSpent % 60;
 
   return (
-    <div className="w-full flex flex-col justify-between py-1 max-w-6xl mx-auto font-sans select-none">
+    <div className="w-full flex flex-col justify-between py-1 max-w-[1550px] mx-auto font-sans select-none">
       {/* 1. HUD TOP BAR (Compteurs & Scores - Identique au HTML) */}
       <header className="w-full mb-3">
         <div className="glass-hud p-3 sm:px-6 sm:py-3.5 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3">
@@ -456,7 +456,7 @@ const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
             <div
               key={card.uniqueId}
               onClick={() => handleCardClick(idx)}
-              className={`card-wrapper h-28 sm:h-34 md:h-36 cursor-pointer ${
+              className={`card-wrapper h-36 sm:h-44 md:h-48 cursor-pointer ${
                 card.flipped || card.matched ? 'flipped' : ''
               } ${card.matched ? 'matched' : ''} ${card.isFailing ? 'shake-fail' : ''}`}
             >
@@ -470,7 +470,7 @@ const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
                   </div>
 
                   {/* Médaillon central : Vraie Photo du Mouvement Complet */}
-                  <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full border border-amber-500/60 p-0.5 bg-slate-950/90 shadow-2xl flex items-center justify-center my-auto group-hover:scale-105 transition-transform overflow-hidden">
+                  <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full border border-amber-500/60 p-0.5 bg-slate-950/90 shadow-2xl flex items-center justify-center my-auto group-hover:scale-105 transition-transform overflow-hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="/images/emboitage/kit/3_mouvement_calibre.png"
@@ -503,7 +503,7 @@ const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
                     <img
                       src={card.img}
                       alt={card.name}
-                      className="max-h-[60px] sm:max-h-[75px] max-w-full object-contain filter drop-shadow-[0_4px_10px_rgba(0,0,0,0.85)]"
+                      className="max-h-[90px] sm:max-h-[110px] max-w-full object-contain filter drop-shadow-[0_4px_10px_rgba(0,0,0,0.85)]"
                       loading="eager"
                       onError={(e) => {
                         (e.currentTarget as HTMLImageElement).src = `https://www.horlolearn.ch${card.img}`;
