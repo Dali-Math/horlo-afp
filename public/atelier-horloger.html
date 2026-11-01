@@ -1230,17 +1230,19 @@ $('changePseudoBtn').onclick = () => {
 };
 
 function quitGame() {
-  try {
-    if (window.parent && window.parent !== window) {
-      window.parent.postMessage({ type: 'HORLO_QUIT' }, '*');
-    }
-  } catch(e) {}
-  if (window.history.length > 1) {
+  var inFrame = false;
+  try { inFrame = window.self !== window.top; } catch (e) { inFrame = true; }
+  if (inFrame) {
+    try { window.parent.postMessage({ type: 'HORLO_QUIT' }, '*'); } catch (e) {}
+    return;
+  }
+  if (document.referrer && window.history.length > 1) {
     window.history.back();
   } else {
-    window.location.href = '/';
+    window.location.href = '/quiz';
   }
 }
+window.quitGame = quitGame;
 
 function confirmPseudo() {
   const v = $('pseudoInput').value.trim();
