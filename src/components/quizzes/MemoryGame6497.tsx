@@ -13,7 +13,7 @@ interface MemoryGame6497Props {
   onExit?: () => void;
 }
 
-// 8 Paires Horlogères Majeures ETA 6497 (16 cartes au total - format cartes géantes d'atelier)
+// 8 Paires Horlogères Majeures ETA 6497 (16 cartes au total - format compact sans défilement)
 const PIECES_CONFIG = [
   { file: 'barillet.png', label: 'Barillet moteur (53h)' },
   { file: 'balancier.png', label: 'Balancier à vis' },
@@ -142,26 +142,26 @@ const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
   };
 
   return (
-    <div className="w-full flex flex-col items-center justify-center py-4">
-      {/* HUD & Chrono */}
-      <div className="w-full max-w-4xl flex flex-wrap items-center justify-between gap-3 mb-6 px-2">
-        <div className="flex items-center gap-3">
+    <div className="w-full flex flex-col items-center justify-center py-1">
+      {/* HUD & Chrono compact */}
+      <div className="w-full max-w-4xl flex items-center justify-between gap-2 mb-3 px-1 text-xs sm:text-sm font-mono">
+        <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={handleQuit}
-            className="px-4 py-2 rounded-xl bg-slate-800/95 hover:bg-rose-950/80 hover:border-rose-500/60 text-slate-300 hover:text-rose-200 border border-slate-700 text-xs sm:text-sm font-mono transition flex items-center gap-2 shadow-md"
+            className="px-3.5 py-1.5 rounded-xl bg-slate-800/95 hover:bg-rose-950/80 hover:border-rose-500/60 text-slate-300 hover:text-rose-200 border border-slate-700 transition flex items-center gap-1.5 shadow-sm"
             title="Quitter le jeu"
           >
             <span className="text-rose-400 font-bold">←</span>
             <span>Quitter</span>
           </button>
-          <div className="px-4 py-2 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-200 text-xs sm:text-sm font-mono shadow-md">
+          <div className="px-3.5 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-200 shadow-sm">
             Paires : <span className="text-amber-400 font-bold">{matchedPairs} / {PIECES_CONFIG.length}</span>
           </div>
         </div>
 
         {!gameOver && !win && (
           <div
-            className={`px-4 py-2 rounded-xl font-mono text-xs sm:text-sm font-bold border transition-colors shadow-md ${
+            className={`px-3.5 py-1.5 rounded-xl font-bold border transition-colors shadow-sm ${
               timeLeft <= 40
                 ? 'bg-rose-950/60 border-rose-500 text-rose-300 animate-pulse'
                 : 'bg-slate-900/90 border-amber-500/40 text-amber-300'
@@ -173,18 +173,18 @@ const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
 
         <button
           onClick={initGame}
-          className="px-4 py-2 rounded-xl bg-slate-800/95 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs sm:text-sm font-mono transition shadow-md"
+          className="px-3.5 py-1.5 rounded-xl bg-slate-800/95 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition shadow-sm"
         >
           Recommencer
         </button>
       </div>
 
-      {/* Grille des CARTES GÉANTES (4 colonnes x 4 lignes = 16 cartes bien lisibles) */}
+      {/* Grille des 16 CARTES : Hauteur ajustée (h-28 sm:h-34 md:h-38) pour tenir à 100% dans l'écran sans défilement */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.15 }}
-        className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5 max-w-4xl w-full"
+        transition={{ delay: 0.1 }}
+        className="grid grid-cols-4 gap-2 sm:gap-3 max-w-4xl w-full"
       >
         <AnimatePresence>
           {cards.map((card, index) => (
@@ -192,8 +192,8 @@ const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
               key={card.id}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.025 }}
-              className="flip-card h-48 sm:h-64 cursor-pointer select-none"
+              transition={{ delay: index * 0.02 }}
+              className="flip-card h-28 sm:h-32 md:h-36 cursor-pointer select-none"
               onClick={() => handleFlip(index)}
             >
               <div
@@ -201,52 +201,52 @@ const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
                   card.flipped || card.matched ? 'flipped' : ''
                 }`}
               >
-                {/* Verso (Face cachée : Blason horloger élégant) */}
-                <div className="flip-card-front bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 border-2 border-amber-500/40 hover:border-amber-400/80 flex flex-col items-center justify-between p-4 rounded-2xl shadow-xl transition-all group">
+                {/* Verso (Face cachée : Blason horloger sobre) */}
+                <div className="flip-card-front bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 border border-amber-500/40 hover:border-amber-400 flex flex-col items-center justify-between p-2 rounded-xl shadow-md transition-all group">
                   <div className="w-full flex justify-between items-center opacity-60">
-                    <span className="text-[10px] font-mono tracking-widest text-amber-400 font-bold">HORLOLEARN</span>
-                    <span className="text-[10px] font-mono text-slate-400">16½'''</span>
+                    <span className="text-[9px] font-mono tracking-widest text-amber-400 font-bold">HORLOLEARN</span>
+                    <span className="text-[9px] font-mono text-slate-400">16½'''</span>
                   </div>
 
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col items-center justify-center shadow-inner group-hover:scale-105 transition-transform">
-                    <span className="text-amber-300 font-mono font-bold text-base sm:text-xl">6497</span>
-                    <span className="text-[9px] text-amber-400/70 font-mono tracking-widest uppercase">ETA</span>
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex flex-col items-center justify-center shadow-inner group-hover:scale-105 transition-transform">
+                    <span className="text-amber-300 font-mono font-bold text-xs sm:text-sm">6497</span>
+                    <span className="text-[8px] text-amber-400/70 font-mono tracking-widest uppercase">ETA</span>
                   </div>
 
-                  <div className="text-[10px] font-mono text-slate-400 tracking-wider">
+                  <div className="text-[8px] sm:text-[9px] font-mono text-slate-400 tracking-wider">
                     CALIBRE SUISSE
                   </div>
                 </div>
 
-                {/* Recto (Fourniture réelle EN GRAND) */}
+                {/* Recto (Fourniture réelle nette) */}
                 <div
                   className={`flip-card-back bg-slate-950/95 border-2 ${
                     card.matched
-                      ? 'border-emerald-500 shadow-xl shadow-emerald-500/25 ring-2 ring-emerald-400/50'
+                      ? 'border-emerald-500 shadow-lg shadow-emerald-500/25 ring-2 ring-emerald-400/50'
                       : 'border-amber-500/80'
-                  } flex flex-col items-center justify-between p-3 sm:p-4 rounded-2xl shadow-2xl`}
+                  } flex flex-col items-center justify-between p-1.5 sm:p-2 rounded-xl shadow-lg`}
                 >
-                  <div className="w-full flex items-center justify-between">
-                    <span className="text-[9px] sm:text-[10px] font-mono px-2 py-0.5 rounded-md bg-slate-900 text-amber-300 border border-amber-500/30 font-bold uppercase tracking-wider">
+                  <div className="w-full flex items-center justify-between px-1">
+                    <span className="text-[8px] sm:text-[9px] font-mono px-1.5 py-0.2 rounded bg-slate-900 text-amber-300 border border-amber-500/30 font-bold uppercase tracking-wider">
                       ETA 6497
                     </span>
-                    <span className={`w-2.5 h-2.5 rounded-full ${card.matched ? 'bg-emerald-400 shadow-sm shadow-emerald-400' : 'bg-amber-400'}`}></span>
+                    <span className={`w-2 h-2 rounded-full ${card.matched ? 'bg-emerald-400 shadow-sm shadow-emerald-400' : 'bg-amber-400'}`}></span>
                   </div>
 
-                  {/* Image HD Géante de la pièce */}
-                  <div className="relative w-full flex-1 flex items-center justify-center p-2 my-1 rounded-xl bg-slate-900/80 border border-slate-800 shadow-inner">
+                  {/* Image HD Fourniture adaptée à la hauteur */}
+                  <div className="relative w-full flex-1 flex items-center justify-center p-1 my-0.5 rounded-lg bg-slate-900/80 border border-slate-800 shadow-inner overflow-hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={`/images/quiz/6497/${card.name}`}
                       alt={card.label}
-                      className="max-h-full max-w-full object-contain filter drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]"
+                      className="max-h-[60px] sm:max-h-[75px] max-w-full object-contain filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]"
                       onError={(e) => {
                         (e.currentTarget as HTMLImageElement).src = `/images/quiz/${card.name}`;
                       }}
                     />
                   </div>
 
-                  <span className="text-xs sm:text-sm font-bold text-amber-100 text-center leading-tight line-clamp-2 px-1">
+                  <span className="text-[10px] sm:text-[11px] font-bold text-amber-100 text-center leading-tight truncate px-1 w-full">
                     {card.label}
                   </span>
                 </div>
@@ -261,17 +261,17 @@ const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="mt-8 text-center bg-slate-900/95 border border-rose-500/40 p-6 rounded-2xl max-w-md w-full shadow-2xl space-y-4"
+          className="mt-6 text-center bg-slate-900/95 border border-rose-500/40 p-5 rounded-2xl max-w-md w-full shadow-2xl space-y-3"
         >
           <div>
-            <div className="text-xl text-rose-400 font-bold mb-1">
+            <div className="text-lg text-rose-400 font-bold mb-1">
               Temps écoulé
             </div>
             <p className="text-xs text-slate-400">
               Prenez le temps d'observer chaque fourniture micromécanique et réessayez.
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-3 pt-2">
+          <div className="grid grid-cols-2 gap-3 pt-1">
             <button
               onClick={initGame}
               className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-slate-950 font-bold text-xs font-mono uppercase tracking-wider transition"
@@ -293,13 +293,13 @@ const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="mt-8 text-center bg-slate-900/95 border border-emerald-500/50 p-6 sm:p-8 rounded-3xl max-w-md w-full shadow-2xl space-y-5"
+          className="mt-6 text-center bg-slate-900/95 border border-emerald-500/50 p-6 rounded-3xl max-w-md w-full shadow-2xl space-y-4"
         >
           <div>
-            <span className="text-[11px] font-mono uppercase tracking-widest text-emerald-400 font-bold block mb-1">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 font-bold block mb-1">
               Mémoire Horlogère Validée
             </span>
-            <div className="text-2xl text-white font-bold">
+            <div className="text-xl text-white font-bold">
               Toutes les fournitures identifiées
             </div>
             <p className="text-xs text-slate-400 mt-1">
@@ -307,20 +307,20 @@ const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
             </p>
           </div>
 
-          <div className="bg-slate-950/80 p-3.5 rounded-xl border border-slate-800 font-mono text-xs text-amber-300">
+          <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800 font-mono text-xs text-amber-300">
             Temps réalisé : <span className="font-bold text-white text-sm">{Math.floor((150 - timeLeft) / 60)}:{String((150 - timeLeft) % 60).padStart(2, '0')}</span>
           </div>
 
           <div className="grid grid-cols-2 gap-3 pt-1">
             <button
               onClick={initGame}
-              className="py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 hover:from-amber-300 text-slate-950 font-bold text-xs sm:text-sm font-mono uppercase tracking-wider transition shadow-lg shadow-amber-500/20 active:scale-98"
+              className="py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 hover:from-amber-300 text-slate-950 font-bold text-xs sm:text-sm font-mono uppercase tracking-wider transition shadow-lg shadow-amber-500/20 active:scale-98"
             >
               Rejouer
             </button>
             <button
               onClick={handleQuit}
-              className="py-3 px-4 rounded-xl bg-rose-950/70 hover:bg-rose-900/80 text-rose-200 hover:text-white border border-rose-500/50 font-bold text-xs sm:text-sm font-mono uppercase tracking-wider transition shadow-lg shadow-rose-950/30 active:scale-98 flex items-center justify-center gap-1.5"
+              className="py-2.5 px-4 rounded-xl bg-rose-950/70 hover:bg-rose-900/80 text-rose-200 hover:text-white border border-rose-500/50 font-bold text-xs sm:text-sm font-mono uppercase tracking-wider transition shadow-lg shadow-rose-950/30 active:scale-98 flex items-center justify-center gap-1.5"
             >
               <span>Quitter</span>
             </button>
@@ -338,7 +338,7 @@ const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
           width: 100%;
           height: 100%;
           text-align: center;
-          transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
           transform-style: preserve-3d;
         }
         .flip-card-inner.flipped {
@@ -352,7 +352,7 @@ const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
           height: 100%;
           -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
-          border-radius: 1rem;
+          border-radius: 0.85rem;
         }
         .flip-card-back {
           transform: rotateY(180deg);

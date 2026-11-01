@@ -39,7 +39,7 @@ const QuizInterface: React.FC<QuizInterfaceProps> = ({ quiz, onExit, onComplete 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen pt-20 pb-8"
+      className="min-h-screen pt-12 pb-4"
     >
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
@@ -47,7 +47,7 @@ const QuizInterface: React.FC<QuizInterfaceProps> = ({ quiz, onExit, onComplete 
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6 }}
-          className="flex items-center justify-between mb-8"
+          className="flex items-center justify-between mb-3"
         >
           <button
             onClick={onExit}
@@ -72,7 +72,7 @@ const QuizInterface: React.FC<QuizInterfaceProps> = ({ quiz, onExit, onComplete 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8"
+          className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-3 sm:p-5"
         >
           {renderQuiz()}
         </motion.div>
