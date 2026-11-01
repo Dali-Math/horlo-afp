@@ -20,6 +20,14 @@ const QuizInterface: React.FC<QuizInterfaceProps> = ({ quiz, onExit, onComplete 
     onComplete(score, total);
   };
 
+  if (quiz.component === 'AtelierHorloger') {
+    return (
+      <div className="w-full min-h-screen pt-4 pb-8 px-2 sm:px-6">
+        <AtelierHorloger onExit={onExit} />
+      </div>
+    );
+  }
+
   if (quiz.component === 'MemoryGame6497') {
     return (
       <div className="w-full min-h-screen pt-4 pb-8 px-2 sm:px-6">

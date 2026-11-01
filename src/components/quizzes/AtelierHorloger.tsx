@@ -1,5 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { ArrowLeft } from 'lucide-react';
+
+interface AtelierHorlogerProps {
+  onExit?: () => void;
+}
 
 interface Badge {
   id: string;
@@ -29,7 +34,7 @@ interface PlayerStats {
   quizTotal: number;
 }
 
-const AtelierHorloger: React.FC = () => {
+const AtelierHorloger: React.FC<AtelierHorlogerProps> = ({ onExit }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const nextCanvasRef = useRef<HTMLCanvasElement>(null);
   
@@ -593,6 +598,20 @@ const AtelierHorloger: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#14141e] via-[#28201e] to-[#14141e] text-[#d4af37] p-5">
       <div className="max-w-7xl mx-auto">
+        {onExit && (
+          <div className="flex items-center justify-between mb-4">
+            <button
+              onClick={onExit}
+              className="px-4 py-2 rounded-xl bg-[#281e1490] hover:bg-[#3c2814] text-[#d4af37] border-2 border-[#8b6914] flex items-center gap-2 text-xs font-mono transition shadow-md hover:border-[#d4af37] cursor-pointer"
+            >
+              <ArrowLeft className="w-4 h-4 text-[#d4af37]" />
+              <span className="font-bold tracking-wider uppercase">← Quitter l'atelier</span>
+            </button>
+            <div className="text-xs font-mono text-[#c9a659]">
+              Manufacture de Haute Horlogerie • Genève 1755
+            </div>
+          </div>
+        )}
         <div className="text-center mb-8 bg-gradient-to-br from-[#d4af3720] to-[#b8860b20] p-8 rounded-2xl border-2 border-[#d4af37]">
           <h1 className="text-5xl font-bold text-[#d4af37] mb-3 tracking-widest" style={{ fontFamily: 'serif' }}>
             ⚙️ ATELIER D'ASSEMBLAGE HORLOGER ⚙️

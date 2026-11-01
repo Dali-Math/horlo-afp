@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atelier d'Assemblage Horloger — HorloLearn</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      background: radial-gradient(circle at 50% 15%, #28201e 0%, #14141e 70%, #0d0d14 100%);
+      color: #d4af37;
+      min-height: 100vh;
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+    .font-mono-tech {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .font-cinzel {
+      font-family: 'Cinzel', serif;
+    }
+    /* Scrollbar personnalisée laiton */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #14141e;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #8b6914;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="p-3 sm:p-6 min-h-screen">
+  <div class="max-w-7xl mx-auto">
+
+    <!-- BARRE HAUTE NAVIGATION / QUITTER -->
+    <div class="flex items-center justify-between mb-4">
+      <button onclick="quitGame()" class="px-4 py-2 rounded-xl bg-[#281e1490] hover:bg-[#3c2814] text-[#d4af37] border-2 border-[#8b6914] flex items-center gap-2 text-xs font-mono-tech transition shadow-md hover:border-[#d4af37]" title="Quitter l'atelier">
+        <svg class="w-4 h-4 text-[#d4af37]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        <span class="font-bold tracking-wider uppercase">← Quitter l'atelier</span>
+      </button>
+
+      <div class="text-xs font-mono-tech text-[#c9a659] flex items-center gap-3">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>Atelier d'horlogerie suisse</span>
+        <span class="text-[#8b6914]">|</span>
+        <span class="text-[#e0c87e]">Contrôles : Fleches + Espace</span>
+      </div>
+    </div>
+
+    <!-- CARTOUCHE TITRE MANUFACTURE -->
+    <div class="text-center mb-6 bg-gradient-to-br from-[#d4af3720] to-[#b8860b20] p-6 sm:p-8 rounded-2xl border-2 border-[#d4af37] shadow-[0_8px_30px_rgba(0,0,0,0.6)]">
+      <h1 class="text-3xl sm:text-5xl font-bold text-[#d4af37] mb-2 sm:mb-3 tracking-widest font-cinzel">
+        ⚙️ ATELIER D'ASSEMBLAGE HORLOGER ⚙️
+      </h1>
+      <div class="text-base sm:text-xl italic text-[#c9a659]">Manufacture de Haute Précision Suisse</div>
+      <div class="inline-block mt-3 px-6 sm:px-8 py-1.5 sm:py-2 border-2 border-[#d4af37] rounded-full text-xs sm:text-sm tracking-widest bg-[#d4af3710] font-mono-tech font-bold">
+        GENÈVE 1755
+      </div>
+    </div>
+
+    <!-- GRILLE 3 COLONNES ORIGINALE DU SITE -->
+    <div class="grid grid-cols-1 lg:grid-cols-[300px_1fr_300px] gap-6">
+
+      <!-- COLONNE GAUCHE : ÉTABLI & STATS -->
+      <div class="bg-gradient-to-br from-[#3c281490] to-[#281e1490] border-2 border-[#8b6914] rounded-xl p-5 shadow-lg flex flex-col justify-between">
+        <div>
+          <h3 class="text-xl text-center border-b-2 border-[#8b6914] pb-2 mb-4 font-bold font-cinzel">📊 Établi</h3>
+          
+          <!-- Score -->
+          <div class="bg-[#00000066] p-4 rounded-xl text-center mb-3 border-2 border-[#d4af37] shadow-inner">
+            <div class="text-xs text-[#c9a659] uppercase tracking-wider font-mono-tech">Points</div>
+            <div id="stat-score" class="text-4xl font-bold text-[#d4af37] font-cinzel">0</div>
+          </div>
+
+          <!-- Calibre & Assemblages -->
+          <div class="grid grid-cols-2 gap-2 mb-3">
+            <div class="bg-[#00000066] p-3 rounded-xl text-center border border-[#8b6914]">
+              <div class="text-xs text-[#c9a659] font-mono-tech">Calibre</div>
+              <div id="stat-level" class="text-2xl font-bold text-[#d4af37] font-cinzel">1</div>
+            </div>
+            <div class="bg-[#00000066] p-3 rounded-xl text-center border border-[#8b6914]">
+              <div class="text-xs text-[#c9a659] font-mono-tech">Assemblages</div>
+              <div id="stat-lines" class="text-2xl font-bold text-[#d4af37] font-cinzel">0</div>
+            </div>
+          </div>
+
+          <!-- Progression bar -->
+          <div class="bg-[#00000066] p-3 rounded-xl mb-3 border border-[#8b6914] text-xs">
+            <div class="text-[#d4af37] mb-2 text-center font-bold font-cinzel">Progression</div>
+            <div class="h-5 bg-[#00000080] rounded-xl overflow-hidden border border-[#8b6914]">
+              <div id="progress-bar-inner" class="h-full bg-gradient-to-r from-[#d4af37] to-[#f0c14b] flex items-center justify-center text-[10px] font-bold text-[#1a1410] font-mono-tech transition-all duration-300" style="width: 0%">
+                0%
+              </div>
+            </div>
+          </div>
+
+          <!-- Anecdote historique -->
+          <div id="historical-fact" class="bg-[#00000050] p-3 rounded-xl mb-3 border border-[#8b6914] text-xs italic text-[#e0c87e] leading-relaxed">
+            📜 Abraham-Louis Breguet perfectionne le tourbillon en 1801 pour compenser les effets de la gravité terrestre.
+          </div>
+          
+          <!-- Bouton Badges -->
+          <button onclick="openBadgesModal()" class="w-full bg-gradient-to-br from-[#d4af37] to-[#b8860b] hover:from-[#e5be48] hover:to-[#c99516] text-[#1a1410] px-4 py-3 rounded-xl font-bold text-sm mb-3 shadow-md hover:shadow-xl transition-all cursor-pointer font-mono-tech">
+            🏅 Mes Badges (<span id="badges-count">0</span>/10)
+          </button>
+
+          <!-- Statistiques Joueur -->
+          <div class="bg-[#00000066] p-3 rounded-xl border border-[#d4af37] mb-3">
+            <h4 class="text-[#d4af37] text-center mb-2 text-xs font-bold font-cinzel">📊 Statistiques Joueur</h4>
+            <div class="space-y-1 text-[11px] text-[#c9a659] font-mono-tech">
+              <div class="flex justify-between">
+                <span>Parties :</span>
+                <strong id="stat-total-games" class="text-[#d4af37]">0</strong>
+              </div>
+              <div class="flex justify-between">
+                <span>Meilleur score :</span>
+                <strong id="stat-best-score" class="text-[#d4af37]">0</strong>
+              </div>
+              <div class="flex justify-between">
+                <span>Total lignes :</span>
+                <strong id="stat-total-lines" class="text-[#d4af37]">0</strong>
+              </div>
+              <div class="flex justify-between">
+                <span>Quiz :</span>
+                <strong id="stat-quiz-score" class="text-[#d4af37]">0/0</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hall of Fame -->
+        <div class="bg-[#00000066] p-3 rounded-xl border border-[#d4af37]">
+          <h4 class="text-[#d4af37] text-center mb-2 text-sm font-bold font-cinzel">🏆 Hall of Fame</h4>
+          <div id="leaderboard-list" class="space-y-1">
+            <div class="text-center py-3 text-[#8b6914] italic text-xs">Aucun score enregistré</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLONNE CENTRALE : PLATEAU DE JEU & PROCHAIN COMPOSANT -->
+      <div class="flex flex-col items-center">
+        <!-- Canvas de jeu -->
+        <div class="relative">
+          <canvas id="game-canvas" width="300" height="600" class="border-4 border-[#d4af37] rounded-xl shadow-[0_12px_36px_rgba(0,0,0,0.8)]"></canvas>
+
+          <!-- Overlay pause -->
+          <div id="pause-overlay" class="absolute inset-0 bg-black/80 rounded-xl flex-col items-center justify-center gap-3 hidden">
+            <div class="text-3xl font-bold font-cinzel text-[#d4af37]">EN PAUSE</div>
+            <p class="text-xs text-[#c9a659] font-mono-tech">Appuyez sur Reprendre pour continuer</p>
+          </div>
+        </div>
+
+        <!-- Boutons Démarrer / Pause -->
+        <div class="flex gap-3 my-4">
+          <button id="btn-start" onclick="toggleStartGame()" class="bg-gradient-to-br from-[#d4af37] to-[#b8860b] hover:from-[#e5be48] hover:to-[#c99516] text-[#1a1410] px-8 py-3 rounded-xl font-bold uppercase tracking-wider text-sm shadow-lg hover:shadow-xl transition-all cursor-pointer font-cinzel">
+            ▶️ Démarrer
+          </button>
+        </div>
+
+        <!-- Prochain Composant Horloger -->
+        <div class="bg-gradient-to-br from-[#00000099] to-[#281e1499] p-4 rounded-xl border-2 border-[#8b6914] text-center w-full max-w-[300px] shadow-lg">
+          <h4 class="text-[#d4af37] mb-2 font-bold font-cinzel text-sm">Prochain Composant</h4>
+          <canvas id="next-canvas" width="120" height="120" class="mx-auto border-2 border-[#8b6914] rounded-lg mb-2 shadow-inner" style="background: rgba(0,0,0,0.4)"></canvas>
+          <div id="next-piece-name" class="text-[#d4af37] italic text-xs font-mono-tech font-bold">---</div>
+        </div>
+      </div>
+
+      <!-- COLONNE DROITE : EXAMEN TECHNIQUE, ENCYCLOPÉDIE & OBJECTIFS -->
+      <div class="bg-gradient-to-br from-[#3c281490] to-[#281e1490] border-2 border-[#8b6914] rounded-xl p-5 shadow-lg flex flex-col justify-between">
+        <div>
+          <h3 class="text-xl text-center border-b-2 border-[#8b6914] pb-2 mb-4 font-bold font-cinzel">🎓 Examen</h3>
+          
+          <!-- Section Quiz Horloger -->
+          <div class="bg-gradient-to-br from-[#143c5050] to-[#14283c50] p-4 rounded-xl border-2 border-[#5a7fa0] mb-3 shadow-md">
+            <h4 class="text-[#8bb4d9] text-center mb-3 text-sm font-bold font-cinzel">Questions Techniques</h4>
+            <div id="quiz-container" class="bg-[#00000066] p-3 rounded-lg border-l-2 border-[#8bb4d9] text-xs">
+              <div id="quiz-idle" class="text-[#c9d4e0] leading-relaxed font-mono-tech">
+                Complétez 3 assemblages pour débloquer l'examen technique (+750 pts) !
+              </div>
+              <div id="quiz-active" class="hidden">
+                <div id="quiz-question-text" class="text-[#c9d4e0] font-bold mb-3 leading-relaxed"></div>
+                <div id="quiz-options-list" class="space-y-2"></div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Encyclopédie horlogère -->
+          <div class="bg-[#00000050] p-3 rounded-xl mb-3 border border-[#8b6914] text-xs">
+            <h4 class="text-[#d4af37] text-center mb-2 font-bold font-cinzel">📚 Encyclopédie</h4>
+            <div id="encyclopedia-text" class="text-[#c9a659] leading-relaxed">
+              <strong>Le Balancier-Spiral</strong> est l'organe régulateur du mouvement. Il oscille à fréquence constante (2.5 à 5 Hz).
+            </div>
+          </div>
+        </div>
+
+        <!-- Objectifs Maîtrise -->
+        <div class="bg-gradient-to-br from-[#8b691420] to-[#d4af3720] p-3 rounded-xl border-2 border-[#d4af37]">
+          <h4 class="text-[#d4af37] text-center mb-2 text-sm font-bold font-cinzel">🏆 Objectifs</h4>
+          <div id="objectives-list" class="text-[#e0c87e] text-xs space-y-1 font-mono-tech">
+            <!-- Rendu dynamique -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL DE BIENVENUE (PSEUDO) -->
+  <div id="modal-pseudo" class="fixed inset-0 bg-black/95 flex items-center justify-center z-50 p-4">
+    <div class="bg-gradient-to-br from-[#281e14f0] to-[#3c2814f0] p-8 sm:p-10 rounded-3xl text-center border-4 border-[#d4af37] max-w-lg w-full shadow-[0_0_50px_rgba(212,175,55,0.4)]">
+      <h2 class="text-3xl sm:text-4xl text-[#d4af37] mb-4 font-bold font-cinzel">⚙️ BIENVENUE ⚙️</h2>
+      <div class="bg-[#d4af3720] p-4 rounded-xl mb-6 border-2 border-[#d4af37] text-sm text-[#e0c87e]">
+        Entrez votre nom d'horloger pour inscrire vos exploits au registre officiel de la manufacture.
+      </div>
+      <input 
+        id="input-pseudo"
+        type="text" 
+        placeholder="Votre pseudo d'horloger..." 
+        maxlength="20" 
+        autofocus 
+        class="w-full p-3.5 text-lg bg-[#00000066] border-2 border-[#d4af37] rounded-xl text-[#d4af37] text-center mb-6 placeholder-[#8b6914] focus:outline-none focus:ring-2 focus:ring-[#f0c14b] font-mono-tech" 
+      />
+      <button onclick="savePseudoAndStart()" class="bg-gradient-to-br from-[#d4af37] to-[#b8860b] hover:from-[#e5be48] hover:to-[#c99516] text-[#1a1410] px-8 py-3.5 rounded-xl font-bold uppercase tracking-wider font-cinzel cursor-pointer shadow-lg w-full">
+        ✨ Commencer
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL GAME OVER / CERTIFICATION -->
+  <div id="modal-gameover" class="fixed inset-0 bg-black/95 flex items-center justify-center z-50 p-4 overflow-y-auto hidden">
+    <div class="bg-gradient-to-br from-[#281e14f0] to-[#3c2814f0] p-6 sm:p-8 rounded-3xl text-center border-4 border-[#d4af37] max-w-2xl w-full max-h-[92vh] overflow-y-auto shadow-[0_0_60px_rgba(212,175,55,0.4)]">
+      <h2 class="text-3xl sm:text-4xl text-[#d4af37] mb-3 font-bold font-cinzel">⚙️ RAPPORT D'ATELIER ⚙️</h2>
+      
+      <div id="gameover-certif" class="bg-[#d4af3720] p-4 rounded-xl mb-4 border-2 border-[#d4af37] whitespace-pre-line text-sm text-[#e0c87e] leading-relaxed"></div>
+      
+      <div class="grid grid-cols-3 gap-3 mb-4">
+        <div class="bg-[#00000066] p-3 rounded-xl border-2 border-[#8b6914]">
+          <div class="text-xs text-[#c9a659] font-mono-tech">Points</div>
+          <div id="gameover-score" class="text-2xl font-bold text-[#d4af37] font-cinzel">0</div>
+        </div>
+        <div class="bg-[#00000066] p-3 rounded-xl border-2 border-[#8b6914]">
+          <div class="text-xs text-[#c9a659] font-mono-tech">Assemblages</div>
+          <div id="gameover-lines" class="text-2xl font-bold text-[#d4af37] font-cinzel">0</div>
+        </div>
+        <div class="bg-[#00000066] p-3 rounded-xl border-2 border-[#8b6914]">
+          <div class="text-xs text-[#c9a659] font-mono-tech">Calibre</div>
+          <div id="gameover-level" class="text-2xl font-bold text-[#d4af37] font-cinzel">1</div>
+        </div>
+      </div>
+
+      <div id="gameover-rank" class="text-[#c9a659] italic mb-4 font-cinzel text-lg"></div>
+
+      <!-- TOP 5 LEADERBOARD -->
+      <div class="bg-[#00000080] p-4 rounded-xl mb-6 border-2 border-[#d4af37]">
+        <h3 class="text-lg text-[#d4af37] mb-3 font-bold font-cinzel">🏆 TOP 5 REGISTRE OFFICIEL 🏆</h3>
+        <div id="gameover-leaderboard" class="space-y-1"></div>
+      </div>
+
+      <div class="flex gap-3 justify-center flex-wrap font-cinzel">
+        <button onclick="quickRestart()" class="bg-gradient-to-br from-[#d4af37] to-[#b8860b] hover:from-[#e5be48] hover:to-[#c99516] text-[#1a1410] px-6 py-3 rounded-xl font-bold uppercase tracking-wider text-sm shadow-md cursor-pointer">
+          ▶️ Nouvelle Partie
+        </button>
+        <button onclick="changePseudo()" class="bg-gradient-to-br from-[#8b6914] to-[#6b5210] hover:from-[#a37e19] text-[#d4af37] px-6 py-3 rounded-xl font-bold uppercase tracking-wider text-sm shadow-md cursor-pointer border border-[#d4af37]">
+          ✏️ Changer Pseudo
+        </button>
+        <button onclick="quitGame()" class="bg-[#14141e] hover:bg-rose-950/80 text-rose-300 px-6 py-3 rounded-xl font-bold uppercase tracking-wider text-sm border border-rose-500/40">
+          Quitter
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL COLLECTION DES BADGES -->
+  <div id="modal-badges" class="fixed inset-0 bg-black/95 flex items-center justify-center z-50 p-4 hidden">
+    <div class="bg-gradient-to-br from-[#281e14f0] to-[#3c2814f0] p-6 sm:p-8 rounded-3xl border-4 border-[#d4af37] max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-[0_0_60px_rgba(212,175,55,0.5)]">
+      <h2 class="text-3xl sm:text-4xl text-[#d4af37] mb-4 text-center font-bold font-cinzel">
+        🏅 Collection de Badges Horlogers
+      </h2>
+      
+      <div class="mb-6 text-center text-[#c9a659] font-mono-tech">
+        <span id="badges-unlocked-title" class="text-2xl font-bold text-[#d4af37]">0</span> / 10 badges débloqués
+      </div>
+
+      <div id="badges-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+        <!-- Rendu dynamique des badges -->
+      </div>
+
+      <button onclick="closeBadgesModal()" class="bg-gradient-to-br from-[#d4af37] to-[#b8860b] hover:from-[#e5be48] text-[#1a1410] px-8 py-3.5 rounded-xl font-bold w-full text-base uppercase tracking-wider font-cinzel cursor-pointer shadow-xl">
+        ✨ Fermer
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // --- ÉTAT & LOGIQUE HORLOGÈRE OFFICIELLE DU SITE ---
+    const COLS = 10;
+    const ROWS = 20;
+    const BLOCK_SIZE = 30;
+
+    const COLORS = ['#c9a659', '#8b4513', '#dc143c', '#4169e1', '#32cd32', '#9370db', '#ff6347'];
+    const PIECE_NAMES = ['⚖️ Balancier-Spiral', '⚙️ Échappement', '💎 Rubis', '⬛ Platine', '🔄 Rotor', '🎯 Rouage', '👑 Couronne'];
+    const SHAPES = [
+      [[1,1,1,1]],          // I - Platine / Balancier
+      [[1,1],[1,1]],        // O - Rubis
+      [[0,1,0],[1,1,1]],    // T - Échappement
+      [[1,0,0],[1,1,1]],    // L - Rouage
+      [[0,0,1],[1,1,1]],    // J - Rotor
+      [[0,1,1],[1,1,0]],    // S - Spiral
+      [[1,1,0],[0,1,1]]     // Z - Ancre
+    ];
+
+    const ALL_BADGES = [
+      { id: 'apprentice', name: 'Apprenti Horloger', icon: '🔰', desc: 'Compléter 25 parties complètes', target: 25, stat: 'totalGames' },
+      { id: 'precision_100', name: 'Précision Suisse', icon: '🎖️', desc: 'Assembler 100 lignes au total', target: 100, stat: 'totalLines' },
+      { id: 'precision_500', name: 'Maître Artisan', icon: '⚙️', desc: 'Assembler 500 lignes au total', target: 500, stat: 'totalLines' },
+      { id: 'precision_1000', name: 'Compagnon Certifié', icon: '🔧', desc: 'Assembler 1000 lignes au total', target: 1000, stat: 'totalLines' },
+      { id: 'precision_2500', name: 'Grande Complication', icon: '👑', desc: 'Assembler 2500 lignes au total', target: 2500, stat: 'totalLines' },
+      { id: 'quiz_master', name: 'Expert COSC', icon: '🎓', desc: 'Répondre correctement à 50 questions', target: 50, stat: 'quizCorrect' },
+      { id: 'score_25000', name: 'Horloger Confirmé', icon: '💎', desc: 'Atteindre 25000 points en une partie', target: 25000, stat: 'bestScore' },
+      { id: 'score_50000', name: 'Maître Horloger', icon: '🏆', desc: 'Atteindre 50000 points en une partie', target: 50000, stat: 'bestScore' },
+      { id: 'score_100000', name: 'Légende Horlogère', icon: '⭐', desc: 'Atteindre 100000 points en une partie', target: 100000, stat: 'bestScore' },
+      { id: 'veteran', name: 'Vétéran du Calibre', icon: '🛡️', desc: 'Jouer 100 parties complètes', target: 100, stat: 'totalGames' },
+    ];
+
+    const historicalFacts = [
+      "En 1770, Abraham-Louis Perrelet invente le mécanisme de remontage automatique.",
+      "Le spiral Breguet, avec sa courbe terminale, améliore la concentricité et la précision chronométrique.",
+      "Les rubis synthétiques sont introduits en horlogerie dès 1902 par Auguste Verneuil pour réduire les frottements.",
+      "Un balancier à 28'800 alt/h effectue 691'200 oscillations par jour !",
+      "Le Calibre 89 de Patek Philippe (1989) compte 1'728 composants et 33 complications horlogères."
+    ];
+
+    const encyclopediaEntries = [
+      "<strong>Le Balancier-Spiral</strong> est l'organe régulateur du mouvement. Il oscille à fréquence constante (2.5 à 5 Hz).",
+      "<strong>L'Échappement</strong> transforme l'énergie continue du barillet en impulsions régulières pour le balancier.",
+      "<strong>Les Rubis</strong> sont des paliers en corindon synthétique qui réduisent les frottements à près de zéro.",
+      "<strong>La Platine</strong> est la base du mouvement sur laquelle tous les composants sont assemblés."
+    ];
+
+    const quizQuestions = [
+      {
+        question: "Quelle est la fréquence standard d'un mouvement mécanique moderne ?",
+        options: ["18'000 alt/h", "21'600 alt/h", "28'800 alt/h", "36'000 alt/h"],
+        correct: 2
+      },
+      {
+        question: "Combien de rubis contient typiquement un mouvement ETA 2824-2 ?",
+        options: ["17 rubis", "21 rubis", "25 rubis", "31 rubis"],
+        correct: 2
+      },
+      {
+        question: "Qu'est-ce que l'échappement à ancre suisse ?",
+        options: ["Un système de remontage", "Un mécanisme régulateur", "Un indicateur de réserve", "Un type de spiral"],
+        correct: 1
+      },
+      {
+        question: "Quelle est la réserve de marche typique d'un calibre automatique ?",
+        options: ["24 heures", "38-42 heures", "7 jours", "14 jours"],
+        correct: 1
+      },
+      {
+        question: "Que signifie 'COSC' en horlogerie ?",
+        options: ["Centre Optique Suisse Cadran", "Contrôle Officiel Suisse des Chronomètres", "Comité Organisation Suisse Calibres", "Centre Observation Spiraux Chronomètres"],
+        correct: 1
+      }
+    ];
+
+    // Variables de jeu
+    let gameState = {
+      score: 0,
+      level: 1,
+      lines: 0,
+      gameRunning: false,
+      gamePaused: false,
+      playerPseudo: ''
+    };
+
+    let board = [];
+    let currentPiece = null;
+    let nextPiece = null;
+    let dropInterval = null;
+    let currentQuestionIndex = 0;
+    let currentQuestion = null;
+    let questionAnswered = false;
+
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+    const nextCanvas = document.getElementById('next-canvas');
+    const nextCtx = nextCanvas.getContext('2d');
+
+    // Système Audio Synthétique Haute Précision Horlogère
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playTone(freq, duration = 0.05, type = 'sine') {
+      try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    // Gestion du Stockage Local
+    function loadHighScores() {
+      const saved = localStorage.getItem('horlogerScores');
+      return saved ? JSON.parse(saved) : [];
+    }
+    function saveHighScores(scores) {
+      localStorage.setItem('horlogerScores', JSON.stringify(scores));
+    }
+    function loadPlayerStats() {
+      const saved = localStorage.getItem('horlogerStats');
+      return saved ? JSON.parse(saved) : { totalGames: 0, totalLines: 0, bestScore: 0, quizCorrect: 0, quizTotal: 0 };
+    }
+    function savePlayerStats(stats) {
+      localStorage.setItem('horlogerStats', JSON.stringify(stats));
+    }
+    function loadBadges() {
+      const saved = localStorage.getItem('horlogerBadges');
+      return saved ? JSON.parse(saved) : [];
+    }
+    function saveBadges(list) {
+      localStorage.setItem('horlogerBadges', JSON.stringify(list));
+    }
+
+    function updateStats(updates) {
+      const cur = loadPlayerStats();
+      const updated = { ...cur, ...updates };
+      savePlayerStats(updated);
+      renderStatsUI(updated);
+      checkAndUnlockBadges(updated);
+    }
+
+    function checkAndUnlockBadges(stats) {
+      const unlocked = loadBadges();
+      let newlyUnlocked = null;
+      for (const badge of ALL_BADGES) {
+        if (!unlocked.includes(badge.id)) {
+          const val = stats[badge.stat] || 0;
+          if (val >= badge.target) {
+            unlocked.push(badge.id);
+            newlyUnlocked = badge;
+            saveBadges(unlocked);
+            break;
+          }
+        }
+      }
+      renderBadgesCount(unlocked.length);
+      if (newlyUnlocked) {
+        setTimeout(() => {
+          alert(`🎉 NOUVEAU BADGE DÉBLOQUÉ !\n\n${newlyUnlocked.icon} ${newlyUnlocked.name}\n${newlyUnlocked.desc}`);
+        }, 300);
+      }
+    }
+
+    function renderBadgesCount(count) {
+      document.getElementById('badges-count').textContent = count;
+      document.getElementById('badges-unlocked-title').textContent = count;
+    }
+
+    function renderStatsUI(stats) {
+      document.getElementById('stat-total-games').textContent = stats.totalGames;
+      document.getElementById('stat-best-score').textContent = stats.bestScore;
+      document.getElementById('stat-total-lines').textContent = stats.totalLines;
+      document.getElementById('stat-quiz-score').textContent = `${stats.quizCorrect}/${stats.quizTotal}`;
+    }
+
+    function renderLeaderboard() {
+      const list = loadHighScores();
+      const container = document.getElementById('leaderboard-list');
+      if (list.length === 0) {
+        container.innerHTML = '<div class="text-center py-3 text-[#8b6914] italic text-xs">Aucun score</div>';
+        return;
+      }
+      container.innerHTML = list.map((e, i) => `
+        <div class="p-1.5 my-1 rounded flex items-center gap-2 text-xs ${i < 3 ? 'bg-[#d4af3720]' : ''}">
+          <span>${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '⚙️'}</span>
+          <div class="flex-1">
+            <div class="font-bold text-[#d4af37]">${e.pseudo}</div>
+            <div class="text-[10px] text-[#a89152] font-mono-tech">${e.lines} ass. • Calibre ${e.level}</div>
+          </div>
+          <div class="font-bold text-[#d4af37] font-cinzel">${e.score}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderObjectives() {
+      const container = document.getElementById('objectives-list');
+      const milestones = [
+        [10, 'Apprenti'],
+        [25, 'Compagnon'],
+        [50, 'Maître Horloger'],
+        [100, 'Grande Complication']
+      ];
+      container.innerHTML = milestones.map(([target, rank], idx) => {
+        const isCompleted = gameState.lines >= target;
+        const isCurrent = gameState.lines < target && (idx === 0 || gameState.lines >= milestones[idx - 1][0]);
+        return `
+          <div class="py-1 border-b border-[#d4af3750] last:border-0 flex items-center justify-between ${
+            isCompleted ? 'text-green-400 font-bold' : isCurrent ? 'text-[#f0c14b]' : 'text-[#8b6914]'
+          }">
+            <span>${isCompleted ? '✅' : isCurrent ? '🔄' : '⭕'} Assembler ${target} lignes : <strong>${rank}</strong></span>
+            ${isCurrent ? `<span class="text-[#d4af37] text-[10px] font-mono-tech">${gameState.lines}/${target}</span>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Gestion du Board & Dessin
+    function initBoard() {
+      board = Array(ROWS).fill(null).map(() => Array(COLS).fill(0));
+    }
+
+    function adjustBrightness(color, amount) {
+      const hex = color.replace('#', '');
+      const r = Math.max(0, Math.min(255, parseInt(hex.substr(0, 2), 16) + amount));
+      const g = Math.max(0, Math.min(255, parseInt(hex.substr(2, 2), 16) + amount));
+      const b = Math.max(0, Math.min(255, parseInt(hex.substr(4, 2), 16) + amount));
+      return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+    }
+
+    function drawBlock(targetContext, x, y, color, size = BLOCK_SIZE) {
+      const px = x * size;
+      const py = y * size;
+      const gradient = targetContext.createLinearGradient(px, py, px + size, py + size);
+      gradient.addColorStop(0, color);
+      gradient.addColorStop(0.5, adjustBrightness(color, 35));
+      gradient.addColorStop(1, adjustBrightness(color, -35));
+      targetContext.fillStyle = gradient;
+      targetContext.fillRect(px + 1, py + 1, size - 2, size - 2);
+
+      // Bordure dorée
+      targetContext.strokeStyle = 'rgba(212, 175, 55, 0.45)';
+      targetContext.lineWidth = 1;
+      targetContext.strokeRect(px + 1, py + 1, size - 2, size - 2);
+
+      // Reflet biseauté
+      targetContext.fillStyle = 'rgba(255, 255, 255, 0.2)';
+      targetContext.fillRect(px + 2, py + 2, size - 4, size / 3);
+    }
+
+    function drawBoard() {
+      // Fond établi horloger
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      gradient.addColorStop(0, '#1a1410');
+      gradient.addColorStop(1, '#2a2010');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Grille micro-mécanique
+      ctx.strokeStyle = 'rgba(139, 105, 20, 0.25)';
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i <= ROWS; i++) {
+        ctx.beginPath();
+        ctx.moveTo(0, i * BLOCK_SIZE);
+        ctx.lineTo(COLS * BLOCK_SIZE, i * BLOCK_SIZE);
+        ctx.stroke();
+      }
+      for (let i = 0; i <= COLS; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * BLOCK_SIZE, 0);
+        ctx.lineTo(i * BLOCK_SIZE, ROWS * BLOCK_SIZE);
+        ctx.stroke();
+      }
+
+      // Pièces posées
+      for (let row = 0; row < ROWS; row++) {
+        for (let col = 0; col < COLS; col++) {
+          if (board[row][col]) drawBlock(ctx, col, row, board[row][col]);
+        }
+      }
+
+      // Pièce active
+      if (currentPiece) {
+        for (let row = 0; row < currentPiece.shape.length; row++) {
+          for (let col = 0; col < currentPiece.shape[row].length; col++) {
+            if (currentPiece.shape[row][col]) {
+              drawBlock(ctx, currentPiece.x + col, currentPiece.y + row, currentPiece.color);
+            }
+          }
+        }
+      }
+    }
+
+    function drawNextPiece() {
+      nextCtx.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
+      if (!nextPiece) return;
+
+      const blockSize = 20;
+      const offsetX = (nextCanvas.width - nextPiece.shape[0].length * blockSize) / 2;
+      const offsetY = (nextCanvas.height - nextPiece.shape.length * blockSize) / 2;
+
+      for (let row = 0; row < nextPiece.shape.length; row++) {
+        for (let col = 0; col < nextPiece.shape[row].length; col++) {
+          if (nextPiece.shape[row][col]) {
+            const x = offsetX + col * blockSize;
+            const y = offsetY + row * blockSize;
+            const gradient = nextCtx.createLinearGradient(x, y, x + blockSize, y + blockSize);
+            gradient.addColorStop(0, nextPiece.color);
+            gradient.addColorStop(0.5, adjustBrightness(nextPiece.color, 30));
+            gradient.addColorStop(1, adjustBrightness(nextPiece.color, -30));
+            nextCtx.fillStyle = gradient;
+            nextCtx.fillRect(x + 1, y + 1, blockSize - 2, blockSize - 2);
+            nextCtx.strokeStyle = 'rgba(212, 175, 55, 0.4)';
+            nextCtx.strokeRect(x + 1, y + 1, blockSize - 2, blockSize - 2);
+          }
+        }
+      }
+      document.getElementById('next-piece-name').textContent = nextPiece.name;
+    }
+
+    function createPiece() {
+      const idx = Math.floor(Math.random() * SHAPES.length);
+      return {
+        shape: SHAPES[idx],
+        color: COLORS[idx],
+        name: PIECE_NAMES[idx],
+        x: Math.floor(COLS / 2) - Math.floor(SHAPES[idx][0].length / 2),
+        y: 0
+      };
+    }
+
+    function checkCollision(piece, offsetX = 0, offsetY = 0) {
+      for (let row = 0; row < piece.shape.length; row++) {
+        for (let col = 0; col < piece.shape[row].length; col++) {
+          if (piece.shape[row][col]) {
+            const newX = piece.x + col + offsetX;
+            const newY = piece.y + row + offsetY;
+            if (newX < 0 || newX >= COLS || newY >= ROWS) return true;
+            if (newY >= 0 && board[newY][newX]) return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    function rotatePiece() {
+      if (!currentPiece || !gameState.gameRunning || gameState.gamePaused) return;
+      const rotated = currentPiece.shape[0].map((_, i) => currentPiece.shape.map(row => row[i]).reverse());
+      const oldShape = currentPiece.shape;
+      currentPiece.shape = rotated;
+      if (checkCollision(currentPiece)) currentPiece.shape = oldShape;
+      else playTone(440, 0.04);
+      drawBoard();
+    }
+
+    function movePiece(direction) {
+      if (!currentPiece || !gameState.gameRunning || gameState.gamePaused) return;
+      if (!checkCollision(currentPiece, direction, 0)) {
+        currentPiece.x += direction;
+        playTone(330, 0.03);
+        drawBoard();
+      }
+    }
+
+    function dropPiece() {
+      if (!currentPiece || !gameState.gameRunning || gameState.gamePaused) return;
+      if (!checkCollision(currentPiece, 0, 1)) {
+        currentPiece.y++;
+      } else {
+        placePiece();
+        clearLines();
+        spawnNewPiece();
+      }
+      drawBoard();
+    }
+
+    function hardDrop() {
+      if (!currentPiece || !gameState.gameRunning || gameState.gamePaused) return;
+      while (!checkCollision(currentPiece, 0, 1)) currentPiece.y++;
+      playTone(520, 0.08, 'triangle');
+      placePiece();
+      clearLines();
+      spawnNewPiece();
+      drawBoard();
+    }
+
+    function placePiece() {
+      if (!currentPiece) return;
+      for (let row = 0; row < currentPiece.shape.length; row++) {
+        for (let col = 0; col < currentPiece.shape[row].length; col++) {
+          if (currentPiece.shape[row][col]) {
+            const boardY = currentPiece.y + row;
+            const boardX = currentPiece.x + col;
+            if (boardY >= 0) board[boardY][boardX] = currentPiece.color;
+          }
+        }
+      }
+    }
+
+    function clearLines() {
+      let linesCleared = 0;
+      for (let row = ROWS - 1; row >= 0; row--) {
+        if (board[row].every(cell => cell !== 0)) {
+          board.splice(row, 1);
+          board.unshift(Array(COLS).fill(0));
+          linesCleared++;
+          row++;
+        }
+      }
+      if (linesCleared > 0) {
+        playTone(660, 0.15, 'sine');
+        gameState.lines += linesCleared;
+        gameState.score += linesCleared * 150 * gameState.level;
+        gameState.level = Math.floor(gameState.lines / 10) + 1;
+
+        // Mise à jour interface
+        document.getElementById('stat-score').textContent = gameState.score;
+        document.getElementById('stat-lines').textContent = gameState.lines;
+        document.getElementById('stat-level').textContent = gameState.level;
+        
+        const pct = Math.min(100, Math.round((gameState.lines / 100) * 100));
+        const bar = document.getElementById('progress-bar-inner');
+        bar.style.width = pct + '%';
+        bar.textContent = pct + '%';
+
+        renderObjectives();
+
+        // Anecdote et Encyclopédie aléatoire
+        document.getElementById('historical-fact').innerHTML = '📜 ' + historicalFacts[Math.floor(Math.random() * historicalFacts.length)];
+        document.getElementById('encyclopedia-text').innerHTML = encyclopediaEntries[Math.floor(Math.random() * encyclopediaEntries.length)];
+
+        // Question technique tous les 3 assemblages
+        if (gameState.lines % 3 === 0 && gameState.lines > 0) {
+          triggerQuizQuestion();
+        }
+      }
+    }
+
+    function spawnNewPiece() {
+      currentPiece = nextPiece || createPiece();
+      nextPiece = createPiece();
+      drawNextPiece();
+      if (checkCollision(currentPiece)) gameOver();
+    }
+
+    // Question Technique d'Atelier
+    function triggerQuizQuestion() {
+      if (currentQuestionIndex >= quizQuestions.length) currentQuestionIndex = 0;
+      currentQuestion = quizQuestions[currentQuestionIndex];
+      questionAnswered = false;
+
+      document.getElementById('quiz-idle').classList.add('hidden');
+      const active = document.getElementById('quiz-active');
+      active.classList.remove('hidden');
+
+      document.getElementById('quiz-question-text').textContent = currentQuestion.question;
+      const opts = document.getElementById('quiz-options-list');
+      opts.innerHTML = currentQuestion.options.map((opt, i) => `
+        <div onclick="handleQuizAnswer(${i})" id="quiz-opt-${i}" class="p-2 rounded cursor-pointer transition-all bg-[#5a7fa020] hover:bg-[#5a7fa040] border-2 border-transparent hover:border-[#8bb4d9] text-[#c9d4e0] font-mono-tech text-[11px]">
+          ${opt}
+        </div>
+      `).join('');
+    }
+
+    function handleQuizAnswer(index) {
+      if (questionAnswered || !currentQuestion) return;
+      questionAnswered = true;
+
+      const stats = loadPlayerStats();
+      const isCorrect = (index === currentQuestion.correct);
+
+      const targetOpt = document.getElementById(`quiz-opt-${index}`);
+      if (isCorrect) {
+        targetOpt.className = 'p-2 rounded border-2 border-green-500 bg-green-900/50 text-green-200 font-mono-tech text-[11px] font-bold';
+        gameState.score += 750;
+        document.getElementById('stat-score').textContent = gameState.score;
+        updateStats({ quizCorrect: stats.quizCorrect + 1, quizTotal: stats.quizTotal + 1 });
+        playTone(880, 0.2);
+        setTimeout(() => {
+          alert('✅ Excellent ! Maîtrise technique confirmée. +750 points');
+          resetQuizUI();
+        }, 400);
+      } else {
+        targetOpt.className = 'p-2 rounded border-2 border-red-500 bg-red-900/50 text-red-200 font-mono-tech text-[11px]';
+        const correctOpt = document.getElementById(`quiz-opt-${currentQuestion.correct}`);
+        if (correctOpt) correctOpt.className = 'p-2 rounded border-2 border-green-500 bg-green-900/50 text-green-200 font-mono-tech text-[11px] font-bold';
+        updateStats({ quizTotal: stats.quizTotal + 1 });
+        playTone(220, 0.2, 'sawtooth');
+        setTimeout(() => {
+          alert('❌ Réponse incorrecte. La bonne réponse : ' + currentQuestion.options[currentQuestion.correct]);
+          resetQuizUI();
+        }, 400);
+      }
+    }
+
+    function resetQuizUI() {
+      currentQuestion = null;
+      currentQuestionIndex++;
+      document.getElementById('quiz-active').classList.add('hidden');
+      document.getElementById('quiz-idle').classList.remove('hidden');
+    }
+
+    // Contrôles du Jeu
+    function toggleStartGame() {
+      if (!gameState.gameRunning) {
+        startGame();
+      } else {
+        togglePause();
+      }
+    }
+
+    function startGame() {
+      initBoard();
+      gameState.score = 0;
+      gameState.level = 1;
+      gameState.lines = 0;
+      gameState.gameRunning = true;
+      gameState.gamePaused = false;
+
+      document.getElementById('stat-score').textContent = '0';
+      document.getElementById('stat-level').textContent = '1';
+      document.getElementById('stat-lines').textContent = '0';
+      document.getElementById('progress-bar-inner').style.width = '0%';
+      document.getElementById('progress-bar-inner').textContent = '0%';
+      document.getElementById('btn-start').innerHTML = '⏸️ Pause';
+      document.getElementById('pause-overlay').classList.add('hidden');
+
+      spawnNewPiece();
+      drawBoard();
+
+      if (dropInterval) clearInterval(dropInterval);
+      const speed = Math.max(100, 1000 - (gameState.level - 1) * 100);
+      dropInterval = setInterval(dropPiece, speed);
+      renderObjectives();
+    }
+
+    function togglePause() {
+      gameState.gamePaused = !gameState.gamePaused;
+      const overlay = document.getElementById('pause-overlay');
+      const btn = document.getElementById('btn-start');
+
+      if (gameState.gamePaused) {
+        if (dropInterval) clearInterval(dropInterval);
+        dropInterval = null;
+        overlay.classList.remove('hidden');
+        overlay.classList.add('flex');
+        btn.innerHTML = '▶️ Reprendre';
+      } else {
+        overlay.classList.add('hidden');
+        overlay.classList.remove('flex');
+        btn.innerHTML = '⏸️ Pause';
+        const speed = Math.max(100, 1000 - (gameState.level - 1) * 100);
+        dropInterval = setInterval(dropPiece, speed);
+      }
+    }
+
+    function gameOver() {
+      if (dropInterval) clearInterval(dropInterval);
+      gameState.gameRunning = false;
+      document.getElementById('btn-start').innerHTML = '▶️ Démarrer';
+
+      const stats = loadPlayerStats();
+      updateStats({
+        totalGames: stats.totalGames + 1,
+        totalLines: stats.totalLines + gameState.lines,
+        bestScore: Math.max(stats.bestScore, gameState.score)
+      });
+
+      let rank = '';
+      let certif = '';
+      if (gameState.lines < 10) {
+        rank = 'Apprenti Horloger';
+        certif = "Vous débutez dans l'art de l'horlogerie. Continuez à vous exercer à l'établi !";
+      } else if (gameState.lines < 25) {
+        rank = 'Compagnon';
+        certif = "Vous maîtrisez les bases de l'assemblage horloger. Travail soigné !";
+      } else if (gameState.lines < 50) {
+        rank = 'Maître Horloger';
+        certif = "Excellente maîtrise technique ! Vous êtes un véritable artisan des calibres suisses.";
+      } else if (gameState.lines < 100) {
+        rank = 'Grande Complication';
+        certif = "Expertise exceptionnelle ! Vous maîtrisez les assemblages les plus exigeants.";
+      } else {
+        rank = 'Légende de la Haute Horlogerie';
+        certif = "Performance extraordinaire ! Vous entrez dans la légende des grands maîtres horlogers !";
+      }
+
+      // Enregistrement au Hall of Fame
+      let scores = loadHighScores();
+      scores.push({ pseudo: gameState.playerPseudo || 'Anonyme', score: gameState.score, lines: gameState.lines, level: gameState.level, date: new Date().toISOString() });
+      scores.sort((a, b) => b.score - a.score);
+      scores = scores.slice(0, 5);
+      saveHighScores(scores);
+      renderLeaderboard();
+
+      const playerRank = scores.findIndex(s => s.pseudo === gameState.playerPseudo && s.score === gameState.score) + 1;
+      if (playerRank > 0 && playerRank <= 3) {
+        certif += `\n\n🏆 INCROYABLE ! Vous êtes ${playerRank === 1 ? 'N°1 👑' : playerRank === 2 ? 'N°2 🥈' : 'N°3 🥉'} du classement officiel !`;
+      } else if (playerRank > 0 && playerRank <= 5) {
+        certif += `\n\n✨ Félicitations ! Vous êtes dans le Top 5 (N°${playerRank}) !`;
+      }
+
+      // Remplir modal game over
+      document.getElementById('gameover-certif').textContent = certif;
+      document.getElementById('gameover-score').textContent = gameState.score;
+      document.getElementById('gameover-lines').textContent = gameState.lines;
+      document.getElementById('gameover-level').textContent = gameState.level;
+      document.getElementById('gameover-rank').textContent = 'Rang : ' + rank;
+
+      const goLeaderboard = document.getElementById('gameover-leaderboard');
+      goLeaderboard.innerHTML = scores.map((e, i) => {
+        const isCurrent = e.score === gameState.score && e.pseudo === gameState.playerPseudo;
+        return `
+          <div class="p-2 my-1.5 rounded-lg flex items-center gap-2 text-sm ${isCurrent ? 'bg-[#d4af3750] border-2 border-[#d4af37]' : i < 3 ? 'bg-[#d4af3720]' : 'bg-[#00000033]'}">
+            <span class="text-xl">${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}</span>
+            <div class="flex-1 text-left">
+              <div class="font-bold text-[#d4af37]">${e.pseudo} ${isCurrent ? '⭐' : ''}</div>
+              <div class="text-xs text-[#a89152] font-mono-tech">${e.lines} ass. • Calibre ${e.level}</div>
+            </div>
+            <div class="font-bold text-[#d4af37] font-cinzel text-base">${e.score}</div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('modal-gameover').classList.remove('hidden');
+    }
+
+    function quickRestart() {
+      document.getElementById('modal-gameover').classList.add('hidden');
+      startGame();
+    }
+
+    function changePseudo() {
+      document.getElementById('modal-gameover').classList.add('hidden');
+      document.getElementById('modal-pseudo').classList.remove('hidden');
+      document.getElementById('input-pseudo').value = '';
+      document.getElementById('input-pseudo').focus();
+    }
+
+    function savePseudoAndStart() {
+      const val = document.getElementById('input-pseudo').value.trim();
+      if (!val) {
+        alert('⚠️ Veuillez entrer un pseudo pour commencer');
+        return;
+      }
+      gameState.playerPseudo = val;
+      document.getElementById('modal-pseudo').classList.add('hidden');
+      startGame();
+    }
+
+    // Modal Badges
+    function openBadgesModal() {
+      const unlocked = loadBadges();
+      const stats = loadPlayerStats();
+      const grid = document.getElementById('badges-grid');
+
+      grid.innerHTML = ALL_BADGES.map(badge => {
+        const isUnlocked = unlocked.includes(badge.id);
+        const progress = stats[badge.stat] || 0;
+        const percent = Math.min(100, Math.round((progress / badge.target) * 100));
+
+        return `
+          <div class="p-4 rounded-xl border-2 transition-all ${
+            isUnlocked 
+              ? 'bg-gradient-to-br from-[#d4af3750] to-[#b8860b30] border-[#d4af37] shadow-lg shadow-[#d4af3730]' 
+              : 'bg-[#00000070] border-[#8b6914]'
+          }">
+            <div class="text-4xl mb-2 text-center">${isUnlocked ? badge.icon : '🔒'}</div>
+            <div class="text-center text-sm mb-1 font-bold font-cinzel ${isUnlocked ? 'text-[#d4af37]' : 'text-[#8b6914]'}">
+              ${badge.name}
+            </div>
+            <div class="text-xs text-center mb-3 ${isUnlocked ? 'text-[#c9a659]' : 'text-[#6b5210]'}">
+              ${badge.desc}
+            </div>
+            ${!isUnlocked ? `
+              <div>
+                <div class="w-full h-2 bg-[#00000080] rounded-full overflow-hidden mb-1">
+                  <div class="h-full bg-gradient-to-r from-[#8b6914] to-[#d4af37]" style="width: ${percent}%"></div>
+                </div>
+                <div class="text-[10px] text-center text-[#8b6914] font-mono-tech">${progress} / ${badge.target}</div>
+              </div>
+            ` : `
+              <div class="text-center text-green-400 text-xs font-bold font-mono-tech">✅ DÉBLOQUÉ</div>
+            `}
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('modal-badges').classList.remove('hidden');
+    }
+
+    function closeBadgesModal() {
+      document.getElementById('modal-badges').classList.add('hidden');
+    }
+
+    function quitGame() {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = '/';
+      }
+    }
+
+    // Écouteurs de clavier
+    window.addEventListener('keydown', (e) => {
+      if (!gameState.gameRunning || gameState.gamePaused) return;
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+        e.preventDefault();
+      }
+      switch (e.key) {
+        case 'ArrowLeft': movePiece(-1); break;
+        case 'ArrowRight': movePiece(1); break;
+        case 'ArrowDown': dropPiece(); break;
+        case 'ArrowUp': rotatePiece(); break;
+        case ' ': hardDrop(); break;
+      }
+    });
+
+    document.getElementById('input-pseudo').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') savePseudoAndStart();
+    });
+
+    // Initialisation
+    window.addEventListener('DOMContentLoaded', () => {
+      initBoard();
+      drawBoard();
+      const stats = loadPlayerStats();
+      renderStatsUI(stats);
+      renderBadgesCount(loadBadges().length);
+      renderLeaderboard();
+      renderObjectives();
+    });
+  </script>
+</body>
+</html>
