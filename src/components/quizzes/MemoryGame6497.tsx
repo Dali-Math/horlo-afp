@@ -143,8 +143,8 @@ const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
 
   return (
     <div className="w-full flex flex-col items-center justify-center py-1">
-      {/* HUD & Chrono compact */}
-      <div className="w-full max-w-4xl flex items-center justify-between gap-2 mb-3 px-1 text-xs sm:text-sm font-mono">
+      {/* HUD & Chrono compact (élargi sur les côtés) */}
+      <div className="w-full max-w-6xl lg:max-w-7xl flex items-center justify-between gap-3 mb-3 px-1 text-xs sm:text-sm font-mono">
         <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={handleQuit}
@@ -179,12 +179,12 @@ const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
         </button>
       </div>
 
-      {/* Grille des 16 CARTES : Hauteur ajustée (h-28 sm:h-34 md:h-38) pour tenir à 100% dans l'écran sans défilement */}
+      {/* Grille des 16 CARTES : Élargie latéralement (max-w-6xl lg:max-w-7xl) sans défilement */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1 }}
-        className="grid grid-cols-4 gap-2 sm:gap-3 max-w-4xl w-full"
+        className="grid grid-cols-4 gap-3 sm:gap-4 max-w-6xl lg:max-w-7xl w-full"
       >
         <AnimatePresence>
           {cards.map((card, index) => (
