@@ -208,8 +208,14 @@ export default function CalibreEcorchePage() {
               {audioOn ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
               <span>Son 5 Hz : {audioOn ? 'ON' : 'OFF'}</span>
             </button>
-
-
+            <Link
+              href="/pratique/demontage"
+              className="px-3 py-1.5 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-500 transition flex items-center gap-1.5 shadow-sm"
+              title="Ouvrir le Banc d'Écorché Cinématique & Démontage Guidé (97 Fournitures)"
+            >
+              <Layers className="w-3.5 h-3.5" />
+              <span>Démontage Guidé 3D (97 Pièces)</span>
+            </Link>
           </div>
         </div>
       </header>

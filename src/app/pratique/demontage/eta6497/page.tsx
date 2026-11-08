@@ -5,70 +5,75 @@ import FlipBookViewer from "@/components/FlipBookViewer";
 
 export default function DemontageEta6497() {
   return (
-    <div className="min-h-screen bg-[#0b1220] text-white py-16 px-6">
-      <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12">
-        {/* Partie gauche : vidéo + texte */}
-        <div>
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0b1220] text-slate-900 dark:text-white py-12 px-6 transition-colors duration-300">
+      <div className="max-w-7xl mx-auto space-y-10">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <Link
             href="/pratique/demontage"
-            className="inline-flex items-center gap-2 text-yellow-400 hover:text-white transition mb-8"
+            className="inline-flex items-center gap-2 text-amber-600 dark:text-yellow-400 hover:underline font-semibold transition"
           >
-            <ArrowLeft className="w-5 h-5" /> Retour
+            <ArrowLeft className="w-5 h-5" /> Retour au Protocole de Démontage (12 étapes)
           </Link>
-
-          <div className="flex items-center gap-3 mb-6">
-            <Wrench className="text-yellow-400 w-7 h-7" />
-            <h1 className="text-3xl font-bold text-yellow-400">
-              Démontage ETA 6497
-            </h1>
-          </div>
 
           <Link
             href="/pratique/calibre-3d"
-            className="flex items-center justify-between p-4 mb-6 rounded-xl bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent border border-amber-500/40 hover:border-amber-400 transition group shadow-lg shadow-amber-500/5"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-700 dark:text-amber-300 text-xs font-bold hover:bg-amber-500/25 transition"
           >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold text-lg shrink-0">
-                ⚙️
-              </div>
-              <div>
-                <strong className="block text-white group-hover:text-amber-400 text-sm flex items-center gap-2">
-                  <span>Examiner en 3D 360° (Simulateur d&apos;Établi)</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold font-mono">NOUVEAU</span>
-                </strong>
-                <span className="text-xs text-gray-300">
-                  Porte-mouvement 360°, écorché vertical Z des 7 couches &amp; cinématique
-                </span>
-              </div>
-            </div>
-            <ArrowRight className="w-5 h-5 text-amber-400 group-hover:translate-x-1 transition shrink-0 ml-2" />
+            <Layers className="w-4 h-4" />
+            <span>Ouvrir le Porte-Mouvement 360° Libre</span>
+            <ArrowRight className="w-4 h-4" />
           </Link>
-
-          <iframe
-            className="rounded-xl mb-6 w-full aspect-video"
-            src="https://www.youtube.com/embed/SbA4uJXlK9g"
-            title="Démontage du mouvement ETA 6497"
-            allowFullScreen
-          ></iframe>
-
-          <p className="text-gray-300 leading-relaxed">
-            Le démontage du mouvement ETA 6497 est une excellente introduction
-            aux mécanismes mécaniques manuels. Prenez soin d'utiliser un support
-            stable, un tournevis adapté et de travailler dans un environnement
-            propre. Ce calibre, très répandu dans les écoles d'horlogerie,
-            permet d'acquérir les gestes essentiels.
-          </p>
         </div>
 
-        {/* Partie droite : flipbook PDF */}
-        <div className="bg-[#111827] p-6 rounded-2xl border border-yellow-500/30 shadow-lg">
-          <div className="flex items-center gap-2 mb-4">
-            <BookOpen className="text-yellow-400 w-6 h-6" />
-            <h2 className="text-xl font-semibold text-yellow-400">
-              Guide de Démontage ETA 6497
-            </h2>
+        <div className="rounded-3xl bg-white dark:bg-[#111827] border-2 border-slate-200 dark:border-yellow-500/30 shadow-xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <Wrench className="text-amber-500 dark:text-yellow-400 w-6 h-6" />
+              <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-yellow-400">
+                Calibre Suisse ETA 6497-1 • Écorché Cinématique 3D (97 Fournitures CAO)
+              </h1>
+            </div>
+            <span className="text-xs font-mono px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+              16½ Lignes (36,6 mm) • 18 000 A/h (2,5 Hz) • 17 Rubis
+            </span>
           </div>
-          <FlipBookViewer file="/pdfs/demontage/ETA-6497-Demontage.pdf" />
+
+          <div className="w-full aspect-[16/9] bg-[#eef5f0]">
+            <iframe
+              src="/cutaway-eta6497.html"
+              title="Écorché Cinématique 3D Calibre ETA 6497-1 (97 Fournitures)"
+              className="w-full h-full border-0"
+            />
+          </div>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-10 items-start">
+          <div className="bg-white dark:bg-[#111827] p-6 rounded-2xl border border-slate-200 dark:border-yellow-500/30 shadow-lg space-y-5">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-yellow-400">
+              Démonstration Vidéo d&apos;Établi
+            </h2>
+
+            <iframe
+              className="rounded-xl w-full aspect-video"
+              src="https://www.youtube.com/embed/SbA4uJXlK9g"
+              title="Démontage du mouvement ETA 6497"
+              allowFullScreen
+            />
+
+            <p className="text-slate-600 dark:text-gray-300 leading-relaxed text-sm">
+              Le démontage du mouvement ETA 6497-1 constitue la base de l&apos;apprentissage à l&apos;établi. Travaillez sur un porte-mouvement stable avec des tournevis affûtés sans jeu dans la fente de vis, désarmez systématiquement le ressort moteur avant toute dépose des ponts et mettez immédiatement le balancier-spiral à l&apos;abri.
+            </p>
+          </div>
+
+          <div className="bg-white dark:bg-[#111827] p-6 rounded-2xl border border-slate-200 dark:border-yellow-500/30 shadow-lg">
+            <div className="flex items-center gap-2 mb-4">
+              <BookOpen className="text-amber-500 dark:text-yellow-400 w-6 h-6" />
+              <h2 className="text-xl font-semibold text-slate-900 dark:text-yellow-400">
+                Fiche Technique de Démontage ETA 6497-1
+              </h2>
+            </div>
+            <FlipBookViewer file="/pdfs/demontage/ETA-6497-Demontage.pdf" />
+          </div>
         </div>
       </div>
     </div>

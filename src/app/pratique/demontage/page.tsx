@@ -1,7 +1,7 @@
 // src/app/pratique/demontage/page.tsx
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import {
   ArrowLeft,
@@ -19,7 +19,9 @@ import {
   Layers,
   Sparkles,
   Compass,
-  Check
+  Check,
+  Maximize2,
+  Play
 } from 'lucide-react';
 
 interface StepDetail {
@@ -436,16 +438,74 @@ const ASSEMBLY_STEPS: StepDetail[] = [
   }
 ];
 
+const DISASSEMBLY_STEP_ACTS: string[] = [
+  'thorax',
+  'wing',
+  'optics',
+  'leg',
+  'thorax',
+  'thorax',
+  'abdomen',
+  'abdomen',
+  'abdomen',
+  'abdomen',
+  'wing',
+  'optics'
+];
+
+const ASSEMBLY_STEP_ACTS: string[] = [
+  'optics',
+  'wing',
+  'abdomen',
+  'abdomen',
+  'abdomen',
+  'thorax',
+  'thorax',
+  'abdomen',
+  'leg',
+  'leg',
+  'optics',
+  'hero'
+];
+
 export default function DemontagePage() {
   const [direction, setDirection] = useState<'disassembly' | 'assembly'>('disassembly');
   const [currentStepIndex, setCurrentStepIndex] = useState<number>(0);
+  const [cutawayMode, setCutawayMode] = useState<'sync' | 'exploded' | 'auto'>('sync');
+  const cutawayIframeRef = useRef<HTMLIFrameElement | null>(null);
+  const cutawayWrapperRef = useRef<HTMLDivElement | null>(null);
 
   const steps = direction === 'disassembly' ? DISASSEMBLY_STEPS : ASSEMBLY_STEPS;
   const currentStep = steps[currentStepIndex] || steps[0];
 
+  const sendCutawayAct = (act: string) => {
+    const win = cutawayIframeRef.current?.contentWindow;
+    if (win) {
+      win.postMessage({ type: 'HORLO_ACT', act }, '*');
+    }
+  };
+
+  useEffect(() => {
+    if (cutawayMode !== 'sync') return;
+    const actList = direction === 'disassembly' ? DISASSEMBLY_STEP_ACTS : ASSEMBLY_STEP_ACTS;
+    const targetAct = actList[currentStepIndex] || 'overview';
+    sendCutawayAct(targetAct);
+  }, [currentStepIndex, direction, cutawayMode]);
+
   const handleSwitchDirection = (newDirection: 'disassembly' | 'assembly') => {
     setDirection(newDirection);
     setCurrentStepIndex(0);
+    setCutawayMode('sync');
+  };
+
+  const handleToggleFullscreen = () => {
+    const el = cutawayWrapperRef.current;
+    if (!el) return;
+    if (!document.fullscreenElement) {
+      el.requestFullscreen?.();
+    } else {
+      document.exitFullscreen?.();
+    }
   };
 
   const isDisassembly = direction === 'disassembly';
@@ -591,7 +651,105 @@ export default function DemontagePage() {
           </div>
         </div>
 
-        {/* Fiche Technique d'Étape Active */}
+        <div
+          ref={cutawayWrapperRef}
+          className="rounded-3xl bg-white dark:bg-[#0c101b] border-2 border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden"
+        >
+          <div className="px-5 py-3.5 border-b border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 bg-slate-50/80 dark:bg-slate-900/60">
+            <div className="flex items-center gap-2.5">
+              <Layers className={`w-4 h-4 ${isDisassembly ? 'text-amber-500' : 'text-emerald-500'}`} />
+              <span className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white">
+                Banc d&apos;Écorché 3D Synchronisé • Calibre ETA 6497-1 (97 Fournitures CAO)
+              </span>
+              <span className="hidden md:inline-block text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+                Étape {currentStep.number < 10 ? `0${currentStep.number}` : currentStep.number} : {currentStep.title}
+              </span>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setCutawayMode('sync');
+                  const actList = direction === 'disassembly' ? DISASSEMBLY_STEP_ACTS : ASSEMBLY_STEP_ACTS;
+                  sendCutawayAct(actList[currentStepIndex] || 'overview');
+                }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  cutawayMode === 'sync'
+                    ? isDisassembly
+                      ? 'bg-amber-500 text-slate-950 shadow-sm'
+                      : 'bg-emerald-500 text-slate-950 shadow-sm'
+                    : 'bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700'
+                }`}
+              >
+                Suivre l&apos;étape ({currentStep.number}/12)
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setCutawayMode('exploded');
+                  sendCutawayAct('exploded');
+                }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  cutawayMode === 'exploded'
+                    ? 'bg-amber-500 text-slate-950 shadow-sm'
+                    : 'bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700'
+                }`}
+              >
+                Éclaté 97 Fournitures
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setCutawayMode('auto');
+                  sendCutawayAct('auto');
+                }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all inline-flex items-center gap-1.5 ${
+                  cutawayMode === 'auto'
+                    ? 'bg-emerald-500 text-slate-950 shadow-sm'
+                    : 'bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700'
+                }`}
+              >
+                <Play className="w-3.5 h-3.5" />
+                <span>Film continu</span>
+              </button>
+
+              <Link
+                href="/pratique/calibre-3d"
+                className="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all"
+              >
+                Porte-Mouvement 360°
+              </Link>
+
+              <button
+                type="button"
+                onClick={handleToggleFullscreen}
+                className="p-1.5 rounded-xl bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all"
+                title="Plein écran"
+              >
+                <Maximize2 className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          <div className="relative w-full aspect-[16/9] bg-[#eef5f0]">
+            <iframe
+              ref={cutawayIframeRef}
+              src="/cutaway-eta6497.html"
+              title="Simulateur 3D Cutaway Calibre Suisse ETA 6497-1 (97 Fournitures)"
+              className="w-full h-full border-0"
+              onLoad={() => {
+                if (cutawayMode === 'sync') {
+                  const actList = direction === 'disassembly' ? DISASSEMBLY_STEP_ACTS : ASSEMBLY_STEP_ACTS;
+                  sendCutawayAct(actList[currentStepIndex] || 'overview');
+                }
+              }}
+            />
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Panneau Principal de l'Opération */}
           <div className="lg:col-span-8 p-6 sm:p-10 rounded-3xl bg-white dark:bg-[#0c101b] border-2 border-slate-200 dark:border-slate-800 shadow-xl space-y-6">
