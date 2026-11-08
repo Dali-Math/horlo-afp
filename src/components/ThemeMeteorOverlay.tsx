@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 
-// Algorithme Sutherland-Hodgman pour découpe de polygone convexe
+// Sutherland-Hodgman pour découpage de polygone convexe
 function clipPolygon(
   poly: { x: number; y: number }[],
   p1: { x: number; y: number },
@@ -75,60 +75,69 @@ export default function ThemeMeteorOverlay() {
   const pathRef = useRef<SVGPathElement | null>(null);
   const [isActive, setIsActive] = useState(false);
   const [targetIsDark, setTargetIsDark] = useState(false);
+  const [overlayOpacity, setOverlayOpacity] = useState(1);
 
   useEffect(() => {
     const handleTrigger = (e: Event) => {
-      const customEvent = e as CustomEvent<{ x: number; y: number; nextIsDark: boolean }>;
-      const { x, y, nextIsDark } = customEvent.detail || {
-        x: window.innerWidth - 60,
-        y: 40,
-        nextIsDark: !document.documentElement.classList.contains("dark"),
-      };
+      const customEvent = e as CustomEvent<{
+        x: number;
+        y: number;
+        nextIsDark: boolean;
+        commitTheme?: () => void;
+      }>;
+
+      const detail = customEvent.detail;
+      if (!detail) return;
+
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const originX = detail.x || width - 60;
+      const originY = detail.y || 40;
+      const nextIsDark = detail.nextIsDark;
 
       setTargetIsDark(nextIsDark);
+      setOverlayOpacity(1);
       setIsActive(true);
 
       const canvas = canvasRef.current;
       const pathEl = pathRef.current;
       if (!canvas || !pathEl) return;
 
-      const width = window.innerWidth;
-      const height = window.innerHeight;
       canvas.width = width;
       canvas.height = height;
-
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      // Grille adaptée aux dimensions de l'écran
-      const cols = Math.max(8, Math.min(18, Math.round(width / 75)));
-      const rows = Math.max(6, Math.min(12, Math.round(height / 75)));
+      // 15 colonnes x 10 lignes de Voronoï pour une granularité identique à la maquette
+      const cols = Math.max(10, Math.min(18, Math.round(width / 80)));
+      const rows = Math.max(7, Math.min(12, Math.round(height / 75)));
       const voronoiGrid = generateVoronoiCells(width, height, cols, rows);
 
-      const TOTAL_DURATION = 1350;
+      // Durée réglée à 1500ms pour une vraie pluie continue bien visible
+      const TOTAL_DURATION = 1500;
       const startTime = performance.now();
 
-      // Préparation des météores liés à chaque cellule
+      // Préparation de la pluie de météores reliée à chaque cellule Voronoï
       const meteors = voronoiGrid.map((cell) => {
-        // Distance relative par rapport au point de départ du clic
-        const dx = cell.center.x - x;
-        const dy = cell.center.y - y;
-        const dist = Math.hypot(dx, dy);
-        const maxDist = Math.hypot(width, height);
-        const normDist = Math.min(1, dist / maxDist);
+        // Projection diagonale depuis le coin/bouton de déclenchement
+        const dx = (width - cell.center.x) * 1.0;
+        const dy = (cell.center.y) * 1.05;
+        const diagDist = dx + dy;
+        const normDist = Math.max(0, Math.min(1, diagDist / (width + height * 1.05)));
 
-        // Léger jitter pour faire émerger des îlots isolés en avance
-        const jitter = (Math.random() - 0.45) * 0.15;
+        // Jitter aléatoire pour faire apparaître des îlots isolés en avance
+        const jitter = (Math.random() - 0.45) * 0.14;
         const progressTrigger = Math.max(0.01, Math.min(0.88, normDist + jitter));
-        const impactTime = progressTrigger * (TOTAL_DURATION * 0.82);
+        const impactTime = progressTrigger * (TOTAL_DURATION * 0.84);
 
-        const flightDuration = 180 + Math.random() * 140;
+        // Durée de vol du météore
+        const flightDuration = 220 + Math.random() * 140;
         const launchTime = Math.max(0, impactTime - flightDuration);
 
         return {
           cell,
-          originX: x + (Math.random() - 0.5) * 30,
-          originY: y + (Math.random() - 0.5) * 25,
+          originX: originX + (Math.random() - 0.5) * 40,
+          originY: originY + (Math.random() - 0.5) * 30,
           targetX: cell.center.x,
           targetY: cell.center.y,
           launchTime,
@@ -138,14 +147,15 @@ export default function ThemeMeteorOverlay() {
         };
       });
 
-      // Météores d'ambiance supplémentaires
-      const extraMeteors = Array.from({ length: 30 }, () => {
-        const launchT = Math.random() * (TOTAL_DURATION * 0.75);
-        const dur = 180 + Math.random() * 150;
-        const angle = Math.atan2(height * 0.7 - y, -width * 0.6) + (Math.random() - 0.5) * 0.6;
-        const len = 300 + Math.random() * 600;
-        const startX = x + (Math.random() - 0.5) * 80;
-        const startY = y + (Math.random() - 0.5) * 50;
+      // Météores d'ambiance supplémentaires pour intensifier la pluie
+      const extraMeteors = Array.from({ length: 40 }, () => {
+        const launchT = Math.random() * (TOTAL_DURATION * 0.8);
+        const dur = 200 + Math.random() * 160;
+        const startX = originX + (Math.random() - 0.5) * 120;
+        const startY = originY + (Math.random() - 0.5) * 80;
+        const angle = Math.PI * 0.76 + (Math.random() - 0.5) * 0.45;
+        const len = 350 + Math.random() * 650;
+
         return {
           x1: startX,
           y1: startY,
@@ -153,37 +163,30 @@ export default function ThemeMeteorOverlay() {
           y2: startY + Math.sin(angle) * len,
           launchTime: launchT,
           duration: dur,
-          headSize: 1.8 + Math.random() * 1.5,
+          headSize: 2.0 + Math.random() * 1.6,
         };
       });
 
-      let switchedDomTheme = false;
+      let themeCommitted = false;
 
       const animate = (now: number) => {
         const elapsed = now - startTime;
         const progress = Math.min(1, elapsed / TOTAL_DURATION);
 
-        // Bascule réelle du DOM à mi-parcours (environ 40%) sous le couvert des cratères Voronoï
-        if (!switchedDomTheme && progress >= 0.4) {
-          switchedDomTheme = true;
-          if (nextIsDark) {
-            document.documentElement.classList.add("dark");
-            localStorage.setItem("theme", "dark");
-          } else {
-            document.documentElement.classList.remove("dark");
-            localStorage.setItem("theme", "light");
+        // BASCULE DU SITE À 88% : Lorsque 90% de l'écran est déjà recouvert de facettes
+        if (!themeCommitted && progress >= 0.88) {
+          themeCommitted = true;
+          if (detail.commitTheme) {
+            detail.commitTheme();
           }
-          window.dispatchEvent(
-            new CustomEvent("horlo:theme-changed", { detail: { isDark: nextIsDark } })
-          );
         }
 
-        // 1. MISE À JOUR DU MASQUE SVG VORONOÏ
+        // 1. DÉCOUPE PROGRESSIVE VORONOÏ
         let svgPath = "";
         meteors.forEach((m) => {
           if (elapsed >= m.impactTime) {
             const cellAge = elapsed - m.impactTime;
-            const cellProgress = Math.min(1, cellAge / 240);
+            const cellProgress = Math.min(1, cellAge / 280);
             m.scale = easeOutCubic(cellProgress);
 
             const poly = m.cell.poly;
@@ -204,75 +207,98 @@ export default function ThemeMeteorOverlay() {
           }
         });
 
-        if (progress >= 0.95) {
+        // Couverture totale à la fin
+        if (progress >= 0.96) {
           svgPath += `M 0 0 H ${width} V ${height} H 0 Z `;
         }
 
         pathEl.setAttribute("d", svgPath || "M 0 0 Z");
 
-        // 2. RENDU CANVAS DES MÉTÉORITES EN CHUTE CONTINUE
+        // 2. RENDU CANVAS DE LA PLUIE DE MÉTÉORITES EN CHUTE CONTINUE
         ctx.clearRect(0, 0, width, height);
 
         meteors.forEach((m) => {
-          if (elapsed >= m.launchTime && elapsed <= m.impactTime + 70) {
+          if (elapsed >= m.launchTime && elapsed <= m.impactTime + 80) {
             const flightRatio = Math.min(1, (elapsed - m.launchTime) / m.flightDuration);
             const curX = m.originX + (m.targetX - m.originX) * flightRatio;
             const curY = m.originY + (m.targetY - m.originY) * flightRatio;
 
-            const tailRatio = Math.max(0, flightRatio - 0.28);
+            const tailRatio = Math.max(0, flightRatio - 0.32);
             const tailX = m.originX + (m.targetX - m.originX) * tailRatio;
             const tailY = m.originY + (m.targetY - m.originY) * tailRatio;
 
             ctx.save();
             const grad = ctx.createLinearGradient(curX, curY, tailX, tailY);
             if (nextIsDark) {
-              grad.addColorStop(0, "rgba(255, 255, 255, 0.95)");
-              grad.addColorStop(0.35, "rgba(167, 139, 250, 0.85)");
-              grad.addColorStop(0.7, "rgba(129, 140, 248, 0.4)");
+              // Météorites d'acier bleui & corindon violet (vers Mode Sombre)
+              grad.addColorStop(0, "rgba(255, 255, 255, 0.98)");
+              grad.addColorStop(0.35, "rgba(167, 139, 250, 0.9)");
+              grad.addColorStop(0.7, "rgba(129, 140, 248, 0.45)");
               grad.addColorStop(1, "rgba(99, 102, 241, 0)");
             } else {
-              grad.addColorStop(0, "rgba(255, 255, 240, 0.95)");
-              grad.addColorStop(0.35, "rgba(251, 191, 36, 0.9)");
-              grad.addColorStop(0.7, "rgba(234, 141, 36, 0.4)");
+              // Météorites solaires dorées de laiton horloger (vers Mode Clair)
+              grad.addColorStop(0, "rgba(255, 255, 235, 0.98)");
+              grad.addColorStop(0.35, "rgba(251, 191, 36, 0.95)");
+              grad.addColorStop(0.7, "rgba(234, 141, 36, 0.45)");
               grad.addColorStop(1, "rgba(234, 141, 36, 0)");
             }
 
             ctx.strokeStyle = grad;
-            ctx.lineWidth = 1.8;
+            ctx.lineWidth = 2.0;
             ctx.lineCap = "round";
             ctx.beginPath();
             ctx.moveTo(curX, curY);
             ctx.lineTo(tailX, tailY);
             ctx.stroke();
 
-            // Tête étincelante
+            // Tête lumineuse étincelante
             ctx.fillStyle = "#ffffff";
             ctx.shadowColor = nextIsDark ? "#a78bfa" : "#fbbf24";
-            ctx.shadowBlur = 9;
+            ctx.shadowBlur = 12;
             ctx.beginPath();
-            ctx.arc(curX, curY, 2.4, 0, Math.PI * 2);
+            ctx.arc(curX, curY, 2.6, 0, Math.PI * 2);
             ctx.fill();
 
             // Halo diffus
-            ctx.fillStyle = nextIsDark ? "rgba(167, 139, 250, 0.4)" : "rgba(251, 191, 36, 0.4)";
+            ctx.fillStyle = nextIsDark ? "rgba(167, 139, 250, 0.45)" : "rgba(251, 191, 36, 0.45)";
             ctx.beginPath();
-            ctx.arc(curX, curY, 5, 0, Math.PI * 2);
+            ctx.arc(curX, curY, 6.0, 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
+
+            // Étincelles à l'impact
+            if (flightRatio >= 0.94) {
+              ctx.fillStyle = nextIsDark ? "#c4b5fd" : "#fde68a";
+              for (let s = 0; s < 3; s++) {
+                const sparkAngle = Math.random() * Math.PI * 2;
+                const sparkDist = 2 + Math.random() * 8;
+                ctx.beginPath();
+                ctx.arc(
+                  curX + Math.cos(sparkAngle) * sparkDist,
+                  curY + Math.sin(sparkAngle) * sparkDist,
+                  1.2,
+                  0,
+                  Math.PI * 2
+                );
+                ctx.fill();
+              }
+            }
           }
         });
 
-        // Météores d'ambiance
+        // Météores secondaires d'ambiance
         extraMeteors.forEach((em) => {
           if (elapsed >= em.launchTime && elapsed <= em.launchTime + em.duration) {
             const r = (elapsed - em.launchTime) / em.duration;
             const curX = em.x1 + (em.x2 - em.x1) * r;
             const curY = em.y1 + (em.y2 - em.y1) * r;
-            const tailX = em.x1 + (em.x2 - em.x1) * Math.max(0, r - 0.22);
-            const tailY = em.y1 + (em.y2 - em.y1) * Math.max(0, r - 0.22);
+            const tailX = em.x1 + (em.x2 - em.x1) * Math.max(0, r - 0.25);
+            const tailY = em.y1 + (em.y2 - em.y1) * Math.max(0, r - 0.25);
 
             ctx.save();
-            ctx.strokeStyle = nextIsDark ? "rgba(167, 139, 250, 0.6)" : "rgba(251, 191, 36, 0.6)";
+            ctx.strokeStyle = nextIsDark
+              ? "rgba(167, 139, 250, 0.7)"
+              : "rgba(251, 191, 36, 0.7)";
             ctx.lineWidth = em.headSize;
             ctx.lineCap = "round";
             ctx.beginPath();
@@ -282,7 +308,7 @@ export default function ThemeMeteorOverlay() {
 
             ctx.fillStyle = "#ffffff";
             ctx.shadowColor = nextIsDark ? "#a78bfa" : "#fbbf24";
-            ctx.shadowBlur = 8;
+            ctx.shadowBlur = 10;
             ctx.beginPath();
             ctx.arc(curX, curY, em.headSize, 0, Math.PI * 2);
             ctx.fill();
@@ -293,10 +319,13 @@ export default function ThemeMeteorOverlay() {
         if (progress < 1) {
           requestAnimationFrame(animate);
         } else {
-          // Clôture
-          ctx.clearRect(0, 0, width, height);
-          pathEl.setAttribute("d", "M 0 0 Z");
-          setIsActive(false);
+          // Fondu de sortie ultra doux
+          setOverlayOpacity(0);
+          setTimeout(() => {
+            ctx.clearRect(0, 0, width, height);
+            pathEl.setAttribute("d", "M 0 0 Z");
+            setIsActive(false);
+          }, 250);
         }
       };
 
@@ -311,8 +340,8 @@ export default function ThemeMeteorOverlay() {
 
   return (
     <div
-      className="fixed inset-0 pointer-events-none"
-      style={{ zIndex: 999999 }}
+      className="fixed inset-0 pointer-events-none transition-opacity duration-300"
+      style={{ zIndex: 999999, opacity: overlayOpacity }}
       aria-hidden="true"
     >
       {/* Masque vectoriel SVG Voronoï */}
@@ -326,28 +355,52 @@ export default function ThemeMeteorOverlay() {
 
       {/* Calque de révélation Voronoï découpé */}
       <div
-        className="absolute inset-0 transition-opacity duration-300"
+        className="absolute inset-0"
         style={{
           clipPath: "url(#horloVoronoiClip)",
           WebkitClipPath: "url(#horloVoronoiClip)",
           backgroundColor: targetIsDark ? "#090b0e" : "#f3efe7",
         }}
       >
-        {targetIsDark && (
-          <div className="absolute inset-0 opacity-40 pointer-events-none">
+        {targetIsDark ? (
+          /* Carte céleste horlogère pour le mode sombre */
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div
+              className="absolute rounded-full border border-violet-500/15"
+              style={{ width: "900px", height: "900px", top: "-180px", right: "-120px" }}
+            />
+            <div
+              className="absolute rounded-full border border-dashed border-indigo-400/12"
+              style={{ width: "1350px", height: "1350px", top: "-280px", right: "-250px" }}
+            />
             <div
               className="absolute rounded-full border border-violet-500/10"
-              style={{ width: "800px", height: "800px", top: "-150px", right: "-150px" }}
+              style={{ width: "1800px", height: "1800px", top: "-400px", right: "-400px" }}
+            />
+            {/* Étoiles célestes */}
+            <div className="absolute w-1 h-1 rounded-full bg-white opacity-60 shadow-[0_0_6px_#a78bfa]" style={{ top: "120px", right: "320px" }} />
+            <div className="absolute w-1.5 h-1.5 rounded-full bg-white opacity-80 shadow-[0_0_8px_#a78bfa]" style={{ top: "240px", right: "200px" }} />
+            <div className="absolute w-1 h-1 rounded-full bg-white opacity-50 shadow-[0_0_6px_#818cf8]" style={{ top: "350px", right: "480px" }} />
+            <div className="absolute w-1 h-1 rounded-full bg-white opacity-70 shadow-[0_0_6px_#a78bfa]" style={{ bottom: "180px", left: "280px" }} />
+            <div className="absolute w-1.5 h-1.5 rounded-full bg-white opacity-80 shadow-[0_0_8px_#c4b5fd]" style={{ bottom: "280px", left: "420px" }} />
+          </div>
+        ) : (
+          /* Ambiance d'atelier horloger clair et chaleureux */
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div
+              className="absolute rounded-full border border-amber-500/12"
+              style={{ width: "900px", height: "900px", top: "-180px", right: "-120px" }}
             />
             <div
-              className="absolute rounded-full border border-dashed border-indigo-400/10"
-              style={{ width: "1200px", height: "1200px", top: "-250px", right: "-300px" }}
+              className="absolute rounded-full border border-dashed border-amber-600/10"
+              style={{ width: "1350px", height: "1350px", top: "-280px", right: "-250px" }}
             />
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-100/30 via-transparent to-orange-100/20" />
           </div>
         )}
       </div>
 
-      {/* Canvas pour le rendu dynamique des traînées de météorites */}
+      {/* Canvas haute performance des météores en chute continue */}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
     </div>
   );
