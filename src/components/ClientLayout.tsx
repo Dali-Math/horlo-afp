@@ -10,6 +10,7 @@ const FloatingSearchButton = dynamic(() => import("./FloatingSearchButton"), { s
 const SearchModal = dynamic(() => import("./SearchModal"), { ssr: false });
 const PwaRegistrar = dynamic(() => import("./PwaRegistrar"), { ssr: false });
 const VoiceWorkbenchAssistant = dynamic(() => import("./VoiceWorkbenchAssistant"), { ssr: false });
+const ThemeMeteorOverlay = dynamic(() => import("./ThemeMeteorOverlay"), { ssr: false });
 
 interface ClientLayoutProps {
   children: React.ReactNode;
@@ -39,6 +40,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
       <FloatingSearchButton onClick={() => setIsSearchOpen(true)} />
       <VoiceWorkbenchAssistant />
+      <ThemeMeteorOverlay />
       <PwaRegistrar />
     </>
   );
