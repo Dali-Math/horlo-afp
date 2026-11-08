@@ -7,7 +7,8 @@ import { ArrowLeft, Maximize2, ShieldCheck, Sparkles } from 'lucide-react';
 
 export default function Calibre2824Client() {
   const [isEmbeddedFullscreen, setIsEmbeddedFullscreen] = React.useState(false);
-  const [iframeHeight, setIframeHeight] = React.useState<number>(1250);
+  const [viewMode, setViewMode] = React.useState<'cutaway' | 'lab'>('cutaway');
+  const [iframeHeight, setIframeHeight] = React.useState<number>(950);
   const { resolvedTheme } = useTheme();
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
 
@@ -74,43 +75,64 @@ export default function Calibre2824Client() {
               </div>
             </div>
 
-            {/* TÉLÉMÉTRIE D'ATELIER */}
+            {/* SÉLECTEUR DE MODE & VUE DÉDIÉE */}
             <div className="flex items-center gap-2 text-xs font-mono">
+              <div className="flex items-center bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl text-xs font-mono border border-slate-300 dark:border-slate-700">
+                <button
+                  type="button"
+                  onClick={() => setViewMode('cutaway')}
+                  className={`px-3 py-1 rounded-lg transition font-semibold ${
+                    viewMode === 'cutaway' ? 'bg-emerald-500 text-slate-950 font-bold shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                >
+                  <span>Écorché 3D Démonté</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode('lab')}
+                  className={`px-3 py-1 rounded-lg transition font-semibold ${
+                    viewMode === 'lab' ? 'bg-amber-500 text-slate-950 font-bold shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                >
+                  <span>Banc d&apos;Établi</span>
+                </button>
+              </div>
+
               <span className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-semibold">
                 <ShieldCheck className="w-3.5 h-3.5" />
                 <span>Normes NIHS &amp; Moebius</span>
               </span>
               <a
-                href="/eta-2824-laboratoire.html"
+                href={viewMode === 'cutaway' ? "/cutaway-eta2824.html" : "/eta-2824-laboratoire.html"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 border border-slate-300 dark:border-slate-700 transition flex items-center gap-1.5 text-xs font-mono font-semibold"
-                title="Ouvrir le laboratoire en page dédiée"
+                className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 border border-slate-300 dark:border-slate-700 transition flex items-center gap-1.5 text-xs font-mono font-semibold"
+                title="Ouvrir le simulateur en plein écran dans un nouvel onglet"
               >
                 <Maximize2 className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Page Dédiée</span>
+                <span className="hidden sm:inline">Plein Écran Dédié</span>
               </a>
             </div>
           </header>
         </div>
       )}
 
-      {/* CONTAINER DU LABORATOIRE INTERACTIF 3D HAUTE FIDÉLITÉ (SANS DOUBLE SCROLLBAR) */}
+      {/* CONTAINER DU SIMULATEUR INTERACTIF 3D */}
       <main className="flex-1 w-full flex flex-col">
         <iframe
           ref={iframeRef}
-          src="/eta-2824-laboratoire.html"
+          src={viewMode === 'cutaway' ? "/cutaway-eta2824.html" : "/eta-2824-laboratoire.html"}
           onLoad={() => {
             sendThemeToIframe(resolvedTheme);
             if (iframeRef.current && iframeRef.current.contentWindow) {
               iframeRef.current.contentWindow.postMessage({ type: 'HORLO_REQUEST_HEIGHT' }, '*');
             }
           }}
-          title="Laboratoire ETA 2824-2 3D Haute Fidélité"
+          title={viewMode === 'cutaway' ? "Calibre Suisse ETA 2824-2 Démonté Pièce par Pièce" : "Laboratoire ETA 2824-2 3D Haute Fidélité"}
           scrolling={isEmbeddedFullscreen ? 'auto' : 'no'}
           style={{
-            height: isEmbeddedFullscreen ? '100vh' : `${iframeHeight}px`,
-            minHeight: isEmbeddedFullscreen ? '100vh' : `${iframeHeight}px`,
+            height: isEmbeddedFullscreen ? '100vh' : (viewMode === 'cutaway' ? '920px' : `${iframeHeight}px`),
+            minHeight: isEmbeddedFullscreen ? '100vh' : (viewMode === 'cutaway' ? '920px' : `${iframeHeight}px`),
             overflow: isEmbeddedFullscreen ? 'auto' : 'hidden',
           }}
           className={`w-full border-0 bg-slate-100 dark:bg-[#070b14] transition-[height] duration-200 ${

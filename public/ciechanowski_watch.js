@@ -3457,9 +3457,9 @@ let gear_train5_explainers;
                 }, {
                     "balance_time": sim[0],
                     "show_date_ring": true,
-                    "show_second_hand": (window.SHOW_DIAL === false) ? true : (arg0 < 0.35),
-                    "show_minute_hand": (window.SHOW_DIAL === false) ? true : (arg0 < 0.25),
-                    "show_hour_hand": (window.SHOW_DIAL === false) ? true : (arg0 < 0.25),
+                    "show_second_hand": (window.SHOW_HANDS === false) ? false : ((window.SHOW_DIAL === false) ? true : (arg0 < 0.35)),
+                    "show_minute_hand": (window.SHOW_HANDS === false) ? false : ((window.SHOW_DIAL === false) ? true : (arg0 < 0.25)),
+                    "show_hour_hand": (window.SHOW_HANDS === false) ? false : ((window.SHOW_DIAL === false) ? true : (arg0 < 0.25)),
                     "show_dial": (window.SHOW_DIAL === false) ? false : (arg0 < 0.15),
                     "Weight_angle": weight_angle,
                     "auto_params": reverse_sim_params(sim[4], sim[5])
