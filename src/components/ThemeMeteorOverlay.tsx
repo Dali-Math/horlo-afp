@@ -113,8 +113,8 @@ export default function ThemeMeteorOverlay() {
       const rows = Math.max(7, Math.min(12, Math.round(height / 75)));
       const voronoiGrid = generateVoronoiCells(width, height, cols, rows);
 
-      // Durée réglée à 1500ms pour une vraie pluie continue bien visible
-      const TOTAL_DURATION = 1500;
+      // Durée réglée à 2500ms pour une vraie pluie continue, majestueuse et bien visible
+      const TOTAL_DURATION = 2500;
       const startTime = performance.now();
 
       // Préparation de la pluie de météores reliée à chaque cellule Voronoï
@@ -128,10 +128,10 @@ export default function ThemeMeteorOverlay() {
         // Jitter aléatoire pour faire apparaître des îlots isolés en avance
         const jitter = (Math.random() - 0.45) * 0.14;
         const progressTrigger = Math.max(0.01, Math.min(0.88, normDist + jitter));
-        const impactTime = progressTrigger * (TOTAL_DURATION * 0.84);
+        const impactTime = progressTrigger * (TOTAL_DURATION * 0.85);
 
-        // Durée de vol du météore
-        const flightDuration = 220 + Math.random() * 140;
+        // Durée de vol du météore (glisse continue bien visible)
+        const flightDuration = 380 + Math.random() * 260;
         const launchTime = Math.max(0, impactTime - flightDuration);
 
         return {
@@ -147,14 +147,14 @@ export default function ThemeMeteorOverlay() {
         };
       });
 
-      // Météores d'ambiance supplémentaires pour intensifier la pluie
-      const extraMeteors = Array.from({ length: 40 }, () => {
-        const launchT = Math.random() * (TOTAL_DURATION * 0.8);
-        const dur = 200 + Math.random() * 160;
-        const startX = originX + (Math.random() - 0.5) * 120;
-        const startY = originY + (Math.random() - 0.5) * 80;
+      // Météores d'ambiance supplémentaires pour intensifier la cascade
+      const extraMeteors = Array.from({ length: 65 }, () => {
+        const launchT = Math.random() * (TOTAL_DURATION * 0.82);
+        const dur = 340 + Math.random() * 280;
+        const startX = originX + (Math.random() - 0.5) * 140;
+        const startY = originY + (Math.random() - 0.5) * 90;
         const angle = Math.PI * 0.76 + (Math.random() - 0.5) * 0.45;
-        const len = 350 + Math.random() * 650;
+        const len = 400 + Math.random() * 750;
 
         return {
           x1: startX,
@@ -186,7 +186,7 @@ export default function ThemeMeteorOverlay() {
         meteors.forEach((m) => {
           if (elapsed >= m.impactTime) {
             const cellAge = elapsed - m.impactTime;
-            const cellProgress = Math.min(1, cellAge / 280);
+            const cellProgress = Math.min(1, cellAge / 450);
             m.scale = easeOutCubic(cellProgress);
 
             const poly = m.cell.poly;
@@ -218,12 +218,12 @@ export default function ThemeMeteorOverlay() {
         ctx.clearRect(0, 0, width, height);
 
         meteors.forEach((m) => {
-          if (elapsed >= m.launchTime && elapsed <= m.impactTime + 80) {
+          if (elapsed >= m.launchTime && elapsed <= m.impactTime + 120) {
             const flightRatio = Math.min(1, (elapsed - m.launchTime) / m.flightDuration);
             const curX = m.originX + (m.targetX - m.originX) * flightRatio;
             const curY = m.originY + (m.targetY - m.originY) * flightRatio;
 
-            const tailRatio = Math.max(0, flightRatio - 0.32);
+            const tailRatio = Math.max(0, flightRatio - 0.38);
             const tailX = m.originX + (m.targetX - m.originX) * tailRatio;
             const tailY = m.originY + (m.targetY - m.originY) * tailRatio;
 
