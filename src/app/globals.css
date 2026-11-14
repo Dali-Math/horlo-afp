@@ -890,11 +890,6 @@ dialog.hl-native-dialog[data-closing]::backdrop {
   }
 }
 
-.hl-deferred-section {
-  content-visibility: auto;
-  contain-intrinsic-size: auto none auto 420px;
-}
-
 :root {
   scrollbar-width: thin;
   scrollbar-color: var(--hl-scrollbar-thumb) var(--hl-scrollbar-track);

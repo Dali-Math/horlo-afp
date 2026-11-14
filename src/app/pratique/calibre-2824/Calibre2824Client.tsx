@@ -7,6 +7,24 @@ import { ArrowLeft, Maximize2, ShieldCheck } from 'lucide-react';
 
 type Calibre2824View = 'labo' | 'coupe';
 
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
+
+function getViewportWidth(): number {
+  if (typeof document !== 'undefined' && document.documentElement?.clientWidth) {
+    return document.documentElement.clientWidth;
+  }
+  return typeof window !== 'undefined' ? window.innerWidth : 1280;
+}
+
+function resolveThemeValue(theme: string | undefined): 'dark' | 'light' {
+  if (theme === 'dark' || theme === 'light') return theme;
+  if (typeof document !== 'undefined') {
+    return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+  }
+  return 'light';
+}
+
 function computeCutawayIframeHeight(viewportWidth: number): number {
   if (viewportWidth <= 768) {
     return Math.max(480, Math.min(560, Math.round(viewportWidth * 1.32)));
@@ -16,18 +34,22 @@ function computeCutawayIframeHeight(viewportWidth: number): number {
 
 export default function Calibre2824Client() {
   const [activeView, setActiveView] = React.useState<Calibre2824View>('labo');
+  const [isReady, setIsReady] = React.useState(false);
   const [isEmbeddedFullscreen, setIsEmbeddedFullscreen] = React.useState(false);
-  const [iframeHeight, setIframeHeight] = React.useState<number>(1250);
+  const [iframeHeight, setIframeHeight] = React.useState<number>(1020);
   const { resolvedTheme } = useTheme();
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
 
-  React.useEffect(() => {
-    if (typeof window === 'undefined') return;
+  useIsomorphicLayoutEffect(() => {
     const vue = new URLSearchParams(window.location.search).get('vue');
     if (vue === 'coupe') {
       setActiveView('coupe');
-      setIframeHeight(computeCutawayIframeHeight(window.innerWidth));
+      setIframeHeight(computeCutawayIframeHeight(getViewportWidth()));
+    } else {
+      setActiveView('labo');
+      setIframeHeight(1020);
     }
+    setIsReady(true);
   }, []);
 
   const handleSelectView = React.useCallback((view: Calibre2824View) => {
@@ -37,10 +59,10 @@ export default function Calibre2824Client() {
       const url = new URL(window.location.href);
       if (view === 'coupe') {
         url.searchParams.set('vue', 'coupe');
-        setIframeHeight(computeCutawayIframeHeight(window.innerWidth));
+        setIframeHeight(computeCutawayIframeHeight(getViewportWidth()));
       } else {
         url.searchParams.delete('vue');
-        setIframeHeight(1250);
+        setIframeHeight(1020);
       }
       window.history.replaceState({}, '', url.toString());
     }
@@ -51,7 +73,7 @@ export default function Calibre2824Client() {
     if (iframeRef.current && iframeRef.current.contentWindow) {
       iframeRef.current.contentWindow.postMessage({
         type: 'HORLO_THEME_CHANGE',
-        theme: theme || 'dark',
+        theme: resolveThemeValue(theme),
       }, '*');
     }
   }, []);
@@ -62,12 +84,15 @@ export default function Calibre2824Client() {
 
   React.useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
+      if (event.source && iframeRef.current?.contentWindow && event.source !== iframeRef.current.contentWindow) {
+        return;
+      }
       if (event.data) {
         if (event.data.type === 'HORLO_FULLSCREEN_CHANGE') {
           setIsEmbeddedFullscreen(!!event.data.isFullscreen);
         } else if (event.data.type === 'HORLO_IFRAME_HEIGHT' && typeof event.data.height === 'number') {
           // Ajustement micromécanique dynamique de la hauteur pour éliminer le double scrollbar
-          const minH = typeof window !== 'undefined' && window.innerWidth <= 768 ? 460 : 660;
+          const minH = getViewportWidth() <= 768 ? 460 : 660;
           const newH = Math.max(Math.ceil(event.data.height), minH);
           setIframeHeight((prev) => (Math.abs(prev - newH) > 6 ? newH : prev));
         }
@@ -168,33 +193,41 @@ export default function Calibre2824Client() {
 
       {/* CONTAINER DU LABORATOIRE INTERACTIF 3D HAUTE FIDÉLITÉ (SANS DOUBLE SCROLLBAR) */}
       <div className="flex-1 w-full flex flex-col">
-        <iframe
-          key={activeView}
-          ref={iframeRef}
-          src={iframeSrc}
-          onLoad={() => {
-            sendThemeToIframe(resolvedTheme);
-            if (iframeRef.current && iframeRef.current.contentWindow) {
-              iframeRef.current.contentWindow.postMessage({ type: 'HORLO_REQUEST_HEIGHT' }, '*');
+        {isReady ? (
+          <iframe
+            key={activeView}
+            ref={iframeRef}
+            src={iframeSrc}
+            onLoad={() => {
+              sendThemeToIframe(resolvedTheme);
+              if (iframeRef.current && iframeRef.current.contentWindow) {
+                iframeRef.current.contentWindow.postMessage({ type: 'HORLO_REQUEST_HEIGHT' }, '*');
+              }
+            }}
+            title={
+              activeView === 'coupe'
+                ? 'Démontage ETA 2824-2 Pièce par Pièce CT'
+                : 'Laboratoire ETA 2824-2 3D Haute Fidélité'
             }
-          }}
-          title={
-            activeView === 'coupe'
-              ? 'Démontage ETA 2824-2 Pièce par Pièce CT'
-              : 'Laboratoire ETA 2824-2 3D Haute Fidélité'
-          }
-          scrolling={isEmbeddedFullscreen ? 'auto' : 'no'}
-          style={{
-            height: isEmbeddedFullscreen ? '100vh' : `${iframeHeight}px`,
-            minHeight: isEmbeddedFullscreen ? '100vh' : `${iframeHeight}px`,
-            overflow: isEmbeddedFullscreen ? 'auto' : 'hidden',
-          }}
-          className={`w-full border-0 bg-slate-100 dark:bg-[#070b14] transition-[height] duration-200 ${
-            isEmbeddedFullscreen ? 'h-screen fixed inset-0 z-50' : 'flex-1'
-          }`}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen *"
-          allowFullScreen={true}
-        />
+            scrolling={isEmbeddedFullscreen ? 'auto' : 'no'}
+            style={{
+              height: isEmbeddedFullscreen ? '100vh' : `${iframeHeight}px`,
+              minHeight: isEmbeddedFullscreen ? '100vh' : `${iframeHeight}px`,
+              overflow: isEmbeddedFullscreen ? 'auto' : 'hidden',
+            }}
+            className={`w-full border-0 bg-slate-100 dark:bg-[#070b14] ${
+              isEmbeddedFullscreen ? 'h-screen fixed inset-0 z-50' : 'flex-1'
+            }`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen *"
+            allowFullScreen={true}
+          />
+        ) : (
+          <div
+            style={{ height: `${iframeHeight}px`, minHeight: `${iframeHeight}px` }}
+            className="w-full bg-slate-100 dark:bg-[#070b14]"
+            aria-hidden="true"
+          />
+        )}
       </div>
 
       {/* CARTOUCHE D'ATTRIBUTION OFFICIEL & ÉTHIQUE HORLOGÈRE */}
