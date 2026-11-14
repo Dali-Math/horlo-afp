@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import NativeDialog from "@/components/ui/NativeDialog";
 import {
   ArrowLeft,
   Wrench,
@@ -898,8 +899,10 @@ export default function RhabillagePage() {
           {Object.values(CALIBRES_DATA).map((item) => {
             const isSelected = item.id === activeCalibre;
             return (
-              <div
+              <button
                 key={item.id}
+                type="button"
+                aria-pressed={isSelected}
                 onClick={() => {
                   setActiveCalibre(item.id);
                   setActiveModuleFilter("all");
@@ -927,7 +930,7 @@ export default function RhabillagePage() {
                   <span className="text-amber-500 font-bold">{item.freq}</span>
                   <span className="text-slate-400">{item.steps.length} Étapes d'Établi</span>
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>
@@ -1257,15 +1260,19 @@ export default function RhabillagePage() {
                     {activeCalibre === "eta6497" && step.images && step.images.length > 0 ? (
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 py-1">
                         {step.images.map((img) => (
-                          <div
+                          <button
                             key={img}
+                            type="button"
                             onClick={() => setLoupeModal({ isOpen: true, stepIdx: step.num - 1 })}
+                            aria-label={`Examiner ${img.replace(".png", "").replace(".jpg", "")} à la loupe 10x`}
                             className="bg-white dark:bg-black/40 border border-slate-200 dark:border-white/10 p-2 rounded-lg flex flex-col items-center hover:border-amber-500/50 transition group cursor-pointer shadow-sm"
                           >
                             <img
                               src={GITHUB_RAW_BASE + img}
                               alt={img}
-                              className="h-14 object-contain group-hover:scale-110 transition duration-300"
+                              loading="lazy"
+                              decoding="async"
+                              className="h-14 w-auto object-contain group-hover:scale-110 transition duration-300"
                               onError={(e) => {
                                 (e.currentTarget as HTMLImageElement).src = LOCAL_IMG_BASE + img;
                               }}
@@ -1273,16 +1280,18 @@ export default function RhabillagePage() {
                             <span className="text-[9px] font-mono text-slate-600 dark:text-slate-400 group-hover:text-amber-500 mt-1 truncate w-full text-center">
                               {img.replace(".png", "").replace(".jpg", "")}
                             </span>
-                          </div>
+                          </button>
                         ))}
                       </div>
                     ) : (
-                      <div
+                      <button
+                        type="button"
                         onClick={() => setLoupeModal({ isOpen: true, stepIdx: step.num - 1 })}
-                        className="rounded-lg overflow-hidden cursor-pointer hover:opacity-95 transition"
+                        aria-label={`Examiner le schéma ${step.visualTitle} à la loupe 10x`}
+                        className="w-full rounded-lg overflow-hidden cursor-pointer hover:opacity-95 transition text-left bg-transparent border-0 p-0"
                       >
                         {renderSvgByKey(step.svgType)}
-                      </div>
+                      </button>
                     )}
 
                     <div className="pt-1.5 border-t border-slate-100 dark:border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-400">
@@ -1298,9 +1307,13 @@ export default function RhabillagePage() {
         </div>
 
         {/* Modal: Loupe d'Atelier 10x */}
-        {loupeModal.isOpen && (
-          <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 transition-all">
-            <div className="relative w-full max-w-4xl bg-white dark:bg-[#0d121f] border border-slate-200 dark:border-amber-500/40 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+        <NativeDialog
+          open={loupeModal.isOpen}
+          onClose={() => setLoupeModal((p) => ({ ...p, isOpen: false }))}
+          ariaLabel={`${cal.name} — Étape #${modalStep.num} : ${modalStep.title}`}
+          className="w-full max-w-4xl"
+        >
+          <div className="relative w-full bg-white dark:bg-[#0d121f] border border-slate-200 dark:border-amber-500/40 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
               
               {/* Header */}
               <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-black/40">
@@ -1318,7 +1331,9 @@ export default function RhabillagePage() {
                   </div>
                 </div>
                 <button
-                  onClick={() => setLoupeModal({ isOpen: false, stepIdx: 0 })}
+                  type="button"
+                  onClick={() => setLoupeModal((p) => ({ ...p, isOpen: false }))}
+                  aria-label="Fermer la loupe"
                   className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white flex items-center justify-center transition-colors text-lg"
                 >
                   ✕
@@ -1336,7 +1351,9 @@ export default function RhabillagePage() {
                             <img
                               src={GITHUB_RAW_BASE + img}
                               alt={img}
-                              className="h-28 object-contain drop-shadow-md hover:scale-110 transition duration-300"
+                              loading="lazy"
+                              decoding="async"
+                              className="h-28 w-auto object-contain drop-shadow-md hover:scale-110 transition duration-300"
                               onError={(e) => {
                                 (e.currentTarget as HTMLImageElement).src = LOCAL_IMG_BASE + img;
                               }}
@@ -1381,16 +1398,16 @@ export default function RhabillagePage() {
               <div className="px-6 py-3 border-t border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-black/40 flex justify-between items-center text-xs font-mono">
                 <span className="text-slate-500 dark:text-slate-400">Norme Horlogère Suisse NIHS & Contrôle Loupe 10x</span>
                 <button
-                  onClick={() => setLoupeModal({ isOpen: false, stepIdx: 0 })}
+                  type="button"
+                  onClick={() => setLoupeModal((p) => ({ ...p, isOpen: false }))}
                   className="px-4 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold hover:bg-amber-400 transition shadow-sm"
                 >
                   Fermer la loupe
                 </button>
               </div>
 
-            </div>
           </div>
-        )}
+        </NativeDialog>
 
       </div>
     </div>

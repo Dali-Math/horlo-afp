@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import TappingBenchSimulator from './TappingBenchSimulator';
 import PolishingBenchSimulator from './PolishingBenchSimulator';
+import NativeDialog from '@/components/ui/NativeDialog';
 import { PrepMachineVisual, BarStickoutVisual, OriginVisual, FacingPassesVisual, LatheAnatomyVisual } from './MicromecaniqueVisuals';
 import Link from 'next/link';
 import {
@@ -37,20 +37,8 @@ export default function MicromecaniqueModulePage() {
   const [latheRpm, setLatheRpm] = useState(0);
   const [targetRpm, setTargetRpm] = useState(800);
   const [direction, setDirection] = useState<'ccw' | 'cw'>('ccw');
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
   const [isLoupeOpen, setIsLoupeOpen] = useState(false);
   const [loupeZoom, setLoupeZoom] = useState<1 | 2 | 5 | 10>(1);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsLoupeOpen(false);
-    };
-    if (isLoupeOpen) {
-      window.addEventListener('keydown', handleKeyDown);
-      return () => window.removeEventListener('keydown', handleKeyDown);
-    }
-  }, [isLoupeOpen]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -379,7 +367,7 @@ export default function MicromecaniqueModulePage() {
         </div>
 
         {/* Main Content */}
-        <main className="space-y-16">
+        <div className="space-y-16">
         
         {/* Hero Section */}
         <div className="relative rounded-3xl bg-gradient-to-b from-white to-slate-50 dark:from-[#10192e] dark:to-[#080C15] p-8 sm:p-12 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-2xl overflow-hidden">
@@ -531,6 +519,8 @@ export default function MicromecaniqueModulePage() {
           <img 
             src="/images/micromecanique/schaublin_tournage_main.jpg" 
             alt="Tour Schaublin 70 en action dans l'atelier d'horlogerie" 
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
@@ -971,21 +961,27 @@ export default function MicromecaniqueModulePage() {
 
       {/* Planche Technique Réelle Haute Définition avec Loupe */}
       <div className="relative rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-900 group shadow-lg">
-        <div 
+        <button
+          type="button"
           onClick={() => { setIsLoupeOpen(true); setLoupeZoom(1); }}
-          className="cursor-pointer relative overflow-hidden bg-slate-950 flex items-center justify-center min-h-[340px] sm:min-h-[460px]"
+          aria-label="Agrandir la planche du burin carré 80 degrés à la loupe 10x"
+          className="w-full cursor-pointer relative overflow-hidden bg-slate-950 flex items-center justify-center min-h-[340px] sm:min-h-[460px] text-left"
         >
-          <img 
+          <img
             src="/images/micromecanique/burin_carre_80_eventail_tour_schaublin.jpg"
             alt="Planche 01 - Géométrie d'Attaque du Burin Carré 80° sur Éventail - Tour d'horloger Schaublin 70"
+            width={1024}
+            height={576}
+            loading="lazy"
+            decoding="async"
             className="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-[1.008]"
           />
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors pointer-events-none" />
-          <div className="absolute bottom-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-900 text-amber-300 text-xs font-bold shadow-lg border border-amber-500/30 backdrop-blur-sm transition-transform group-hover:scale-105">
-            <ZoomIn className="w-3.5 h-3.5 text-amber-400" />
+          <span className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors pointer-events-none" />
+          <span className="absolute bottom-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-900 text-amber-300 text-xs font-bold shadow-lg border border-amber-500/30 backdrop-blur-sm transition-transform group-hover:scale-105">
+            <ZoomIn className="w-3.5 h-3.5 text-amber-400" aria-hidden="true" />
             <span>Agrandir Loupe 10x</span>
-          </div>
-        </div>
+          </span>
+        </button>
         <div className="p-3.5 sm:p-4 bg-slate-50 dark:bg-slate-900/90 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-600 dark:text-slate-300">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
@@ -1458,6 +1454,8 @@ export default function MicromecaniqueModulePage() {
             <img 
               src="/images/micromecanique/schaublin_tournage_main.jpg" 
               alt="Chauffe au chalumeau d'un pointeau d'horloger au rouge cerise avec bain d'huile et plateau à bleuir" 
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent"></div>
@@ -1880,7 +1878,7 @@ export default function MicromecaniqueModulePage() {
           </div>
         </section>
 
-      </main>
+      </div>
 
       {/* Footer */}
       <footer className="mt-20 border-t border-slate-200 dark:border-slate-800 py-8 px-4 text-center text-xs font-mono text-slate-500">
@@ -1889,15 +1887,13 @@ export default function MicromecaniqueModulePage() {
       </div>
 
       {/* Modal Loupe 10x d'Atelier */}
-      {mounted && isLoupeOpen && createPortal(
-        <div 
-          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
-          onClick={() => setIsLoupeOpen(false)}
-        >
-          <div 
-            className="relative w-full max-w-6xl max-h-[92vh] flex flex-col bg-white dark:bg-slate-900 rounded-3xl border border-slate-300 dark:border-slate-800 shadow-2xl overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
+      <NativeDialog
+        open={isLoupeOpen}
+        onClose={() => setIsLoupeOpen(false)}
+        ariaLabel="Loupe d'inspection 10x — Géométrie d'Attaque du Burin Carré 80° sur Éventail"
+        className="w-full max-w-6xl"
+      >
+        <div className="relative w-full max-h-[92vh] flex flex-col bg-white dark:bg-slate-900 rounded-3xl border border-slate-300 dark:border-slate-800 shadow-2xl overflow-hidden">
             {/* Header Modal */}
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60">
               <div className="flex items-center gap-3">
@@ -1924,6 +1920,7 @@ export default function MicromecaniqueModulePage() {
                   {([1, 2, 5, 10] as const).map((z) => (
                     <button
                       key={z}
+                      type="button"
                       onClick={() => setLoupeZoom(z)}
                       className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
                         loupeZoom === z
@@ -1937,6 +1934,7 @@ export default function MicromecaniqueModulePage() {
                 </div>
 
                 <button
+                  type="button"
                   onClick={() => setIsLoupeOpen(false)}
                   aria-label="Fermer"
                   className="p-2 rounded-xl text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
@@ -1948,17 +1946,23 @@ export default function MicromecaniqueModulePage() {
 
             {/* Body with zoomable image */}
             <div className="relative flex-1 overflow-auto p-4 bg-slate-950 flex items-center justify-center min-h-[380px] sm:min-h-[500px]">
-              <div 
-                className="transition-transform duration-200 origin-center cursor-zoom-in"
+              <button
+                type="button"
+                className="transition-transform duration-200 origin-center cursor-zoom-in bg-transparent border-0 p-0"
                 style={{ transform: `scale(${loupeZoom})` }}
+                aria-label={`Changer le grossissement (actuellement ${loupeZoom}x)`}
                 onClick={() => setLoupeZoom(prev => prev === 1 ? 2 : prev === 2 ? 5 : prev === 5 ? 10 : 1)}
               >
-                <img 
+                <img
                   src="/images/micromecanique/burin_carre_80_eventail_tour_schaublin.jpg"
                   alt="Planche 01 - Géométrie d'Attaque du Burin Carré 80° sur Éventail"
+                  width={1024}
+                  height={576}
+                  loading="lazy"
+                  decoding="async"
                   className="max-w-none w-auto max-h-[75vh] object-contain rounded-lg shadow-2xl"
                 />
-              </div>
+              </button>
             </div>
 
             {/* Footer */}
@@ -1967,16 +1971,15 @@ export default function MicromecaniqueModulePage() {
                 <strong className="text-slate-900 dark:text-white">Règles d'usinage :</strong> Arête au centre exact (H = 70.00 mm), face de coupe polie miroir à la pierre d'Arkansas, appui rigide à moins de 1 mm.
               </div>
               <button
+                type="button"
                 onClick={() => setIsLoupeOpen(false)}
                 className="px-4 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold transition-colors self-end sm:self-auto shadow-sm"
               >
                 Retour à l'établi
               </button>
             </div>
-          </div>
-        </div>,
-        document.body
-      )}
+        </div>
+      </NativeDialog>
     </div>
   );
 }

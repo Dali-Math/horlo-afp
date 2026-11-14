@@ -4,6 +4,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { observeRenderActivity } from '@/lib/viewportActivity';
 
 export default function LuxuryHeroClock() {
   const [mounted, setMounted] = useState(false);
@@ -17,13 +18,15 @@ export default function LuxuryHeroClock() {
     cycleDay: 11.4
   });
 
+  const rootRef = useRef<HTMLDivElement | null>(null);
   const hourHandRef = useRef<SVGGElement | null>(null);
   const minuteHandRef = useRef<SVGGElement | null>(null);
   const secondHandRef = useRef<SVGGElement | null>(null);
 
   useEffect(() => {
     setMounted(true);
-    let animationFrameId: number;
+    let animationFrameId = 0;
+    let isRenderActive = true;
 
     // Détection du thème initial et observation en temps réel du changement de mode (sombre / clair)
     const checkTheme = () => {
@@ -97,8 +100,12 @@ export default function LuxuryHeroClock() {
 
     computeMoonPhase();
 
-    // Sweep 60 FPS fluide continue
+    // Sweep 60 FPS fluide continue (suspendue automatiquement hors-écran ou onglet masqué)
     const renderSweep = () => {
+      if (!isRenderActive) {
+        animationFrameId = 0;
+        return;
+      }
       const now = new Date();
       const ms = now.getMilliseconds();
       const s = now.getSeconds() + ms / 1000;
@@ -122,7 +129,19 @@ export default function LuxuryHeroClock() {
       animationFrameId = requestAnimationFrame(renderSweep);
     };
 
-    renderSweep();
+    const stopActivity = observeRenderActivity(rootRef.current, (active) => {
+      isRenderActive = active;
+      if (active && animationFrameId === 0) {
+        renderSweep();
+      } else if (!active && animationFrameId !== 0) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = 0;
+      }
+    });
+
+    if (isRenderActive && animationFrameId === 0) {
+      renderSweep();
+    }
 
     // Horloge digitale locale, date du jour & Heure Sidérale
     const updateTimes = () => {
@@ -146,7 +165,8 @@ export default function LuxuryHeroClock() {
     const timer = setInterval(updateTimes, 1000);
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      stopActivity();
+      if (animationFrameId !== 0) cancelAnimationFrame(animationFrameId);
       clearInterval(timer);
       observer.disconnect();
       mediaQuery.removeEventListener('change', handleMedia);
@@ -154,7 +174,7 @@ export default function LuxuryHeroClock() {
   }, []);
 
   return (
-    <div className="relative w-full flex items-center justify-center py-4 select-none">
+    <div ref={rootRef} className="relative w-full flex items-center justify-center py-4 select-none">
       
       {/* 1. SPHÈRE CÉLESTE & ASTROLABE EN ARRIÈRE-PLAN (Gravure or discrète) */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-35 dark:opacity-45 overflow-visible">

@@ -44,7 +44,16 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
           y,
           nextIsDark,
           commitTheme: () => {
-            setTheme(nextIsDark ? "dark" : "light");
+            const systemIsDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            const meta = document.querySelector<HTMLMetaElement>('meta[name="color-scheme"]');
+            if (nextIsDark === systemIsDark) {
+              setTheme("system");
+              if (meta) meta.setAttribute("content", "light dark");
+            } else {
+              const explicitTheme = nextIsDark ? "dark" : "light";
+              setTheme(explicitTheme);
+              if (meta) meta.setAttribute("content", explicitTheme);
+            }
           },
         },
       })

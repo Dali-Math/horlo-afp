@@ -5,7 +5,7 @@ import "./guide-complet-final-fixes.css";
 import type { Metadata, Viewport } from "next";
 import { SITE } from "@/lib/seo";
 import dynamic from "next/dynamic";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Playfair_Display, Inter, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import JsonLd from "@/components/JsonLd";
 import ThemeProvider from "@/components/ThemeProvider";
@@ -24,6 +24,12 @@ const playfair = Playfair_Display({
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jbmono-loaded",
   display: "swap",
 });
 
@@ -83,7 +89,6 @@ export const metadata: Metadata = {
     "ai:topic":
       "Horlogerie suisse, mécanique de précision, culture horlogère, ETA 6497",
     "ai:author": "Équipe HorloLearn",
-    "color-scheme": "light dark",
   },
 };
 
@@ -131,12 +136,47 @@ export default function RootLayout({
     },
   };
 
+  const themeBootScript = `
+    (function () {
+      try {
+        var stored = localStorage.getItem("horlolearn-theme");
+        var root = document.documentElement;
+        var meta = document.querySelector('meta[name="color-scheme"]');
+        if (stored === "dark") {
+          root.classList.add("dark");
+          if (meta) meta.setAttribute("content", "dark");
+        } else if (stored === "light") {
+          root.classList.remove("dark");
+          if (meta) meta.setAttribute("content", "light");
+        } else {
+          var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+          if (prefersDark) root.classList.add("dark");
+          else root.classList.remove("dark");
+          if (meta) meta.setAttribute("content", "light dark");
+        }
+      } catch (e) {}
+    })();
+  `;
+
   return (
-    <html lang="fr" suppressHydrationWarning>
-      <body className={`${playfair.variable} ${inter.variable} bg-hl text-[var(--hl-ink)]`}>
+    <html
+      lang="fr"
+      className={`${playfair.variable} ${inter.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <meta name="color-scheme" content="light dark" />
+        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
+      </head>
+      <body className="bg-hl text-[var(--hl-ink)]">
+        <a href="#contenu-principal" className="hl-skip-link">
+          Aller au contenu principal
+        </a>
         <ThemeProvider>
           <ClientLayout>
-            <main className="relative min-h-screen overflow-visible">{children}</main>
+            <main id="contenu-principal" tabIndex={-1} className="relative min-h-screen overflow-visible">
+              {children}
+            </main>
           </ClientLayout>
           <GuideCompletRuntimeFixes />
           <ScrollToTop />

@@ -377,6 +377,8 @@ export default function Eta6497Page() {
                         <img
                           src={part.img}
                           alt={part.name}
+                          loading="lazy"
+                          decoding="async"
                           className="max-h-24 w-auto object-contain transition-transform duration-300 hover:scale-110"
                         />
                       </div>
@@ -403,6 +405,7 @@ export default function Eta6497Page() {
                   </h3>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setLoupeZoom(!loupeZoom)}
                   className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${
                     loupeZoom
@@ -419,6 +422,7 @@ export default function Eta6497Page() {
                 <img
                   src={activePart.img}
                   alt={activePart.name}
+                  decoding="async"
                   className={`max-h-52 w-auto object-contain transition-transform duration-500 ${
                     loupeZoom ? "scale-[1.75]" : "scale-100"
                   }`}

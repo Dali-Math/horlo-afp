@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { observeRenderActivity } from '@/lib/viewportActivity';
 
 interface PartItem {
   node: THREE.Object3D;
@@ -189,15 +190,20 @@ export default function FloatingCalibre3D() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
 
-    // 5. Animation Render Loop
-    let animId: number;
+    // 5. Animation Render Loop (pause auto si onglet masqué ou hors-écran)
+    let animId = 0;
     let lastTime = performance.now();
+    let isRenderActive = true;
 
     function easeInOutCubic(t: number): number {
       return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
     }
 
     const animate = (time: number) => {
+      if (isDisposed || !isRenderActive) {
+        animId = 0;
+        return;
+      }
       animId = requestAnimationFrame(animate);
 
       const dt = Math.min((time - lastTime) / 1000, 0.1);
@@ -222,11 +228,25 @@ export default function FloatingCalibre3D() {
       renderer.render(scene, camera);
     };
 
-    animId = requestAnimationFrame(animate);
+    const stopObserveActivity = observeRenderActivity(benchRef.current, (active) => {
+      isRenderActive = active;
+      if (active && !isDisposed && animId === 0) {
+        lastTime = performance.now();
+        animId = requestAnimationFrame(animate);
+      } else if (!active && animId !== 0) {
+        cancelAnimationFrame(animId);
+        animId = 0;
+      }
+    });
+
+    if (isRenderActive && animId === 0) {
+      animId = requestAnimationFrame(animate);
+    }
 
     return () => {
       isDisposed = true;
-      cancelAnimationFrame(animId);
+      stopObserveActivity();
+      if (animId !== 0) cancelAnimationFrame(animId);
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('scroll', handleScroll);
       canvas.removeEventListener('pointerdown', onPointerDown);

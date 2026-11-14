@@ -1639,9 +1639,14 @@ callbacks.onOrganSelect?.(data);
          * 8. REAL-TIME KINEMATIC LOOP (QUATERNION TRACKBALL + 3D GEARS + HANDS)
          */
         let lastFrameTime = performance.now();
+        let isRenderActive = true;
 
         function animateMasterCalibre(now: number) {
-            requestAnimationFrame(animateMasterCalibre);
+            if (isDisposed || !isRenderActive) {
+                animFrameId = 0;
+                return;
+            }
+            animFrameId = requestAnimationFrame(animateMasterCalibre);
 
             const dt = Math.min(0.05, (now - lastFrameTime) / 1000);
             lastFrameTime = now;
@@ -1788,6 +1793,37 @@ callbacks.onOrganSelect?.(data);
     onMainspringSlider(85);
     animFrameId = requestAnimationFrame(animateMasterCalibre);
 
+    const handleVisibilityChange = () => {
+        isRenderActive = !document.hidden;
+        if (isRenderActive && !isDisposed && animFrameId === 0) {
+            lastFrameTime = performance.now();
+            animFrameId = requestAnimationFrame(animateMasterCalibre);
+        } else if (!isRenderActive && animFrameId !== 0) {
+            cancelAnimationFrame(animFrameId);
+            animFrameId = 0;
+        }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    let activityObserver: IntersectionObserver | null = null;
+    if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
+        activityObserver = new IntersectionObserver(
+            (entries) => {
+                const visible = entries.some((entry) => entry.isIntersecting);
+                isRenderActive = !document.hidden && visible;
+                if (isRenderActive && !isDisposed && animFrameId === 0) {
+                    lastFrameTime = performance.now();
+                    animFrameId = requestAnimationFrame(animateMasterCalibre);
+                } else if (!isRenderActive && animFrameId !== 0) {
+                    cancelAnimationFrame(animFrameId);
+                    animFrameId = 0;
+                }
+            },
+            { rootMargin: '200px 0px' }
+        );
+        activityObserver.observe(container);
+    }
+
     // Resize observer
     const resizeObserver = new ResizeObserver(() => {
         if (isDisposed || !container || !renderer || !camera) return;
@@ -1843,7 +1879,9 @@ callbacks.onOrganSelect?.(data);
         },
         dispose: () => {
             isDisposed = true;
-            cancelAnimationFrame(animFrameId);
+            if (animFrameId !== 0) cancelAnimationFrame(animFrameId);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            activityObserver?.disconnect();
             resizeObserver.disconnect();
             if (audioCtx) {
                 try { audioCtx.close(); } catch (e) {}

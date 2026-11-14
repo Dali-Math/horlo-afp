@@ -59,6 +59,8 @@ export default function Chronologie() {
           <img
             src="/assets/images/chronologie_historique.png"
             alt="Évolution horlogerie suisse"
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover"
           />
         </div>
@@ -69,6 +71,7 @@ export default function Chronologie() {
           <div className="flex flex-wrap gap-3 mb-6">
             {(['XVI-XVII', 'XVIII-XIX', 'XX', 'XXI'] as PeriodeKey[]).map((key) => (
               <button
+                type="button"
                 key={key}
                 onClick={() => setPeriode(key)}
                 className={`px-4 py-2 rounded-xl border text-sm font-medium transition ${

@@ -255,11 +255,13 @@ export default function RemontagePage() {
                 <img
                   src={currentStep.img}
                   alt={currentStep.title}
+                  decoding="async"
                   className={`max-h-72 w-auto object-contain transition-transform duration-500 ${
                     loupe ? "scale-150" : "scale-100"
                   }`}
                 />
                 <button
+                  type="button"
                   onClick={() => setLoupe(!loupe)}
                   className={`absolute top-3 right-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${
                     loupe

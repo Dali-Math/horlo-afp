@@ -15,6 +15,7 @@ import {
   Sliders,
   ShieldAlert,
 } from 'lucide-react';
+import { observeRenderActivity } from '@/lib/viewportActivity';
 
 type CalibreId = '2824' | '6497';
 type PositionId = 'CH' | 'CB' | '6H' | '3H' | '9H' | '12H';
@@ -183,9 +184,14 @@ export default function WitschiSimulator() {
 
   // Initialisation et boucle de dessin Witschi
   useEffect(() => {
-    let animId: number;
+    let animId = 0;
+    let isRenderActive = true;
 
     const renderLoop = (timestamp: number) => {
+      if (!isRenderActive) {
+        animId = 0;
+        return;
+      }
       const canvas = canvasRef.current;
       if (canvas) {
         const ctx = canvas.getContext('2d');
@@ -305,8 +311,25 @@ export default function WitschiSimulator() {
       animId = requestAnimationFrame(renderLoop);
     };
 
-    animId = requestAnimationFrame(renderLoop);
-    return () => cancelAnimationFrame(animId);
+    const stopActivity = observeRenderActivity(canvasRef.current, (active) => {
+      isRenderActive = active;
+      if (active && animId === 0) {
+        lastBeatTimeRef.current = performance.now();
+        animId = requestAnimationFrame(renderLoop);
+      } else if (!active && animId !== 0) {
+        cancelAnimationFrame(animId);
+        animId = 0;
+      }
+    });
+
+    if (isRenderActive && animId === 0) {
+      animId = requestAnimationFrame(renderLoop);
+    }
+
+    return () => {
+      stopActivity();
+      if (animId !== 0) cancelAnimationFrame(animId);
+    };
   }, [calibre, effectiveRate, beat, displayedAmp, isKnocking, audioEnabled]);
 
   const handleToggleAudio = () => {

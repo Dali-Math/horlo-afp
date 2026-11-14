@@ -14,6 +14,7 @@ import {
   Activity,
   Compass,
 } from 'lucide-react';
+import { observeRenderActivity } from '@/lib/viewportActivity';
 
 interface GearPreset {
   name: string;
@@ -90,6 +91,7 @@ export default function GearTrainKinematics() {
   });
 
   const animRef = useRef<number | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const applyPreset = (key: '6497' | '2824') => {
     setSelectedPreset(key);
@@ -109,36 +111,63 @@ export default function GearTrainKinematics() {
   const hz = (vph / 7200).toFixed(2);
   const secRatio = z3 > 0 && z4 > 0 ? ((Z2 * Z3) / (z3 * z4)).toFixed(1) : '0';
 
-  // Animation loop
+  // Animation loop (suspendue automatiquement hors-écran ou onglet masqué)
   useEffect(() => {
+    if (!isPlaying) {
+      if (animRef.current) cancelAnimationFrame(animRef.current);
+      animRef.current = null;
+      return;
+    }
+
     let lastTime = performance.now();
+    let isRenderActive = true;
 
     const loop = (time: number) => {
-      const dt = (time - lastTime) / 1000;
+      if (!isRenderActive) {
+        animRef.current = null;
+        return;
+      }
+      const dt = Math.min(0.1, (time - lastTime) / 1000);
       lastTime = time;
 
-      if (isPlaying) {
-        // Base speed for Centre wheel (1 rotation per 12 seconds in demo mode)
-        const baseSpeed = 30; // deg/s
-        const rMoyenne = z3 > 0 ? Z2 / z3 : 1;
-        const rSeconde = z3 > 0 && z4 > 0 ? (Z2 * Z3) / (z3 * z4) : 1;
-        const rEchapp = z3 > 0 && z4 > 0 && z5 > 0 ? (Z2 * Z3 * Z4) / (z3 * z4 * z5) : 1;
+      // Base speed for Centre wheel (1 rotation per 12 seconds in demo mode)
+      const baseSpeed = 30; // deg/s
+      const rMoyenne = z3 > 0 ? Z2 / z3 : 1;
+      const rSeconde = z3 > 0 && z4 > 0 ? (Z2 * Z3) / (z3 * z4) : 1;
+      const rEchapp = z3 > 0 && z4 > 0 && z5 > 0 ? (Z2 * Z3 * Z4) / (z3 * z4 * z5) : 1;
 
-        setAngles((prev) => ({
-          barillet: (prev.barillet + 2 * dt) % 360,
-          centre: (prev.centre - baseSpeed * dt) % 360,
-          moyenne: (prev.moyenne + baseSpeed * rMoyenne * dt) % 360,
-          seconde: (prev.seconde - baseSpeed * rSeconde * 0.15 * dt) % 360,
-          echappement: (prev.echappement + baseSpeed * rEchapp * 0.05 * dt) % 360,
-        }));
-      }
+      setAngles((prev) => ({
+        barillet: (prev.barillet + 2 * dt) % 360,
+        centre: (prev.centre - baseSpeed * dt) % 360,
+        moyenne: (prev.moyenne + baseSpeed * rMoyenne * dt) % 360,
+        seconde: (prev.seconde - baseSpeed * rSeconde * 0.15 * dt) % 360,
+        echappement: (prev.echappement + baseSpeed * rEchapp * 0.05 * dt) % 360,
+      }));
 
       animRef.current = requestAnimationFrame(loop);
     };
 
-    animRef.current = requestAnimationFrame(loop);
+    const stopActivity = observeRenderActivity(containerRef.current, (active) => {
+      isRenderActive = active;
+      if (active && animRef.current === null) {
+        lastTime = performance.now();
+        animRef.current = requestAnimationFrame(loop);
+      } else if (!active && animRef.current !== null) {
+        cancelAnimationFrame(animRef.current);
+        animRef.current = null;
+      }
+    });
+
+    if (isRenderActive && animRef.current === null) {
+      animRef.current = requestAnimationFrame(loop);
+    }
+
     return () => {
-      if (animRef.current) cancelAnimationFrame(animRef.current);
+      stopActivity();
+      if (animRef.current) {
+        cancelAnimationFrame(animRef.current);
+        animRef.current = null;
+      }
     };
   }, [isPlaying, Z2, z3, Z3, z4, Z4, z5]);
 
@@ -198,7 +227,7 @@ export default function GearTrainKinematics() {
   const currentWheel = WHEELS_DATA[selectedWheelIdx] || WHEELS_DATA[1];
 
   return (
-    <div className="space-y-6">
+    <div ref={containerRef} className="space-y-6">
       {/* Top Banner & Preset Controls */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-xl transition-colors">
         <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">

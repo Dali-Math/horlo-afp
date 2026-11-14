@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { NativeDialog } from "@/components/ui/NativeDialog";
 import {
   ArrowLeft,
   ZoomIn,
@@ -633,6 +634,11 @@ interface LoupeProps {
 function LoupeModal({ step, onClose }: LoupeProps): React.JSX.Element | null {
   const [zoom, setZoom] = useState<number>(1);
   const viewportRef = useRef<HTMLDivElement>(null);
+  const activeStepRef = useRef(step);
+  if (step) {
+    activeStepRef.current = step;
+  }
+  const activeStep = step ?? activeStepRef.current;
 
   useEffect(() => {
     setZoom(1);
@@ -651,37 +657,29 @@ function LoupeModal({ step, onClose }: LoupeProps): React.JSX.Element | null {
   useEffect(() => {
     if (!step) return;
     const onKey = (e: KeyboardEvent): void => {
-      if (e.key === "Escape") onClose();
       if (e.key === "1") setZoom(1);
       if (e.key === "2") setZoom(2);
       if (e.key === "5") setZoom(5);
       if (e.key === "0") setZoom(10);
     };
     window.addEventListener("keydown", onKey);
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     return () => {
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prev;
     };
-  }, [step, onClose]);
+  }, [step]);
 
-  if (!step) return null;
-  const Svg = step.Svg;
+  if (!activeStep) return null;
+  const Svg = activeStep.Svg;
   const factor = ZOOM_WIDTH[zoom] ?? 1;
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-label={step.loupeTitle}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-      className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 cursor-pointer"
-      title="Cliquer à l’extérieur pour fermer"
+    <NativeDialog
+      open={Boolean(step)}
+      onClose={onClose}
+      ariaLabel={activeStep.loupeTitle}
+      className="w-full max-w-5xl"
     >
-      <div className="relative w-full max-w-5xl bg-[#0a0e17] border border-amber-500/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] cursor-default">
+      <div className="relative w-full bg-[#0a0e17] border border-amber-500/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] text-inherit">
         <div className="flex items-center justify-between gap-3 px-4 sm:px-6 py-4 border-b border-slate-800 bg-[#0d1322]">
           <div className="flex items-center gap-3 min-w-0">
             <span className="w-9 h-9 shrink-0 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center">
@@ -692,9 +690,9 @@ function LoupeModal({ step, onClose }: LoupeProps): React.JSX.Element | null {
                 <span className="text-[10px] uppercase font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">
                   Loupe d’inspection 10x
                 </span>
-                <span className="text-xs font-mono text-slate-400">{step.standard}</span>
+                <span className="text-xs font-mono text-slate-400">{activeStep.standard}</span>
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-white mt-0.5 truncate">{step.loupeTitle}</h3>
+              <h3 className="text-base sm:text-lg font-bold text-white mt-0.5 truncate">{activeStep.loupeTitle}</h3>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -761,7 +759,7 @@ function LoupeModal({ step, onClose }: LoupeProps): React.JSX.Element | null {
           </button>
         </div>
       </div>
-    </div>
+    </NativeDialog>
   );
 }
 
@@ -1517,6 +1515,11 @@ function EditorialHeroMechanism(): React.JSX.Element {
 function EditorialLoupeModal({ step, onClose }: LoupeProps): React.JSX.Element | null {
   const [zoom, setZoom] = useState<number>(1);
   const viewportRef = useRef<HTMLDivElement>(null);
+  const activeStepRef = useRef(step);
+  if (step) {
+    activeStepRef.current = step;
+  }
+  const activeStep = step ?? activeStepRef.current;
 
   useEffect(() => {
     setZoom(1);
@@ -1525,20 +1528,16 @@ function EditorialLoupeModal({ step, onClose }: LoupeProps): React.JSX.Element |
   useEffect(() => {
     if (!step) return;
     const onKey = (event: KeyboardEvent): void => {
-      if (event.key === "Escape") onClose();
       if (event.key === "1") setZoom(1);
       if (event.key === "2") setZoom(2);
       if (event.key === "5") setZoom(5);
       if (event.key === "0") setZoom(10);
     };
     window.addEventListener("keydown", onKey);
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     return () => {
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = previous;
     };
-  }, [step, onClose]);
+  }, [step]);
 
   useEffect(() => {
     const vp = viewportRef.current;
@@ -1550,25 +1549,22 @@ function EditorialLoupeModal({ step, onClose }: LoupeProps): React.JSX.Element |
     return () => cancelAnimationFrame(raf);
   }, [zoom, step]);
 
-  if (!step) return null;
-  const Svg = step.Svg;
+  if (!activeStep) return null;
+  const Svg = activeStep.Svg;
   const factor = ZOOM_WIDTH[zoom] ?? 1;
 
   return (
-    <div
-      className="editorial-modal"
-      role="dialog"
-      aria-modal="true"
-      aria-label={step.loupeTitle}
-      onClick={(event) => {
-        if (event.currentTarget === event.target) onClose();
-      }}
+    <NativeDialog
+      open={Boolean(step)}
+      onClose={onClose}
+      ariaLabel={activeStep.loupeTitle}
+      className="w-[min(1200px,96vw)]"
     >
-      <div className="editorial-modal-inner">
+      <div className="editorial-modal-inner w-full">
         <div className="editorial-modal-bar">
           <div>
             <span>Inspection technique</span>
-            <strong>{step.loupeTitle}</strong>
+            <strong>{activeStep.loupeTitle}</strong>
           </div>
           <div className="editorial-modal-actions">
             {ZOOM_LEVELS.map((z) => (
@@ -1585,11 +1581,11 @@ function EditorialLoupeModal({ step, onClose }: LoupeProps): React.JSX.Element |
           </div>
         </div>
         <div className="editorial-modal-foot">
-          <span>{step.standard}</span>
+          <span>{activeStep.standard}</span>
           <span>Grossissement {zoom}× · Échap pour fermer</span>
         </div>
       </div>
-    </div>
+    </NativeDialog>
   );
 }
 
@@ -1700,7 +1696,7 @@ export default function EchappementPage(): React.JSX.Element {
           </nav>
         </aside>
 
-        <main className="editorial-main">
+        <div className="editorial-main">
           {/* ⭐ Master Lab Echappement 5 Phases Banner */}
           <div className="p-5 rounded-2xl bg-gradient-to-r from-amber-950/70 via-slate-900 to-slate-950 border-2 border-amber-500/50 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
             <div className="flex items-center gap-3">
@@ -1808,7 +1804,7 @@ export default function EchappementPage(): React.JSX.Element {
               {workshop === "oiling" && <OilingWorkshop />}
             </div>
           </section>
-        </main>
+        </div>
       </div>
 
       <footer className="editorial-footer">

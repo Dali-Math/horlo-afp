@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import {
@@ -16,9 +16,11 @@ import {
   Globe,
   Layers,
   Brain,
-  Users
+  Users,
+  Pause,
+  Play
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 // Horloge interactive Haute Horlogerie Suisse (rendue côté client uniquement pour éviter les écarts d'hydratation)
 const LuxuryHeroClock = dynamic(() => import('@/components/LuxuryHeroClock'), {
@@ -114,6 +116,8 @@ function Hero() {
 
 /* ✅ Carrousel défilant de rubriques */
 function Carousel() {
+  const [isPaused, setIsPaused] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
   const items = [
     { name: "Théorie Fondamentale", href: "/theorie" },
     { name: "Pratique & Démontage", href: "/pratique" },
@@ -126,28 +130,50 @@ function Carousel() {
     { name: "Histoire de l'Horlogerie", href: "/theorie/histoire-horlogerie-suisse" }
   ];
 
+  const animationActive = !isPaused && !prefersReducedMotion;
+
   return (
-    <section className="py-4 bg-white/80 dark:bg-slate-900/80 border-y border-slate-200 dark:border-slate-800 overflow-hidden">
-      <div className="overflow-hidden">
-        <div
-          className="flex gap-4 animate-[scroll_35s_linear_infinite]"
-          style={{
-            maskImage:
-              "linear-gradient(90deg, transparent, black 10%, black 90%, transparent)",
-          }}
-        >
-          {items.concat(items).map((it, i) => (
-            <Link
-              key={i}
-              href={it.href}
-              className="shrink-0 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400 transition text-xs font-mono font-medium shadow-sm"
-            >
-              {it.name}
-            </Link>
-          ))}
+    <section
+      aria-label="Rubriques principales en défilement"
+      className="py-4 bg-white/80 dark:bg-slate-900/80 border-y border-slate-200 dark:border-slate-800 overflow-hidden"
+    >
+      <div className="max-w-7xl mx-auto px-4 flex items-center gap-3">
+        <div className="flex-1 min-w-0 overflow-hidden">
+          <div
+            className="hl-carousel-track flex gap-4 animate-[scroll_35s_linear_infinite]"
+            style={{
+              animationPlayState: animationActive ? "running" : "paused",
+              maskImage:
+                "linear-gradient(90deg, transparent, black 8%, black 92%, transparent)",
+            }}
+          >
+            {items.concat(items).map((it, i) => (
+              <Link
+                key={i}
+                href={it.href}
+                tabIndex={i >= items.length ? -1 : undefined}
+                className="shrink-0 px-4 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400 transition text-xs font-mono font-medium shadow-sm"
+              >
+                {it.name}
+              </Link>
+            ))}
+          </div>
         </div>
+        <button
+          type="button"
+          onClick={() => setIsPaused((prev) => !prev)}
+          aria-label={
+            isPaused
+              ? "Reprendre le défilement des rubriques"
+              : "Mettre en pause le défilement des rubriques"
+          }
+          className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-200 hover:border-amber-500 hover:text-amber-600 dark:hover:text-amber-400 transition active:scale-95 text-xs font-mono font-semibold shadow-sm"
+        >
+          {isPaused ? <Play className="w-3.5 h-3.5" aria-hidden="true" /> : <Pause className="w-3.5 h-3.5" aria-hidden="true" />}
+          <span>{isPaused ? "Lire" : "Pause"}</span>
+        </button>
       </div>
-      <style>{`@keyframes scroll { from {transform: translateX(0);} to {transform: translateX(-50%);} }`}</style>
+      <style>{`@keyframes scroll { from {transform: translateX(0);} to {transform: translateX(-50%);} } @media (prefers-reduced-motion: reduce) { .hl-carousel-track { animation: none !important; } }`}</style>
     </section>
   );
 }
@@ -458,11 +484,17 @@ function GuidedPathwaysSection() {
 
 /* ✅ Atlas suisse — remplace l’ancienne grille de 9 cases */
 function ExploreGrid() {
-  return <SwissWatchAtlas />;
+  return (
+    <div className="hl-deferred-section">
+      <SwissWatchAtlas />
+    </div>
+  );
 }
 
 /* ✅ Section Partenaires */
 function PartnersSection() {
+  const [isPaused, setIsPaused] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
   const partners = [
     { alt: "Rolex" },
     { alt: "Patek Philippe" },
@@ -473,9 +505,11 @@ function PartnersSection() {
     { alt: "Breguet" },
   ];
 
+  const shouldStop = isPaused || prefersReducedMotion;
+
   return (
-    <section className="relative bg-[#0A0A0A] py-16 md:py-20 overflow-hidden border-t border-slate-800">
-      <div className="text-center mb-10 relative z-10 space-y-2">
+    <section className="hl-deferred-section relative bg-[#0A0A0A] py-16 md:py-20 overflow-hidden border-t border-slate-800">
+      <div className="text-center mb-10 relative z-10 space-y-2 px-4">
         <span className="text-xs font-mono font-bold uppercase tracking-widest text-amber-400">
           Excellence & Patrimoine
         </span>
@@ -488,8 +522,12 @@ function PartnersSection() {
       </div>
       <motion.div
         className="flex items-center justify-around gap-20 px-8 relative z-10"
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{ repeat: Infinity, duration: 40, ease: "linear" }}
+        animate={shouldStop ? { x: "0%" } : { x: ["0%", "-50%"] }}
+        transition={
+          shouldStop
+            ? { duration: 0.2 }
+            : { repeat: Infinity, duration: 40, ease: "linear" }
+        }
       >
         {[...partners, ...partners].map((p, i) => (
           <div
@@ -502,9 +540,24 @@ function PartnersSection() {
           </div>
         ))}
       </motion.div>
-      <p className="text-center text-slate-500 mt-8 text-xs font-mono relative z-10">
-        Ressources académiques ouvertes pour la formation horlogère internationale.
-      </p>
+      <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 relative z-10 px-4">
+        <p className="text-center text-slate-400 text-xs font-mono">
+          Ressources académiques ouvertes pour la formation horlogère internationale.
+        </p>
+        <button
+          type="button"
+          onClick={() => setIsPaused((prev) => !prev)}
+          aria-label={
+            isPaused
+              ? "Reprendre le bandeau des manufactures suisses"
+              : "Mettre en pause le bandeau des manufactures suisses"
+          }
+          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-slate-700 bg-slate-900/90 text-slate-200 hover:border-amber-400 hover:text-amber-300 transition active:scale-95 text-xs font-mono"
+        >
+          {isPaused ? <Play className="w-3 h-3" aria-hidden="true" /> : <Pause className="w-3 h-3" aria-hidden="true" />}
+          <span>{isPaused ? "Reprendre" : "Pause"}</span>
+        </button>
+      </div>
     </section>
   );
 }

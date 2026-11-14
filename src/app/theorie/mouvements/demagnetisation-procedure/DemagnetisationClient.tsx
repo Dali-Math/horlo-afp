@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { observeRenderActivity } from '@/lib/viewportActivity';
 import {
   ArrowLeft,
   Compass,
@@ -34,14 +35,20 @@ export default function DemagnetisationProcedurePage() {
   const [procedureSuccess, setProcedureSuccess] = useState<boolean>(false);
   const [procedureWarning, setProcedureWarning] = useState<string | null>(null);
 
-  // Animation spiral
+  // Animation spiral (suspendue automatiquement hors-écran ou onglet masqué)
   const [spiralAngle, setSpiralAngle] = useState(0);
+  const rootRef = useRef<HTMLDivElement | null>(null);
 
   // Animation continue du balancier
   useEffect(() => {
-    let animId: number;
+    let animId = 0;
+    let isRenderActive = true;
     let start: number | null = null;
     const loop = (timestamp: number) => {
+      if (!isRenderActive) {
+        animId = 0;
+        return;
+      }
       if (!start) start = timestamp;
       const progress = (timestamp - start) / 1000;
       // Vitesse d'oscillation : plus rapide et saccadée si magnétisé
@@ -49,8 +56,25 @@ export default function DemagnetisationProcedurePage() {
       setSpiralAngle(Math.sin(progress * speed) * (isMagnetized ? 15 : 32));
       animId = requestAnimationFrame(loop);
     };
-    animId = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(animId);
+
+    const stopActivity = observeRenderActivity(rootRef.current, (active) => {
+      isRenderActive = active;
+      if (active && animId === 0) {
+        animId = requestAnimationFrame(loop);
+      } else if (!active && animId !== 0) {
+        cancelAnimationFrame(animId);
+        animId = 0;
+      }
+    });
+
+    if (isRenderActive && animId === 0) {
+      animId = requestAnimationFrame(loop);
+    }
+
+    return () => {
+      stopActivity();
+      if (animId !== 0) cancelAnimationFrame(animId);
+    };
   }, [isMagnetized]);
 
   // Gestion du geste d'atelier sur le démagnétiseur
@@ -90,7 +114,7 @@ export default function DemagnetisationProcedurePage() {
     : 0; // Parfaitement au Nord si démagnétisé
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
+    <div ref={rootRef} className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
       {/* Header Sticky */}
       <header className="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-4">
@@ -126,7 +150,7 @@ export default function DemagnetisationProcedurePage() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
         {/* Titre & Introduction */}
         <div className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-4">
@@ -845,7 +869,7 @@ export default function DemagnetisationProcedurePage() {
             </div>
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 }

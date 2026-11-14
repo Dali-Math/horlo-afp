@@ -450,13 +450,19 @@ const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
       </header>
 
       {/* 2. GRILLE DES CARTES HAUTE DÉFINITION (4x4 = 16 CARTES PRO - Élargie latéralement) */}
-      <main className="w-full flex-1 flex items-center justify-center py-1">
+      <div className="w-full flex-1 flex items-center justify-center py-1">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 w-full">
           {cards.map((card, idx) => (
-            <div
+            <button
               key={card.uniqueId}
+              type="button"
               onClick={() => handleCardClick(idx)}
-              className={`card-wrapper h-36 sm:h-44 md:h-48 cursor-pointer ${
+              aria-label={
+                card.flipped || card.matched
+                  ? `${card.name} — ${card.category}`
+                  : `Retourner la carte ${idx + 1}`
+              }
+              className={`card-wrapper w-full h-36 sm:h-44 md:h-48 cursor-pointer text-left bg-transparent border-0 p-0 ${
                 card.flipped || card.matched ? 'flipped' : ''
               } ${card.matched ? 'matched' : ''} ${card.isFailing ? 'shake-fail' : ''}`}
             >
@@ -475,6 +481,9 @@ const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
                     <img
                       src="/images/emboitage/kit/3_mouvement_calibre.png"
                       alt="Calibre ETA 6497 complet"
+                      width={1468}
+                      height={1216}
+                      decoding="async"
                       className="w-full h-full object-contain filter drop-shadow-md rounded-full"
                       loading="eager"
                       onError={(e) => {
@@ -503,8 +512,9 @@ const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
                     <img
                       src={card.img}
                       alt={card.name}
-                      className="max-h-[90px] sm:max-h-[110px] max-w-full object-contain filter drop-shadow-[0_4px_10px_rgba(0,0,0,0.85)]"
-                      loading="eager"
+                      decoding="async"
+                      className="max-h-[90px] sm:max-h-[110px] w-auto max-w-full object-contain filter drop-shadow-[0_4px_10px_rgba(0,0,0,0.85)]"
+                      loading="lazy"
                       onError={(e) => {
                         (e.currentTarget as HTMLImageElement).src = `https://www.horlolearn.ch${card.img}`;
                       }}
@@ -519,10 +529,10 @@ const MemoryGame6497: React.FC<MemoryGame6497Props> = ({ onExit }) => {
                 </div>
 
               </div>
-            </div>
+            </button>
           ))}
         </div>
-      </main>
+      </div>
 
       {/* 3. BANDEAU BAS : FICHE D'ATELIER DE LA PAIRE TROUVÉE */}
       <footer className="w-full mt-3">

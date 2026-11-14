@@ -298,9 +298,13 @@ html.dark {
 .hero-photo {
   position: absolute;
   inset: 0;
-  background-image: url('/images/depannage/hero.jpg');
-  background-size: cover;
-  background-position: center right;
+}
+.hero-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center right;
+  display: block;
 }
 .hero-photo::after {
   content: "";
@@ -829,7 +833,18 @@ html.dark {
 
       {/* ==================== HERO ==================== */}
       <div className="hero">
-        <div className="hero-photo"></div>
+        <div className="hero-photo">
+          <img
+            src="/images/depannage/hero.jpg"
+            alt=""
+            aria-hidden="true"
+            width={1600}
+            height={900}
+            fetchPriority="high"
+            decoding="async"
+            className="hero-photo-img"
+          />
+        </div>
         <div className="container">
           <div className="hero-content">
             <div className="eyebrow">Atelier d'horlogerie · Guide de survie</div>
@@ -850,7 +865,7 @@ html.dark {
         <div className="container">
           <div className="pillar-grid">
             <a href="#case1" className="pillar">
-              <img src="/images/depannage/cas-01-good.jpg" alt="Barillet et ressort moteur" />
+              <img src="/images/depannage/cas-01-good.jpg" alt="Barillet et ressort moteur" width={1200} height={800} loading="lazy" decoding="async" />
               <div>
                 <h3>1. Barillet &amp; énergie</h3>
                 <p>Ressort moteur, tambour et couvercle : maîtrise des forces vives et des enroulements.</p>
@@ -858,7 +873,7 @@ html.dark {
               </div>
             </a>
             <a href="#case2" className="pillar">
-              <img src="/images/depannage/cas-02-good.jpg" alt="Rouage et pivot" />
+              <img src="/images/depannage/cas-02-good.jpg" alt="Rouage et pivot" width={1200} height={800} loading="lazy" decoding="async" />
               <div>
                 <h3>2. Rouage &amp; ébats</h3>
                 <p>Mobiles de grande moyenne, moyenne et seconde : alignement vertical et jeu axial.</p>
@@ -866,7 +881,7 @@ html.dark {
               </div>
             </a>
             <a href="#case3" className="pillar">
-              <img src="/images/depannage/cas-03-good.jpg" alt="Ancre et échappement" />
+              <img src="/images/depannage/cas-03-good.jpg" alt="Ancre et échappement" width={1200} height={800} loading="lazy" decoding="async" />
               <div>
                 <h3>3. Échappement &amp; réglage</h3>
                 <p>Ancre suisse, dard, petit plateau et spiral : les micro-détails de la précision.</p>
@@ -874,7 +889,7 @@ html.dark {
               </div>
             </a>
             <a href="#case5" className="pillar">
-              <img src="/images/depannage/cas-05-good.jpg" alt="Remontoir et tigerie" />
+              <img src="/images/depannage/cas-05-good.jpg" alt="Remontoir et tigerie" width={1200} height={800} loading="lazy" decoding="async" />
               <div>
                 <h3>4. Remontoir &amp; friction</h3>
                 <p>Tirette, coulant, vis de rochet à pas à gauche et lanterne de chaussée.</p>
@@ -886,7 +901,7 @@ html.dark {
       </section>
 
       {/* ==================== SECTION 6 CAS ==================== */}
-      <section className="section" id="cases">
+      <section className="section hl-deferred-section" id="cases">
         <div className="container">
           <div className="section-kicker">Diagnostic sous loupe</div>
           <div className="section-title-row">
@@ -908,12 +923,14 @@ html.dark {
                     </div>
                     <div className="view-toggle">
                       <button
+                        type="button"
                         className={`vt-btn ${isBad ? "active bad" : ""}`}
                         onClick={() => setCaseView(c.id, "bad")}
                       >
                         ❌ Erreur
                       </button>
                       <button
+                        type="button"
                         className={`vt-btn ${!isBad ? "active good" : ""}`}
                         onClick={() => setCaseView(c.id, "good")}
                       >
@@ -927,6 +944,10 @@ html.dark {
                     <img
                       src={isBad ? c.badImg : c.goodImg}
                       alt={isBad ? c.title : c.goodCaption}
+                      width={1200}
+                      height={800}
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
 
@@ -968,7 +989,7 @@ html.dark {
       </section>
 
       {/* ==================== TEST D'ATELIER (QUIZ 3 COLONNES) ==================== */}
-      <section className="quiz" id="test-etabli">
+      <section className="quiz hl-deferred-section" id="test-etabli">
         <div className="container">
           <div className="quiz-box">
             {/* Col 1 : Explications et boutons */}
@@ -981,7 +1002,7 @@ html.dark {
 
               <div>
                 {!showHint ? (
-                  <button className="quiz-btn" onClick={() => setShowHint(true)}>
+                  <button type="button" className="quiz-btn" onClick={() => setShowHint(true)}>
                     Afficher l’indice d'artisan →
                   </button>
                 ) : (
@@ -994,7 +1015,7 @@ html.dark {
 
             {/* Col 2 : Photo d'inspection HD */}
             <div className="quiz-photo">
-              <img src="/images/depannage/quiz.jpg" alt="Vue macro de l'anomalie d'établi" />
+              <img src="/images/depannage/quiz.jpg" alt="Vue macro de l'anomalie d'établi" width={1600} height={900} loading="lazy" decoding="async" />
             </div>
 
             {/* Col 3 : Options de réponse et validation */}
@@ -1023,7 +1044,7 @@ html.dark {
                 ))}
               </div>
 
-              <button className="validate" onClick={handleValidateQuiz}>
+              <button type="button" className="validate" onClick={handleValidateQuiz}>
                 Valider le diagnostic
               </button>
 

@@ -167,7 +167,7 @@ export default function Calibre2824Client() {
       )}
 
       {/* CONTAINER DU LABORATOIRE INTERACTIF 3D HAUTE FIDÉLITÉ (SANS DOUBLE SCROLLBAR) */}
-      <main className="flex-1 w-full flex flex-col">
+      <div className="flex-1 w-full flex flex-col">
         <iframe
           key={activeView}
           ref={iframeRef}
@@ -195,7 +195,7 @@ export default function Calibre2824Client() {
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen *"
           allowFullScreen={true}
         />
-      </main>
+      </div>
 
       {/* CARTOUCHE D'ATTRIBUTION OFFICIEL & ÉTHIQUE HORLOGÈRE */}
       {!isEmbeddedFullscreen && (

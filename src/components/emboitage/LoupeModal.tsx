@@ -8,8 +8,8 @@
  */
 
 import { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { Search, Eye, X, MapPin } from 'lucide-react';
+import NativeDialog from '@/components/ui/NativeDialog';
 import { renderSchemaComponent } from '@/lib/emboitage/schemas';
 import { SCHEMA_HOTSPOTS, SCHEMA_VIEWS, type Hotspot, type SchemaType } from '@/lib/emboitage/data';
 
@@ -31,27 +31,20 @@ interface LoupeModalProps {
 }
 
 export default function LoupeModal({ loupe, setLoupe, onClose }: LoupeModalProps) {
-  const [mounted, setMounted] = useState(false);
   const [activeHotspot, setActiveHotspot] = useState<Hotspot | null>(null);
 
   const hotspots = SCHEMA_HOTSPOTS[loupe.schemaType] ?? [];
   const view = SCHEMA_VIEWS[loupe.schemaType] ?? { w: 500, h: 280 };
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
 
   // Réinitialiser la sélection au changement d'étape
   useEffect(() => {
     setActiveHotspot(null);
   }, [loupe.stepId, loupe.schemaType]);
 
-  // Navigation clavier
+  // Raccourcis clavier pour les paliers de zoom (+ / - / 0)
   useEffect(() => {
     if (!loupe.isOpen) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
       if (e.key === '+' || e.key === '=') {
         setLoupe((p) => ({ ...p, zoomLevel: p.zoomLevel === 1 ? 2 : p.zoomLevel === 2 ? 5 : 10 }));
       }
@@ -62,24 +55,18 @@ export default function LoupeModal({ loupe, setLoupe, onClose }: LoupeModalProps
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [loupe.isOpen, setLoupe, onClose]);
-
-  if (!loupe.isOpen || !mounted) return null;
+  }, [loupe.isOpen, setLoupe]);
 
   const scale = ZOOM_SCALES[loupe.zoomLevel] ?? 1;
 
-  const modalContent = (
-    <div
-      onClick={onClose}
-      className="fixed inset-0 z-[9999] bg-[#090d16]/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 cursor-pointer"
-      role="dialog"
-      aria-modal="true"
-      aria-label={`Loupe d'inspection 10x — ${loupe.title}`}
+  return (
+    <NativeDialog
+      open={loupe.isOpen}
+      onClose={onClose}
+      ariaLabel={`Loupe d'inspection 10x — ${loupe.title}`}
+      className="w-full max-w-5xl"
     >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-5xl bg-cream dark:bg-slate-900 border border-bronze/50 dark:border-amber-600/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] cursor-default"
-      >
+      <div className="relative w-full bg-cream dark:bg-slate-900 border border-bronze/50 dark:border-amber-600/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] cursor-default">
         {/* En-tête */}
         <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-cream-border dark:border-slate-800 bg-cream-card dark:bg-slate-900/90">
           <div className="flex items-center gap-3 min-w-0">
@@ -106,6 +93,7 @@ export default function LoupeModal({ loupe, setLoupe, onClose }: LoupeModalProps
               {[1, 2, 5, 10].map((level) => (
                 <button
                   key={level}
+                  type="button"
                   onClick={() => setLoupe((p) => ({ ...p, zoomLevel: level }))}
                   className={`px-2.5 py-1 rounded-lg text-xs font-label font-bold transition ${
                     loupe.zoomLevel === level
@@ -118,6 +106,7 @@ export default function LoupeModal({ loupe, setLoupe, onClose }: LoupeModalProps
               ))}
             </div>
             <button
+              type="button"
               onClick={onClose}
               className="w-10 h-10 rounded-xl bg-cream-tile dark:bg-slate-800 hover:bg-cream-track dark:hover:bg-slate-700 text-ink-soft dark:text-slate-300 hover:text-ink dark:hover:text-white flex items-center justify-center transition border border-cream-border dark:border-slate-700"
               aria-label="Fermer la loupe (Échap)"
@@ -138,6 +127,9 @@ export default function LoupeModal({ loupe, setLoupe, onClose }: LoupeModalProps
               <img
                 src="/images/emboitage/coupe_technique_reelle.jpg"
                 alt="Coupe technique réelle d'emboîtage — Vue réelle d'une montre mécanique"
+                width={1024}
+                height={800}
+                decoding="async"
                 className="w-full h-auto max-h-[72vh] object-contain rounded-2xl shadow-xl border border-cream-border dark:border-slate-800"
               />
             ) : (
@@ -236,6 +228,7 @@ export default function LoupeModal({ loupe, setLoupe, onClose }: LoupeModalProps
             <span>Examen micro-mécanique officiel : chaque trait, tolérance et cote respecte la norme suisse.</span>
           </div>
           <button
+            type="button"
             onClick={onClose}
             className="px-4 py-2 rounded-xl bg-bronze hover:bg-bronze-dark text-white font-label text-xs font-bold transition shadow"
           >
@@ -243,8 +236,6 @@ export default function LoupeModal({ loupe, setLoupe, onClose }: LoupeModalProps
           </button>
         </div>
       </div>
-    </div>
+    </NativeDialog>
   );
-
-  return createPortal(modalContent, document.body);
 }

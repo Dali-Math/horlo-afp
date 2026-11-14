@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { createPortal } from "react-dom";
+import React, { useState } from "react";
 import { ZoomIn, X } from "lucide-react";
+import NativeDialog from "@/components/ui/NativeDialog";
 
 // =========================================================================
 // DÉFINITIONS SVG PARTAGÉES (Gradients acier, laiton, fonte, hachures, filtres)
@@ -155,30 +155,14 @@ export function TechnicalLoupeModal({
 }: LoupeModalProps) {
   const [zoomLevel, setZoomLevel] = useState<number>(1);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    if (isOpen) {
-      window.addEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "hidden";
-    }
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "unset";
-    };
-  }, [isOpen, onClose]);
-
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!isOpen || !mounted) return null;
-
-  return createPortal(
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 transition-all">
-      <div className="relative w-full max-w-5xl bg-white dark:bg-[#0d121f] border border-slate-200 dark:border-amber-500/40 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+  return (
+    <NativeDialog
+      open={isOpen}
+      onClose={onClose}
+      ariaLabel={`${figNum} · ${stepTitle}`}
+      className="w-full max-w-5xl"
+    >
+      <div className="relative w-full bg-white dark:bg-[#0d121f] border border-slate-200 dark:border-amber-500/40 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
         {/* En-tête de la Loupe */}
         <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-black/50 shrink-0">
           <div className="flex items-center gap-3">
@@ -204,18 +188,21 @@ export function TechnicalLoupeModal({
             {/* Contrôles de zoom */}
             <div className="hidden sm:flex items-center bg-slate-200 dark:bg-slate-800 rounded-lg p-0.5 font-mono text-xs">
               <button
+                type="button"
                 onClick={() => setZoomLevel(1)}
                 className={`px-2.5 py-1 rounded-md transition ${zoomLevel === 1 ? 'bg-white dark:bg-slate-900 text-amber-500 font-bold shadow-sm' : 'text-slate-600 dark:text-slate-400'}`}
               >
                 1x
               </button>
               <button
+                type="button"
                 onClick={() => setZoomLevel(1.5)}
                 className={`px-2.5 py-1 rounded-md transition ${zoomLevel === 1.5 ? 'bg-white dark:bg-slate-900 text-amber-500 font-bold shadow-sm' : 'text-slate-600 dark:text-slate-400'}`}
               >
                 1.5x
               </button>
               <button
+                type="button"
                 onClick={() => setZoomLevel(2)}
                 className={`px-2.5 py-1 rounded-md transition ${zoomLevel === 2 ? 'bg-white dark:bg-slate-900 text-amber-500 font-bold shadow-sm' : 'text-slate-600 dark:text-slate-400'}`}
               >
@@ -224,6 +211,7 @@ export function TechnicalLoupeModal({
             </div>
 
             <button
+              type="button"
               onClick={onClose}
               className="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white flex items-center justify-center transition"
               aria-label="Fermer la loupe"
@@ -256,6 +244,7 @@ export function TechnicalLoupeModal({
               </p>
             </div>
             <button
+              type="button"
               onClick={onClose}
               className="sm:w-auto px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-mono font-bold text-xs transition"
             >
@@ -264,8 +253,7 @@ export function TechnicalLoupeModal({
           </div>
         </div>
       </div>
-    </div>,
-    document.body
+    </NativeDialog>
   );
 }
 

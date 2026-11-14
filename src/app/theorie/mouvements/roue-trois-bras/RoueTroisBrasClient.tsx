@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { observeRenderActivity } from '@/lib/viewportActivity';
 import {
   ArrowLeft,
   RotateCw,
@@ -42,15 +43,29 @@ export default function RoueTroisBrasPage() {
   const [wheelType, setWheelType] = useState<'ajouree' | 'pleine'>('ajouree');
   const [simulatedTorque, setSimulatedTorque] = useState<number>(100); // 100%
 
-  // Rotation continue
+  // Rotation continue (suspendue automatiquement hors-écran ou onglet masqué)
   const [rotationAngle, setRotationAngle] = useState(0);
+  const rootRef = useRef<HTMLDivElement | null>(null);
   const requestRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number | null>(null);
 
   useEffect(() => {
+    if (!isPlaying) {
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      requestRef.current = null;
+      return;
+    }
+
+    let isRenderActive = true;
+    lastTimeRef.current = null;
+
     const animate = (time: number) => {
-      if (lastTimeRef.current !== null && isPlaying) {
-        const delta = (time - lastTimeRef.current) / 1000;
+      if (!isRenderActive) {
+        requestRef.current = null;
+        return;
+      }
+      if (lastTimeRef.current !== null) {
+        const delta = Math.min(0.1, (time - lastTimeRef.current) / 1000);
         // 60 secondes par tour à vitesse 1x (360° / 60 = 6 deg/sec)
         const baseSpeed = 18; // 18 deg/sec pour une belle animation fluide
         setRotationAngle((prev) => (prev + baseSpeed * speed * delta) % 360);
@@ -59,9 +74,27 @@ export default function RoueTroisBrasPage() {
       requestRef.current = requestAnimationFrame(animate);
     };
 
-    requestRef.current = requestAnimationFrame(animate);
+    const stopActivity = observeRenderActivity(rootRef.current, (active) => {
+      isRenderActive = active;
+      if (active && requestRef.current === null) {
+        lastTimeRef.current = null;
+        requestRef.current = requestAnimationFrame(animate);
+      } else if (!active && requestRef.current !== null) {
+        cancelAnimationFrame(requestRef.current);
+        requestRef.current = null;
+      }
+    });
+
+    if (isRenderActive && requestRef.current === null) {
+      requestRef.current = requestAnimationFrame(animate);
+    }
+
     return () => {
-      if (requestRef.current) cancelAnimationFrame(requestRef.current);
+      stopActivity();
+      if (requestRef.current) {
+        cancelAnimationFrame(requestRef.current);
+        requestRef.current = null;
+      }
     };
   }, [isPlaying, speed]);
 
@@ -98,7 +131,7 @@ export default function RoueTroisBrasPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
+    <div ref={rootRef} className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
       {/* Fil d'Ariane & En-tête supérieur */}
       <header className="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-4">
@@ -128,7 +161,7 @@ export default function RoueTroisBrasPage() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
         {/* Titre & Description Principale */}
         <div className="space-y-3">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 dark:from-amber-300 dark:via-amber-400 dark:to-yellow-500 bg-clip-text text-transparent">
@@ -836,7 +869,7 @@ export default function RoueTroisBrasPage() {
             </div>
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 }

@@ -8,7 +8,7 @@
  * Strictement conforme aux standards de l'artisan horloger suisse (NIHS, ISO 22810, ETA 2824-2).
  */
 
-import { useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import Image from 'next/image';
 import {
   Wrench,
@@ -22,6 +22,26 @@ import {
   Layers,
   FileText
 } from 'lucide-react';
+import NativeDialog from '@/components/ui/NativeDialog';
+
+function getEmboitageImageDimensions(src: string): { width: number; height: number } {
+  if (src.includes('planche_outillage_complete')) return { width: 953, height: 927 };
+  if (src.includes('planche_kit_complete') || src.includes('kit_complet_etabli')) {
+    return { width: 653, height: 451 };
+  }
+  if (src.includes('1_cercle_emboitage')) return { width: 590, height: 590 };
+  if (src.includes('3_mouvement_calibre')) return { width: 1468, height: 1216 };
+  if (
+    src.includes('/tools/3_') ||
+    src.includes('/tools/5_') ||
+    src.includes('/tools/8_') ||
+    src.includes('/tools/10_') ||
+    src.includes('7_boite_etanche')
+  ) {
+    return { width: 800, height: 800 };
+  }
+  return { width: 1000, height: 1000 };
+}
 
 export interface AtelierTool {
   id: string;
@@ -337,16 +357,11 @@ export default function OutillageKitSection() {
 
   // État modale d'agrandissement d'image
   const [lightboxImage, setLightboxImage] = useState<{ src: string; title: string; subtitle: string } | null>(null);
-
-  // Écoute de la touche Échap pour fermer la modale
-  useEffect(() => {
-    if (!lightboxImage) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setLightboxImage(null);
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lightboxImage]);
+  const lastLightboxRef = useRef<{ src: string; title: string; subtitle: string } | null>(null);
+  if (lightboxImage) {
+    lastLightboxRef.current = lightboxImage;
+  }
+  const activeLightbox = lightboxImage ?? lastLightboxRef.current;
 
   return (
     <div className="space-y-6">
@@ -366,6 +381,7 @@ export default function OutillageKitSection() {
         <div className="flex flex-wrap items-center gap-2">
           {/* Bouton Commutateur Outillage (10) */}
           <button
+            type="button"
             onClick={() => setActiveTab('outillage')}
             className={`px-3.5 py-2 rounded-xl text-xs font-label font-bold transition flex items-center gap-2 ${
               activeTab === 'outillage'
@@ -378,6 +394,7 @@ export default function OutillageKitSection() {
 
           {/* Bouton Commutateur Kit (7) */}
           <button
+            type="button"
             onClick={() => setActiveTab('kit')}
             className={`px-3.5 py-2 rounded-xl text-xs font-label font-bold transition flex items-center gap-2 ${
               activeTab === 'kit'
@@ -390,6 +407,7 @@ export default function OutillageKitSection() {
 
           {/* Bouton voir la planche originale complète */}
           <button
+            type="button"
             onClick={() => {
               if (activeTab === 'outillage') {
                 setLightboxImage({
@@ -423,6 +441,7 @@ export default function OutillageKitSection() {
               return (
                 <button
                   key={t.id}
+                  type="button"
                   onClick={() => setSelectedTool(t)}
                   className={`text-left p-3 rounded-2xl border transition flex items-center gap-3 group relative overflow-hidden ${
                     isSelected
@@ -435,6 +454,9 @@ export default function OutillageKitSection() {
                     <img
                       src={t.image}
                       alt={t.name}
+                      {...getEmboitageImageDimensions(t.image)}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-contain p-0.5 group-hover:scale-105 transition duration-300"
                     />
                     <span
@@ -483,6 +505,7 @@ export default function OutillageKitSection() {
                 <span className="text-ink-soft dark:text-slate-400 font-medium">Vue réelle de l'instrument</span>
 
                 <button
+                  type="button"
                   onClick={() =>
                     setLightboxImage({
                       src: selectedTool.image,
@@ -497,7 +520,8 @@ export default function OutillageKitSection() {
               </div>
 
               {/* Conteneur d'affichage de l'image */}
-              <div
+              <button
+                type="button"
                 onClick={() =>
                   setLightboxImage({
                     src: selectedTool.image,
@@ -505,17 +529,21 @@ export default function OutillageKitSection() {
                     subtitle: selectedTool.role,
                   })
                 }
+                aria-label={`Agrandir sous la loupe 10x : ${selectedTool.name}`}
                 className="relative w-full h-44 rounded-2xl overflow-hidden border border-cream-border dark:border-slate-800 bg-cream-tile dark:bg-slate-950 flex items-center justify-center p-3 cursor-zoom-in group shadow-inner"
               >
                 <img
                   src={selectedTool.image}
                   alt={selectedTool.name}
+                  {...getEmboitageImageDimensions(selectedTool.image)}
+                  loading="lazy"
+                  decoding="async"
                   className="max-w-full max-h-full object-contain filter drop-shadow-md group-hover:scale-105 transition duration-300"
                 />
-                <div className="absolute bottom-2 right-2 px-2 py-1 rounded bg-black/75 text-[10px] font-label text-white/90 backdrop-blur-sm flex items-center gap-1 opacity-80 group-hover:opacity-100">
-                  <ZoomIn className="w-3 h-3 text-amber-300" /> Agrandir
-                </div>
-              </div>
+                <span className="absolute bottom-2 right-2 px-2 py-1 rounded bg-black/75 text-[10px] font-label text-white/90 backdrop-blur-sm flex items-center gap-1 opacity-80 group-hover:opacity-100">
+                  <ZoomIn className="w-3 h-3 text-amber-300" aria-hidden="true" /> Agrandir
+                </span>
+              </button>
             </div>
 
             {/* Spécifications & Tolérances Suisses */}
@@ -560,6 +588,7 @@ export default function OutillageKitSection() {
               return (
                 <button
                   key={k.id}
+                  type="button"
                   onClick={() => setSelectedKit(k)}
                   className={`w-full text-left p-3 rounded-2xl border transition flex items-center gap-3 group relative overflow-hidden ${
                     isSelected
@@ -572,6 +601,9 @@ export default function OutillageKitSection() {
                     <img
                       src={k.image}
                       alt={k.name}
+                      {...getEmboitageImageDimensions(k.image)}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-contain p-0.5 group-hover:scale-105 transition duration-300"
                     />
                     <span
@@ -619,6 +651,7 @@ export default function OutillageKitSection() {
               <div className="flex items-center justify-between text-[11px] font-label">
                 <span className="text-ink-soft dark:text-slate-400 font-medium">Vue réelle sur tapis vert d'atelier</span>
                 <button
+                  type="button"
                   onClick={() =>
                     setLightboxImage({
                       src: selectedKit.image,
@@ -632,7 +665,8 @@ export default function OutillageKitSection() {
                 </button>
               </div>
 
-              <div
+              <button
+                type="button"
                 onClick={() =>
                   setLightboxImage({
                     src: selectedKit.image,
@@ -640,17 +674,21 @@ export default function OutillageKitSection() {
                     subtitle: selectedKit.role,
                   })
                 }
+                aria-label={`Agrandir sous la loupe 10x : ${selectedKit.name}`}
                 className="relative w-full h-44 rounded-2xl overflow-hidden border border-cream-border dark:border-slate-800 bg-[#1b3624] flex items-center justify-center p-3 cursor-zoom-in group shadow-inner"
               >
                 <img
                   src={selectedKit.image}
                   alt={selectedKit.name}
+                  {...getEmboitageImageDimensions(selectedKit.image)}
+                  loading="lazy"
+                  decoding="async"
                   className="max-w-full max-h-full object-contain filter drop-shadow-md group-hover:scale-105 transition duration-300"
                 />
-                <div className="absolute bottom-2 right-2 px-2 py-1 rounded bg-black/75 text-[10px] font-label text-white/90 backdrop-blur-sm flex items-center gap-1 opacity-80 group-hover:opacity-100">
-                  <ZoomIn className="w-3 h-3 text-amber-300" /> Agrandir
-                </div>
-              </div>
+                <span className="absolute bottom-2 right-2 px-2 py-1 rounded bg-black/75 text-[10px] font-label text-white/90 backdrop-blur-sm flex items-center gap-1 opacity-80 group-hover:opacity-100">
+                  <ZoomIn className="w-3 h-3 text-amber-300" aria-hidden="true" /> Agrandir
+                </span>
+              </button>
             </div>
 
             {/* Dimensions & Contrôles */}
@@ -677,15 +715,14 @@ export default function OutillageKitSection() {
       )}
 
       {/* MODALE LIGHTBOX : ZOOM IMAGE 10X & PLANCHE COMPLÈTE */}
-      {lightboxImage && (
-        <div
-          onClick={() => setLightboxImage(null)}
-          className="fixed inset-0 z-[9999] bg-[#070b14]/90 backdrop-blur-md flex items-center justify-center p-4 cursor-pointer"
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="relative max-w-4xl w-full bg-cream dark:bg-slate-900 border border-bronze/40 dark:border-amber-500/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] cursor-default"
-          >
+      <NativeDialog
+        open={Boolean(lightboxImage)}
+        onClose={() => setLightboxImage(null)}
+        ariaLabel={activeLightbox?.title ?? 'Inspection Loupe 10x'}
+        className="w-full max-w-4xl"
+      >
+        {activeLightbox ? (
+          <div className="relative w-full bg-cream dark:bg-slate-900 border border-bronze/40 dark:border-amber-500/40 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] cursor-default">
             {/* Barre supérieure modale */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-cream-border dark:border-slate-800 bg-cream-card dark:bg-slate-900/90">
               <div>
@@ -693,15 +730,17 @@ export default function OutillageKitSection() {
                   Inspection Loupe 10x — Document d'Atelier
                 </span>
                 <h3 className="font-display text-lg text-ink dark:text-slate-100">
-                  {lightboxImage.title}
+                  {activeLightbox.title}
                 </h3>
                 <p className="text-xs font-label text-ink-soft dark:text-slate-400">
-                  {lightboxImage.subtitle}
+                  {activeLightbox.subtitle}
                 </p>
               </div>
 
               <button
+                type="button"
                 onClick={() => setLightboxImage(null)}
+                aria-label="Fermer l'inspection (Échap)"
                 className="w-9 h-9 rounded-xl bg-cream-track dark:bg-slate-800 border border-cream-border dark:border-slate-700 text-ink dark:text-slate-200 hover:bg-cream-border flex items-center justify-center transition"
                 title="Fermer (Échap)"
               >
@@ -712,8 +751,10 @@ export default function OutillageKitSection() {
             {/* Corps de l'image agrandie */}
             <div className="p-6 overflow-auto flex items-center justify-center bg-cream-tile dark:bg-slate-950/80">
               <img
-                src={lightboxImage.src}
-                alt={lightboxImage.title}
+                src={activeLightbox.src}
+                alt={activeLightbox.title}
+                {...getEmboitageImageDimensions(activeLightbox.src)}
+                decoding="async"
                 className="max-w-full max-h-[70vh] object-contain rounded-xl border border-cream-border dark:border-slate-800 shadow-lg"
               />
             </div>
@@ -722,6 +763,7 @@ export default function OutillageKitSection() {
             <div className="px-6 py-3 border-t border-cream-border dark:border-slate-800 bg-cream-card dark:bg-slate-900/90 flex items-center justify-between text-xs font-label text-ink-soft dark:text-slate-400">
               <span>Résolution d'inspection d'établi</span>
               <button
+                type="button"
                 onClick={() => setLightboxImage(null)}
                 className="px-4 py-1.5 rounded-lg bg-bronze text-white font-bold hover:bg-bronze-dark transition"
               >
@@ -729,8 +771,8 @@ export default function OutillageKitSection() {
               </button>
             </div>
           </div>
-        </div>
-      )}
+        ) : null}
+      </NativeDialog>
     </div>
   );
 }

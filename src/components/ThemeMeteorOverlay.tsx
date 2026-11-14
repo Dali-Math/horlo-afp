@@ -89,6 +89,11 @@ export default function ThemeMeteorOverlay() {
       const detail = customEvent.detail;
       if (!detail) return;
 
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        detail.commitTheme?.();
+        return;
+      }
+
       const width = window.innerWidth;
       const height = window.innerHeight;
       const originX = detail.x || width - 60;

@@ -297,25 +297,25 @@ export default function EmboitageAcademy() {
                 </button>
               </div>
 
-              <div
+              <button
+                type="button"
                 onClick={openHeroLoupe}
-                className="relative block w-full overflow-hidden rounded-xl bg-cream-tile dark:bg-slate-800/80 border border-cream-border dark:border-slate-700 cursor-zoom-in group shadow-inner"
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') openHeroLoupe();
-                }}
+                className="relative block w-full overflow-hidden rounded-xl bg-cream-tile dark:bg-slate-800/80 border border-cream-border dark:border-slate-700 cursor-zoom-in group shadow-inner text-left"
                 aria-label="Agrandir la coupe technique réelle à la loupe 10x"
               >
                 <img
                   src="/images/emboitage/coupe_technique_reelle.jpg"
                   alt="Coupe technique réelle d'emboîtage — Vue réelle d'une montre mécanique"
+                  width={1024}
+                  height={800}
+                  fetchPriority="high"
+                  decoding="async"
                   className="w-full h-auto object-cover group-hover:scale-105 transition duration-300"
                 />
-                <div className="absolute bottom-2 right-2 px-2 py-1 rounded bg-black/75 text-[10px] font-label text-white/90 backdrop-blur-sm flex items-center gap-1 opacity-80 group-hover:opacity-100">
-                  <ZoomIn className="w-3 h-3 text-amber-300" /> Agrandir 10x
-                </div>
-              </div>
+                <span className="absolute bottom-2 right-2 px-2 py-1 rounded bg-black/75 text-[10px] font-label text-white/90 backdrop-blur-sm flex items-center gap-1 opacity-80 group-hover:opacity-100">
+                  <ZoomIn className="w-3 h-3 text-amber-300" aria-hidden="true" /> Agrandir 10x
+                </span>
+              </button>
 
               <p className="text-[11px] text-center text-ink-soft dark:text-slate-400 mt-2 font-label">
                 Coupe réelle : glace saphir, joint Hytrel, cercle, brides, tube, couronne &amp; fond vissé.
@@ -326,7 +326,7 @@ export default function EmboitageAcademy() {
       </section>
 
       {/* ==================== CONTENU DES ONGLETS ==================== */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
         {tab === 'outillage' && <OutillageKitSection />}
         {tab === 'parcours' && (
           <Parcours
@@ -341,7 +341,7 @@ export default function EmboitageAcademy() {
         {tab === 'quiz' && <Quiz best={progress.quizBest} onScore={setQuizBest} />}
         {tab === 'examen' && <Examen best={progress.examBest} onScore={setExamBest} />}
         {tab === 'fiches' && <Fiches />}
-      </main>
+      </div>
 
       {/* ==================== LOUPE D'INSPECTION 10x (PORTAL) ==================== */}
       <LoupeModal loupe={loupe} setLoupe={setLoupe} onClose={closeLoupe} />

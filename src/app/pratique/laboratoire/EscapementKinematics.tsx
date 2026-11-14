@@ -12,6 +12,7 @@ import {
   CheckCircle2,
   Info,
 } from 'lucide-react';
+import { observeRenderActivity } from '@/lib/viewportActivity';
 
 interface PhaseInfo {
   id: number;
@@ -80,21 +81,47 @@ export default function EscapementKinematics() {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [showVectors, setShowVectors] = useState<boolean>(true);
   const [showOil, setShowOil] = useState<boolean>(true);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const animRef = useRef<number | null>(null);
 
-  // Boucle de lecture animée
+  // Boucle de lecture animée (suspendue automatiquement hors-écran ou onglet masqué)
   useEffect(() => {
-    if (isPlaying) {
-      const loop = () => {
-        setProgress((prev) => (prev + 0.3) % 100);
-        animRef.current = requestAnimationFrame(loop);
-      };
-      animRef.current = requestAnimationFrame(loop);
-    } else if (animRef.current) {
-      cancelAnimationFrame(animRef.current);
-    }
-    return () => {
+    if (!isPlaying) {
       if (animRef.current) cancelAnimationFrame(animRef.current);
+      animRef.current = null;
+      return;
+    }
+
+    let isRenderActive = true;
+    const loop = () => {
+      if (!isRenderActive) {
+        animRef.current = null;
+        return;
+      }
+      setProgress((prev) => (prev + 0.3) % 100);
+      animRef.current = requestAnimationFrame(loop);
+    };
+
+    const stopActivity = observeRenderActivity(containerRef.current, (active) => {
+      isRenderActive = active;
+      if (active && animRef.current === null) {
+        animRef.current = requestAnimationFrame(loop);
+      } else if (!active && animRef.current !== null) {
+        cancelAnimationFrame(animRef.current);
+        animRef.current = null;
+      }
+    });
+
+    if (isRenderActive && animRef.current === null) {
+      animRef.current = requestAnimationFrame(loop);
+    }
+
+    return () => {
+      stopActivity();
+      if (animRef.current !== null) {
+        cancelAnimationFrame(animRef.current);
+        animRef.current = null;
+      }
     };
   }, [isPlaying]);
 
@@ -129,7 +156,7 @@ export default function EscapementKinematics() {
     PHASES[0];
 
   return (
-    <div className="space-y-6">
+    <div ref={containerRef} className="space-y-6">
       {/* --- CONTRÔLES SUPÉRIEURS DU BANC CINÉMATIQUE --- */}
       <div className="p-5 rounded-2xl bg-white dark:bg-[#131822] border-2 border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
