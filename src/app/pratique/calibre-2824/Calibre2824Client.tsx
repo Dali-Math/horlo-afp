@@ -7,6 +7,13 @@ import { ArrowLeft, Maximize2, ShieldCheck } from 'lucide-react';
 
 type Calibre2824View = 'labo' | 'coupe';
 
+function computeCutawayIframeHeight(viewportWidth: number): number {
+  if (viewportWidth <= 768) {
+    return Math.max(480, Math.min(560, Math.round(viewportWidth * 1.32)));
+  }
+  return Math.max(660, Math.min(920, Math.round(viewportWidth * (9 / 16))));
+}
+
 export default function Calibre2824Client() {
   const [activeView, setActiveView] = React.useState<Calibre2824View>('labo');
   const [isEmbeddedFullscreen, setIsEmbeddedFullscreen] = React.useState(false);
@@ -19,7 +26,7 @@ export default function Calibre2824Client() {
     const vue = new URLSearchParams(window.location.search).get('vue');
     if (vue === 'coupe') {
       setActiveView('coupe');
-      setIframeHeight(Math.max(660, Math.min(920, Math.round(window.innerWidth * (9 / 16)))));
+      setIframeHeight(computeCutawayIframeHeight(window.innerWidth));
     }
   }, []);
 
@@ -30,7 +37,7 @@ export default function Calibre2824Client() {
       const url = new URL(window.location.href);
       if (view === 'coupe') {
         url.searchParams.set('vue', 'coupe');
-        setIframeHeight(Math.max(660, Math.min(920, Math.round(window.innerWidth * (9 / 16)))));
+        setIframeHeight(computeCutawayIframeHeight(window.innerWidth));
       } else {
         url.searchParams.delete('vue');
         setIframeHeight(1250);
@@ -60,7 +67,8 @@ export default function Calibre2824Client() {
           setIsEmbeddedFullscreen(!!event.data.isFullscreen);
         } else if (event.data.type === 'HORLO_IFRAME_HEIGHT' && typeof event.data.height === 'number') {
           // Ajustement micromécanique dynamique de la hauteur pour éliminer le double scrollbar
-          const newH = Math.max(Math.ceil(event.data.height), 660);
+          const minH = typeof window !== 'undefined' && window.innerWidth <= 768 ? 460 : 660;
+          const newH = Math.max(Math.ceil(event.data.height), minH);
           setIframeHeight((prev) => (Math.abs(prev - newH) > 6 ? newH : prev));
         }
       }
