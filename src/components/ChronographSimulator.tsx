@@ -96,7 +96,7 @@ export default function ChronographSimulator() {
   }
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <div className="space-y-6 max-w-6xl p-6 rounded-2xl bg-slate-950 border border-slate-800">
       <div className="flex items-start gap-4">
         <img src="/imgs/outils_chronograph_simulator.png" alt="Chronographe" className="w-20 h-20 rounded-xl object-cover" />
         <div>
@@ -106,7 +106,7 @@ export default function ChronographSimulator() {
       </div>
 
       {/* Affichage chronographe */}
-      <div className="p-8 rounded-xl bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700">
+      <div className="p-8 rounded-xl bg-slate-900 bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700">
         <div className="text-center mb-6">
           <div className="text-7xl font-bold font-mono text-white mb-2">{formatTime(time)}</div>
           <div className="text-sm text-slate-400">Précision: 1/{results.precisionFraction} seconde</div>

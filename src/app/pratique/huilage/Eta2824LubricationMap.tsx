@@ -567,25 +567,25 @@ export default function Eta2824LubricationMap() {
 
             {/* Bandeau de consigne en Mode Quiz */}
             {mode === 'quiz' && (
-              <div className="rounded-2xl bg-gradient-to-r from-amber-950/90 via-slate-900 to-slate-900 border border-amber-500/50 p-4 text-white flex flex-wrap items-center justify-between gap-4">
+              <div className="rounded-2xl bg-white dark:bg-slate-900 border border-amber-500/50 p-4 text-slate-900 dark:text-white flex flex-wrap items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400 flex items-center justify-center text-amber-400">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/15 dark:bg-amber-500/20 border border-amber-400 flex items-center justify-center text-amber-700 dark:text-amber-400">
                     <Crosshair className="w-5 h-5" />
                   </div>
                   <div>
-                    <div className="text-[11px] font-mono uppercase text-amber-400">
+                    <div className="text-[11px] font-mono uppercase text-amber-700 dark:text-amber-400">
                       Entraînement Pratique d’Établi
                     </div>
-                    <p className="text-xs sm:text-sm font-bold">
-                      Cible : <span className="text-amber-300 font-mono">#{quizTarget.code} ({quizTarget.organ})</span> — Choisissez l’huilier puis cliquez sur <span className="text-amber-300 font-mono">?</span>
+                    <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                      Cible : <span className="text-amber-700 dark:text-amber-300 font-mono">#{quizTarget.code} ({quizTarget.organ})</span> — Choisissez l’huilier puis cliquez sur <span className="text-amber-700 dark:text-amber-300 font-mono">?</span>
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3 ml-auto">
                   <div className="text-right font-mono">
-                    <div className="text-[10px] text-slate-400">SCORE</div>
-                    <div className="text-base font-extrabold text-amber-400">
+                    <div className="text-[10px] text-slate-500 dark:text-slate-400">SCORE</div>
+                    <div className="text-base font-extrabold text-amber-700 dark:text-amber-400">
                       {quizScore} / {quizAttempts}
                     </div>
                   </div>

@@ -269,9 +269,9 @@ export default function ReglagePage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
 
         {/* ⭐ Master Lab Witschi & Échappement */}
-        <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-amber-950/70 via-slate-900 to-slate-950 border-2 border-amber-500/50 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="p-5 sm:p-6 rounded-3xl bg-white dark:bg-slate-900 border-2 border-amber-500/50 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0 text-amber-400">
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/15 dark:bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0 text-amber-700 dark:text-amber-400">
               <Activity className="w-6 h-6 animate-pulse" />
             </div>
             <div>
@@ -279,12 +279,12 @@ export default function ReglagePage() {
                 <span className="px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 text-[10px] font-mono font-bold uppercase tracking-wider">
                   ⭐ Master Lab d’Établi
                 </span>
-                <span className="text-xs font-mono text-amber-400">Watch Expert IV · Etachron · 5 Phases</span>
+                <span className="text-xs font-mono text-amber-700 dark:text-amber-400">Watch Expert IV · Etachron · 5 Phases</span>
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-white mt-1">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mt-1">
                 Laboratoire Complet : Chronométrie Witschi, Échappement &amp; Emboîtage
               </h3>
-              <p className="text-xs sm:text-sm text-slate-300 font-light mt-0.5">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-light mt-0.5">
                 Simulateur acoustique temps réel, 6 scénarios de pannes COSC, régulateur Etachron interactif et calcul de mise à tige.
               </p>
             </div>
@@ -299,17 +299,17 @@ export default function ReglagePage() {
         </div>
 
         {/* ⭐ Bannière d'accès direct au Chronocomparateur Acoustique Réel */}
-        <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-emerald-950/70 via-slate-900 to-slate-950 border-2 border-emerald-500/40 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="p-5 sm:p-6 rounded-3xl bg-white dark:bg-slate-900 border-2 border-emerald-500/40 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0 text-emerald-400">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-500/15 dark:bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0 text-emerald-700 dark:text-emerald-400">
               <Volume2 className="w-6 h-6 animate-pulse" />
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <span>Vous possédez une montre mécanique ?</span>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-mono uppercase tracking-wider">Direct Micro</span>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[10px] font-mono uppercase tracking-wider">Direct Micro</span>
               </h3>
-              <p className="text-xs sm:text-sm text-slate-300 font-light mt-0.5">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-light mt-0.5">
                 Mesurez la marche réelle (+/- s/j), le repère et l&apos;amplitude de votre montre via le microphone de votre appareil avec notre Chronocomparateur Witschi acoustique.
               </p>
             </div>

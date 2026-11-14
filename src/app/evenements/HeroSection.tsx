@@ -12,7 +12,7 @@ export default function HeroSection() {
 
   return (
     <>
-      <section className="relative min-h-[60vh] flex items-center justify-center bg-gradient-to-b from-amber-950/40 via-gray-900 to-black overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/20 via-gray-900 to-black">
+      <section className="relative min-h-[60vh] flex items-center justify-center bg-gray-950 bg-gradient-to-b from-amber-950/40 via-gray-900 to-black overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/20 via-gray-900 to-black">
         {/* Decorative background elements with parallax - gold gradient blur */}
         <motion.div 
           className="absolute inset-0 opacity-10"
